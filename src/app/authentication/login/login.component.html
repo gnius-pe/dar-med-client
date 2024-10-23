@@ -20,14 +20,14 @@
               <div class="login-right-wrap">
                 <div class="account-logo">
                   <a [routerLink]="routes.adminDashboard"
-                    ><img src="assets/img/login-logo.png" alt=""
+                    ><img src="assets/img/login-logo.png" alt="" style="max-height: 100px;"
                   /></a>
                 </div>
-                <h2>Login</h2>
+                <h2>Inciar sesión</h2>
                 <!-- Form -->
                 <form [formGroup]="form" (ngSubmit)="loginFormSubmit()">
                   <div class="form-group">
-                    <label>Email <span class="login-danger">*</span></label>
+                    <label>Correo electrónico<span class="login-danger">*</span></label>
                     <input
                       class="form-control"
                       formControlName="email"
@@ -41,19 +41,19 @@
                     class="invalid-feedback"
                     >
                       <div
-                      *ngIf="f['email'].errors && f['email'].errors['required']"
+                      *ngIf="f['email'].errors && f['email'].errors?.['required']"
                       >
                         Email is required.
                       </div>
                       <div
-                        *ngIf="f['email'].errors && f['email'].errors['email']"
+                        *ngIf="f['email'].errors && f['email'].errors?.['email']"
                       >
                         Please, enter valid email address.
                       </div>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label>Password <span class="login-danger">*</span></label>
+                    <label>Contraseña <span class="login-danger">*</span></label>
                     <input
                       class="form-control pass-input"
                       [type]="passwordClass ? 'text' : 'password'"
@@ -70,7 +70,7 @@
                       <div
                         *ngIf="
                           f['password'].errors &&
-                          f['password'].errors['required']
+                          f['password'].errors?.['required']
                         "
                       >
                         Password is required.
@@ -117,7 +117,7 @@
                   </p>
 
                   <div class="social-login">
-                    <a href="javascript:;" 
+                    <a href="javascript:;"
                       ><img src="assets/img/icons/login-icon-01.svg" alt=""
                     /></a>
                     <a href="javascript:;"
