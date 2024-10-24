@@ -3,13 +3,10 @@
   <div class="container-fluid px-0">
     <div class="row">
       <!-- Login logo -->
-      <div class="col-lg-6 login-wrap">
-        <div class="login-sec">
-          <div class="log-img">
-            <img class="img-fluid" src="assets/img/login-02.png" alt="Logo" />
-          </div>
-        </div>
+      <div class="col-lg-6">
+        <app-carousel></app-carousel>
       </div>
+
       <!-- /Login logo -->
 
       <!-- Login Content -->
@@ -19,9 +16,13 @@
             <div class="login-right">
               <div class="login-right-wrap">
                 <div class="account-logo">
-                  <a [routerLink]="routes.adminDashboard"
-                    ><img src="assets/img/login-logo.png" alt="" style="max-height: 100px;"
-                  /></a>
+
+                  <a [routerLink]="routes.adminDashboard">
+                    <div class="w-full h-100 flex justify-center items-center">
+                      <img src="assets/img/login-logo.png" alt="" class="w-auto h-auto" style="max-height: 100px;" />
+                    </div>
+                  </a>
+
                 </div>
                 <h2>Inciar sesión</h2>
                 <!-- Form -->
@@ -37,11 +38,11 @@
                       }"
                     />
                     <div
-                    *ngIf="f['email'].touched && f['email'].invalid"
-                    class="invalid-feedback"
+                      *ngIf="f['email'].touched && f['email'].invalid"
+                      class="invalid-feedback"
                     >
                       <div
-                      *ngIf="f['email'].errors && f['email'].errors?.['required']"
+                        *ngIf="f['email'].errors && f['email'].errors?.['required']"
                       >
                         Email is required.
                       </div>
@@ -76,8 +77,9 @@
                         Password is required.
                       </div>
                     </div>
-                    <span (click)="togglePassword()" [ngClass] = "passwordClass ? 'feather icon-eye' : 'feather icon-eye-off'"
-                      class="profile-views toggle-password"
+                    <span (click)="togglePassword()"
+                          [ngClass]="passwordClass ? 'feather icon-eye' : 'feather icon-eye-off'"
+                          class="profile-views toggle-password"
                     ></span>
                   </div>
                   <!-- <div class="forgotpass">
@@ -93,10 +95,10 @@
                     <a [routerLink]="routes.forgotPassword">Forgot Password?</a>
                   </div> -->
                   <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="ERROR">
-                      <strong>Error!</strong> EL usuario y contraseña son incorrectos.
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true"> </span>
-                      </button>
+                    <strong>Error!</strong> EL usuario y contraseña son incorrectos.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true"> </span>
+                    </button>
                   </div>
                   <div class="form-group login-btn">
                     <button
