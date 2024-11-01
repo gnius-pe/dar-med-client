@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { NgxBootstrapModule } from './ngx-bootstrap/ngx-bootstrap.module';
 import { CountUpModule } from 'ngx-countup';
 import { NgApexchartsModule } from "ng-apexcharts";
@@ -22,37 +22,38 @@ import { RouterModule } from '@angular/router';
     HeaderComponent,
     SidebarComponent,
   ],
-  imports: [
-    CommonModule,
-    NgxBootstrapModule,
-    CountUpModule,
-    NgApexchartsModule,
-    NgCircleProgressModule.forRoot({
-      "radius": 40,
-      "space": -10,
-      "outerStrokeWidth": 10,
-      "innerStrokeWidth": 10,
-      "animationDuration": 1000,
-      "clockwise": false,
-      "startFromZero": false,
-      "lazy": false,
-      "outerStrokeLinecap":"square",
-      "showSubtitle": false,
-      "showTitle" : false,
-      "showUnits" : false,
-      "showBackground" : false
-    }),
-    SlickCarouselModule,
-    materialModule,
-    NgxEditorModule,
-    FullCalendarModule,
-    HttpClientModule,
-    MatSortModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgxMaterialTimepickerModule,
-    RouterModule
-  ],
+    imports: [
+        CommonModule,
+        NgxBootstrapModule,
+        CountUpModule,
+        NgApexchartsModule,
+        NgCircleProgressModule.forRoot({
+            "radius": 40,
+            "space": -10,
+            "outerStrokeWidth": 10,
+            "innerStrokeWidth": 10,
+            "animationDuration": 1000,
+            "clockwise": false,
+            "startFromZero": false,
+            "lazy": false,
+            "outerStrokeLinecap": "square",
+            "showSubtitle": false,
+            "showTitle": false,
+            "showUnits": false,
+            "showBackground": false
+        }),
+        SlickCarouselModule,
+        materialModule,
+        NgxEditorModule,
+        FullCalendarModule,
+        HttpClientModule,
+        MatSortModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgxMaterialTimepickerModule,
+        RouterModule,
+        NgOptimizedImage
+    ],
   exports: [
     CommonModule,
     NgxBootstrapModule,
