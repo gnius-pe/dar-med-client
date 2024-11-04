@@ -58,8 +58,7 @@
                 <div class="col-12 col-md-6 col-xl-6">
                   <div class="form-group local-forms">
                     <label>Fecha de nacimiento</label>
-                    <input class="form-control datetimepicker" [(ngModel)]="birth_date" name="birth_date" type="text"
-                           matInput [matDatepicker]="picker">
+                    <input class="form-control datetimepicker" type="text" [matDatepicker]="picker">
                     <mat-datepicker #picker></mat-datepicker>
                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                   </div>
@@ -84,16 +83,54 @@
                     <label class="gen-label">Sexo:</label>
                     <div class="form-check-inline">
                       <label class="form-check-label">
-                        <input type="radio" class="form-check-input">
+                        <input type="radio" class="form-check-input" name="gender" value="masculino">
                         Masculino
                       </label>
                     </div>
                     <div class="form-check-inline">
                       <label class="form-check-label">
-                        <input type="radio" class="form-check-input">
+                        <input type="radio" class="form-check-input" name="gender" value="femenino">
                         Femenino
                       </label>
                     </div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="form-heading">
+                    <h4>Pre diagnóstico</h4>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="form-group local-forms">
+                    <label>Mensaje</label>
+                    <textarea class="form-control" rows="3" cols="30"></textarea>
+                  </div>
+                </div>
+
+                <div class="col-12 mb-2">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox"> ¿Cuentas con exámenes o algún análisis sobre tu consulta, que tenga menos
+                      de 30 días?
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-12 mb-2">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox"> ¿Está interesado en recibir apoyo espiritual?
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-12 mb-2">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox"> ¿Desea ser contactado para futuras actividades o eventos religiosos?
+                    </label>
                   </div>
                 </div>
 
@@ -120,6 +157,7 @@
                     </div>
                   </div>
                 </div>
+
                 <div class="col-12">
                   <div class="doctor-submit text-end">
                     <button type="button" (click)="save()" class="btn btn-primary submit-form me-2">Guardar</button>
@@ -131,192 +169,193 @@
         </div>
       </div>
 
-      <!--    <div class="col-sm-12">
+      <!--   <div class="col-sm-12">
 
-              <div class="card">
-                  <div class="card-body">
-                      <form>
-                          <div class="row">
-                              <div class="col-12">
-                                  <div class="form-heading">
-                                      <h4>Antecedentes del Paciente</h4>
-                                  </div>
-                              </div>
-
-
-                              <div class="col-12 col-sm-4">
-                                  <div class="form-group local-forms">
-                                      <label>Antecedente Personal  <span class="login-danger">*</span></label>
-                                      <textarea class="form-control" [(ngModel)]="antecedent_family" name="antecedent_family" rows="3" cols="30"></textarea>
-                                  </div>
-                              </div>
-
-                              <div class="col-12 col-sm-4">
-                                  <div class="form-group local-forms">
-                                      <label>Antecedente Familiar  <span class="login-danger">*</span></label>
-                                      <textarea class="form-control" [(ngModel)]="antecedent_personal" name="antecedent_personal" rows="3" cols="30"></textarea>
-                                  </div>
-                              </div>
-
-                              <div class="col-12 col-sm-4">
-                                  <div class="form-group local-forms">
-                                      <label>Antecedente Alergico  <span class="login-danger">*</span></label>
-                                      <textarea class="form-control" [(ngModel)]="antecedent_allergic" name="antecedent_allergic" rows="3" cols="30"></textarea>
-                                  </div>
-                              </div>
+             <div class="card">
+                 <div class="card-body">
+                     <form>
+                         <div class="row">
+                             <div class="col-12">
+                                 <div class="form-heading">
+                                     <h4>Antecedentes del Paciente</h4>
+                                 </div>
+                             </div>
 
 
-                              <div class="col-12">
-                                  <div class="doctor-submit text-end">
-                                      <button type="button" (click)="save()" class="btn btn-primary submit-form me-2">Guardar</button>
-                                  </div>
-                              </div>
-                          </div>
-                      </form>
-                  </div>
-              </div>
-          </div>
+                             <div class="col-12 col-sm-4">
+                                 <div class="form-group local-forms">
+                                     <label>Antecedente Personal  <span class="login-danger">*</span></label>
+                                     <textarea class="form-control" [(ngModel)]="antecedent_family" name="antecedent_family" rows="3" cols="30"></textarea>
+                                 </div>
+                             </div>
 
-          <div class="col-sm-12">
+                             <div class="col-12 col-sm-4">
+                                 <div class="form-group local-forms">
+                                     <label>Antecedente Familiar  <span class="login-danger">*</span></label>
+                                     <textarea class="form-control" [(ngModel)]="antecedent_personal" name="antecedent_personal" rows="3" cols="30"></textarea>
+                                 </div>
+                             </div>
 
-              <div class="card">
-                  <div class="card-body">
-                      <form>
-                          <div class="row">
-                              <div class="col-12">
-                                  <div class="form-heading">
-                                      <h4>Personas del Paciente</h4>
-                                  </div>
-                              </div>
+                             <div class="col-12 col-sm-4">
+                                 <div class="form-group local-forms">
+                                     <label>Antecedente Alergico  <span class="login-danger">*</span></label>
+                                     <textarea class="form-control" [(ngModel)]="antecedent_allergic" name="antecedent_allergic" rows="3" cols="30"></textarea>
+                                 </div>
+                             </div>
 
 
-                              <div class="col-12 col-sm-3">
-                                  <div class="form-group local-forms">
-                                      <label>Nombre del Acompañante  <span class="login-danger">*</span></label>
-                                      <input class="form-control" [(ngModel)]="name_companion" type="text" name="name_companion">
-                                  </div>
-                              </div>
+                             <div class="col-12">
+                                 <div class="doctor-submit text-end">
+                                     <button type="button" (click)="save()" class="btn btn-primary submit-form me-2">Guardar</button>
+                                 </div>
+                             </div>
+                         </div>
+                     </form>
+                 </div>
+             </div>
+         </div>
 
-                              <div class="col-12 col-sm-3">
-                                  <div class="form-group local-forms">
-                                      <label>Apellido del Acompañante  <span class="login-danger">*</span></label>
-                                      <input type="text" class="form-control" [(ngModel)]="surname_companion" name="surname_companion" >
-                                  </div>
-                              </div>
+         <div class="col-sm-12">
 
-                              <div class="col-12 col-sm-3">
-                                  <div class="form-group local-forms">
-                                      <label>Telefono del Acompañante  <span class="login-danger">*</span></label>
-                                      <input type="text" class="form-control" [(ngModel)]="mobile_companion" name="mobile_companion" >
-                                  </div>
-                              </div>
-
-                              <div class="col-12 col-sm-3">
-                                  <div class="form-group local-forms">
-                                      <label>Relación con el Acompañante  <span class="login-danger">*</span></label>
-                                      <input type="text" class="form-control" [(ngModel)]="relationship_companion" name="relationship_companion" >
-                                  </div>
-                              </div>
-
-                              <div class="col-12 col-sm-3">
-                                  <div class="form-group local-forms">
-                                      <label>Nombre del Responsable  <span class="login-danger">*</span></label>
-                                      <input class="form-control" [(ngModel)]="name_responsible" type="text" name="name_responsible">
-                                  </div>
-                              </div>
-
-                              <div class="col-12 col-sm-3">
-                                  <div class="form-group local-forms">
-                                      <label>Apellido del Responsable  <span class="login-danger">*</span></label>
-                                      <input type="text" class="form-control" [(ngModel)]="surname_responsible" name="surname_responsible" >
-                                  </div>
-                              </div>
-
-                              <div class="col-12 col-sm-3">
-                                  <div class="form-group local-forms">
-                                      <label>Telefono del Responsable  <span class="login-danger">*</span></label>
-                                      <input type="text" class="form-control" [(ngModel)]="mobile_responsible" name="mobile_responsible" >
-                                  </div>
-                              </div>
-
-                              <div class="col-12 col-sm-3">
-                                  <div class="form-group local-forms">
-                                      <label>Relación con el Responsable  <span class="login-danger">*</span></label>
-                                      <input type="text" class="form-control" [(ngModel)]="relationship_responsible" name="relationship_responsible" >
-                                  </div>
-                              </div>
+             <div class="card">
+                 <div class="card-body">
+                     <form>
+                         <div class="row">
+                             <div class="col-12">
+                                 <div class="form-heading">
+                                     <h4>Personas del Paciente</h4>
+                                 </div>
+                             </div>
 
 
-                              <div class="col-12">
-                                  <div class="doctor-submit text-end">
-                                      <button type="button" (click)="save()" class="btn btn-primary submit-form me-2">Guardar</button>
-                                  </div>
-                              </div>
-                          </div>
-                      </form>
-                  </div>
-              </div>
-          </div>
+                             <div class="col-12 col-sm-3">
+                                 <div class="form-group local-forms">
+                                     <label>Nombre del Acompañante  <span class="login-danger">*</span></label>
+                                     <input class="form-control" [(ngModel)]="name_companion" type="text" name="name_companion">
+                                 </div>
+                             </div>
 
-          <div class="col-sm-12">
+                             <div class="col-12 col-sm-3">
+                                 <div class="form-group local-forms">
+                                     <label>Apellido del Acompañante  <span class="login-danger">*</span></label>
+                                     <input type="text" class="form-control" [(ngModel)]="surname_companion" name="surname_companion" >
+                                 </div>
+                             </div>
 
-              <div class="card">
-                  <div class="card-body">
-                      <form>
-                          <div class="row">
-                              <div class="col-12">
-                                  <div class="form-heading">
-                                      <h4>Signos Vitales</h4>
-                                  </div>
-                              </div>
+                             <div class="col-12 col-sm-3">
+                                 <div class="form-group local-forms">
+                                     <label>Telefono del Acompañante  <span class="login-danger">*</span></label>
+                                     <input type="text" class="form-control" [(ngModel)]="mobile_companion" name="mobile_companion" >
+                                 </div>
+                             </div>
 
+                             <div class="col-12 col-sm-3">
+                                 <div class="form-group local-forms">
+                                     <label>Relación con el Acompañante  <span class="login-danger">*</span></label>
+                                     <input type="text" class="form-control" [(ngModel)]="relationship_companion" name="relationship_companion" >
+                                 </div>
+                             </div>
 
-                              <div class="col-12 col-sm-3">
-                                  <div class="form-group local-forms">
-                                      <label>TA(mm/Hg) <span class="login-danger">*</span></label>
-                                      <input class="form-control" [(ngModel)]="ta" type="number" name="ta">
-                                  </div>
-                              </div>
+                             <div class="col-12 col-sm-3">
+                                 <div class="form-group local-forms">
+                                     <label>Nombre del Responsable  <span class="login-danger">*</span></label>
+                                     <input class="form-control" [(ngModel)]="name_responsible" type="text" name="name_responsible">
+                                 </div>
+                             </div>
 
-                              <div class="col-12 col-sm-3">
-                                  <div class="form-group local-forms">
-                                      <label>Temperatura (°C)  <span class="login-danger">*</span></label>
-                                      <input type="number" class="form-control" [(ngModel)]="temperatura" name="temperatura" >
-                                  </div>
-                              </div>
+                             <div class="col-12 col-sm-3">
+                                 <div class="form-group local-forms">
+                                     <label>Apellido del Responsable  <span class="login-danger">*</span></label>
+                                     <input type="text" class="form-control" [(ngModel)]="surname_responsible" name="surname_responsible" >
+                                 </div>
+                             </div>
 
-                              <div class="col-12 col-sm-2">
-                                  <div class="form-group local-forms">
-                                      <label>Frecuencia Cardi.(por minuto)  <span class="login-danger">*</span></label>
-                                      <input type="number" class="form-control" [(ngModel)]="fc" name="fc" >
-                                  </div>
-                              </div>
+                             <div class="col-12 col-sm-3">
+                                 <div class="form-group local-forms">
+                                     <label>Telefono del Responsable  <span class="login-danger">*</span></label>
+                                     <input type="text" class="form-control" [(ngModel)]="mobile_responsible" name="mobile_responsible" >
+                                 </div>
+                             </div>
 
-                              <div class="col-12 col-sm-2">
-                                  <div class="form-group local-forms">
-                                      <label>Frecuencia Resp.(por minuto)  <span class="login-danger">*</span></label>
-                                      <input type="number" class="form-control" [(ngModel)]="fr" name="fr" >
-                                  </div>
-                              </div>
-
-                              <div class="col-12 col-sm-2">
-                                  <div class="form-group local-forms">
-                                      <label>Peso(Kg)  <span class="login-danger">*</span></label>
-                                      <input class="form-control" [(ngModel)]="peso" type="number" name="peso">
-                                  </div>
-                              </div>
+                             <div class="col-12 col-sm-3">
+                                 <div class="form-group local-forms">
+                                     <label>Relación con el Responsable  <span class="login-danger">*</span></label>
+                                     <input type="text" class="form-control" [(ngModel)]="relationship_responsible" name="relationship_responsible" >
+                                 </div>
+                             </div>
 
 
-                              <div class="col-12">
-                                  <div class="doctor-submit text-end">
-                                      <button type="button" (click)="save()" class="btn btn-primary submit-form me-2">Guardar</button>
-                                  </div>
-                              </div>
-                          </div>
-                      </form>
-                  </div>
-              </div>
-          </div>-->
+                             <div class="col-12">
+                                 <div class="doctor-submit text-end">
+                                     <button type="button" (click)="save()" class="btn btn-primary submit-form me-2">Guardar</button>
+                                 </div>
+                             </div>
+                         </div>
+                     </form>
+                 </div>
+             </div>
+         </div>
+
+         <div class="col-sm-12">
+
+             <div class="card">
+                 <div class="card-body">
+                     <form>
+                         <div class="row">
+                             <div class="col-12">
+                                 <div class="form-heading">
+                                     <h4>Signos Vitales</h4>
+                                 </div>
+                             </div>
+
+
+                             <div class="col-12 col-sm-3">
+                                 <div class="form-group local-forms">
+                                     <label>TA(mm/Hg) <span class="login-danger">*</span></label>
+                                     <input class="form-control" [(ngModel)]="ta" type="number" name="ta">
+                                 </div>
+                             </div>
+
+                             <div class="col-12 col-sm-3">
+                                 <div class="form-group local-forms">
+                                     <label>Temperatura (°C)  <span class="login-danger">*</span></label>
+                                     <input type="number" class="form-control" [(ngModel)]="temperatura" name="temperatura" >
+                                 </div>
+                             </div>
+
+                             <div class="col-12 col-sm-2">
+                                 <div class="form-group local-forms">
+                                     <label>Frecuencia Cardi.(por minuto)  <span class="login-danger">*</span></label>
+                                     <input type="number" class="form-control" [(ngModel)]="fc" name="fc" >
+                                 </div>
+                             </div>
+
+                             <div class="col-12 col-sm-2">
+                                 <div class="form-group local-forms">
+                                     <label>Frecuencia Resp.(por minuto)  <span class="login-danger">*</span></label>
+                                     <input type="number" class="form-control" [(ngModel)]="fr" name="fr" >
+                                 </div>
+                             </div>
+
+                             <div class="col-12 col-sm-2">
+                                 <div class="form-group local-forms">
+                                     <label>Peso(Kg)  <span class="login-danger">*</span></label>
+                                     <input class="form-control" [(ngModel)]="peso" type="number" name="peso">
+                                 </div>
+                             </div>
+
+
+                             <div class="col-12">
+                                 <div class="doctor-submit text-end">
+                                     <button type="button" (click)="save()" class="btn btn-primary submit-form me-2">Guardar</button>
+                                 </div>
+                             </div>
+                         </div>
+                     </form>
+                 </div>
+             </div>
+         </div>-->
+
     </div>
   </div>
 </div>
