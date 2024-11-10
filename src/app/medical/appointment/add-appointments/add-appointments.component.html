@@ -150,6 +150,13 @@
                                     <h4>Datos del paciente: </h4>
                                     <button class="btn btn-sm btn-dark" (click)="resetPatient()">O</button>
                                 </div>
+                                <div class="col-12 col-md-6 col-xl-4">
+                                    <div class="form-group local-forms">
+                                        <label >N° Documento <span class="login-danger">*</span></label>
+                                        <input class="form-control" (keyup.enter)="filterPatient()"  [(ngModel)]="n_document" name="n_document"  type="number"  >
+                                    </div>
+                                </div>
+
                                 <div class="col-12 col-md-6 col-xl-4">  
                                     <div class="form-group local-forms">
                                         <label >First Name <span class="login-danger">*</span></label>
@@ -163,21 +170,16 @@
                                         <input class="form-control" [(ngModel)]="surname" name="surname" type="text"  >
                                     </div>
                                 </div>
-
+                                <!-- 
                                 <div class="col-12 col-md-6 col-xl-4">
                                     <div class="form-group local-forms">
                                         <label >Mobile <span class="login-danger">*</span></label>
                                         <input class="form-control" [(ngModel)]="mobile" name="mobile" type="text"  >
                                     </div>
                                 </div>
-
-                                <div class="col-12 col-md-6 col-xl-4">
-                                    <div class="form-group local-forms">
-                                        <label >N° Documento <span class="login-danger">*</span></label>
-                                        <input class="form-control" (keyup.enter)="filterPatient()"  [(ngModel)]="n_document" name="n_document"  type="number"  >
-                                    </div>
-                                </div>
-
+                            -->
+                               
+                                <!-- 
                                 <div class="col-12 col-sm-3">
                                     <div class="form-group local-forms">
                                         <label>Nombre del Acompañante  <span class="login-danger">*</span></label>
@@ -191,8 +193,10 @@
                                         <input type="text" class="form-control" [(ngModel)]="surname_companion" name="surname_companion" >
                                     </div>
                                 </div>
+                                -->
                             </div>
-
+                        
+                            <!-- 
                             <div class="row align-items-center py-4">
                                 <div class="col-12 py-4">  
                                     <h4>Pago: </h4>
@@ -233,7 +237,7 @@
 
                                 
                             </div>
-
+                        -->
 
                             <div class="row align-items-center">
                                 <div class="col-12">
