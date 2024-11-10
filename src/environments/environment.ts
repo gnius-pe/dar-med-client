@@ -1,5 +1,5 @@
 export const environment = {
-    URL_BACKEND: 'https://api.admincursos-udemy.site',
-    URL_SERVICIOS: 'https://api.admincursos-udemy.site/api',
-    URL_FRONTEND: 'https://admin.admincursos-udemy.site/'
+    URL_BACKEND: 'http://api.v1.core.dar.reformaperu.org',
+    URL_SERVICIOS: 'http://api.v1.core.dar.reformaperu.org/api',
+    URL_FRONTEND: 'http://app.dar.reformaperu.org/'
 };
