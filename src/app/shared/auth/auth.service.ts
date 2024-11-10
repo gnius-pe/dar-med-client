@@ -22,7 +22,7 @@ export class AuthService {
 
   getLocalStorage(){
     if(localStorage.getItem("token") && localStorage.getItem("user")){
-      let USER = localStorage.getItem("user");
+      const USER = localStorage.getItem("user");
       this.user = JSON.parse(USER ? USER : '');
       this.token = localStorage.getItem("token");
     }else{
@@ -34,7 +34,7 @@ export class AuthService {
   login(email:string,password:string) {
     // localStorage.setItem('authenticated', 'true');
     // this.router.navigate([routes.adminDashboard]);
-    let URL = URL_SERVICIOS+"/auth/login";
+    const URL = URL_SERVICIOS+"/auth/login";
     return this.http.post(URL,{email: email,password: password}).pipe(
       map((auth:any) => {
         console.log(auth);
