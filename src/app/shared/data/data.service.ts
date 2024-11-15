@@ -393,21 +393,21 @@ export class DataService {
           ],
         },
         {
-          menuValue: 'Patients',
+          menuValue: 'Pacientes',
           hasSubRoute: true,
           showSubRoute: false,
           base: 'patient',
           img: 'assets/img/icons/menu-icon-03.svg',
           subMenus: [
             {
-              menuValue: 'Add Patients',
+              menuValue: 'Añadir paciente',
               route: routes.addPatient,
               base: routes.addPatient,
               permision: 'register_patient',
               show_nav: true,
             },
             {
-              menuValue: 'Patients List',
+              menuValue: 'Pacientes registrados',
               route: routes.patientsList,
               base: routes.patientsList,
               permision: 'list_patient',
@@ -540,7 +540,7 @@ export class DataService {
         //   show_nav: true,
         //   subMenus: [],
         // },
-        
+
         // {
         //   menuValue: 'Reports',
         //   hasSubRoute: true,
@@ -579,7 +579,7 @@ export class DataService {
     },
   ];
   // public sideBarList = [
-    
+
   // ];
 
   public carousel1 = [

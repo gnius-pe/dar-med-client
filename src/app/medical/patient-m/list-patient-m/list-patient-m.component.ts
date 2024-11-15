@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
-import { PatientMService } from '../service/patient-m.service';
-import { MatTableDataSource } from '@angular/material/table';
+import {Component, OnInit} from '@angular/core';
+import {PatientMService} from '../service/patient-m.service';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-list-patient-m',
   templateUrl: './list-patient-m.component.html',
   styleUrls: ['./list-patient-m.component.scss']
 })
-export class ListPatientMComponent {
+export class ListPatientMComponent implements OnInit {
 
-  public patientsList:any = [];
+  public patientsList: any = [];
   dataSource!: MatTableDataSource<any>;
 
   public showFilter = false;
@@ -26,41 +26,42 @@ export class ListPatientMComponent {
   public pageSelection: Array<any> = [];
   public totalPages = 0;
 
-  public patient_generals:any = [];
-  public patient_selected:any;
-  public user:any;
+  public patient_generals: any = [];
+  public patient_selected: any;
+  public user: any;
+
   constructor(
     public patientService: PatientMService,
-  ){
+  ) {
 
   }
+
   ngOnInit() {
     this.getTableData();
     this.user = this.patientService.authService.user;
   }
-  
-  isPermision(permission:string){
-    if(this.user.roles.includes('Super-Admin')){
+
+  isPermission(permission: string) {
+    if (this.user.roles.includes('Super-Admin')) {
       return true;
     }
-    if(this.user.permissions.includes(permission)){
-      return true;
-    }
-    return false;
+    return !!this.user.permissions.includes(permission);
+
   }
-  private getTableData(page=1): void {
+
+  private getTableData(page = 1): void {
     this.patientsList = [];
     this.serialNumberArray = [];
 
-    this.patientService.listPatients(page,this.searchDataValue).subscribe((resp:any) => {
+    this.patientService.listPatients().subscribe((resp: any) => {
 
       console.log(resp);
 
-      this.totalData = resp.total;
-      this.patientsList = resp.patients.data;
+      /*    this.totalData = resp.total;*/
+      this.patientsList = resp.data;
       // this.getTableDataGeneral();
-      this.dataSource = new MatTableDataSource<any>(this.patientsList);
-      this.calculateTotalPages(this.totalData, this.pageSize);
+      //this.dataSource = new MatTableDataSource<any>(this.patientsList);
+      //this.calculateTotalPages(this.totalData, this.pageSize);
     })
 
 
@@ -73,7 +74,7 @@ export class ListPatientMComponent {
     this.patient_generals.map((res: any, index: number) => {
       const serialNumber = index + 1;
       if (index >= this.skip && serialNumber <= this.limit) {
-        
+
         this.patientsList.push(res);
         this.serialNumberArray.push(serialNumber);
       }
@@ -82,17 +83,17 @@ export class ListPatientMComponent {
     this.calculateTotalPages(this.totalData, this.pageSize);
   }
 
-  selectUser(rol:any){
+  selectUser(rol: any) {
     this.patient_selected = rol;
   }
 
-  deletePatient(){
+  deletePatient() {
 
-    this.patientService.deletePatient(this.patient_selected.id).subscribe((resp:any) => {
+    this.patientService.deletePatient(this.patient_selected.id).subscribe((resp: any) => {
       console.log(resp);
-      let INDEX = this.patientsList.findIndex((item:any) => item.id == this.patient_selected.id);
-      if(INDEX != -1){
-        this.patientsList.splice(INDEX,1);
+      const INDEX = this.patientsList.findIndex((item: any) => item.id == this.patient_selected.id);
+      if (INDEX != -1) {
+        this.patientsList.splice(INDEX, 1);
 
         $('#delete_patient').hide();
         $("#delete_patient").removeClass("show");
@@ -104,6 +105,7 @@ export class ListPatientMComponent {
       }
     })
   }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public searchData() {
     // this.dataSource.filter = value.trim().toLowerCase();
@@ -122,7 +124,7 @@ export class ListPatientMComponent {
     if (!sort.active || sort.direction === '') {
       this.patientsList = data;
     } else {
-      this.patientsList = data.sort((a:any, b:any) => {
+      this.patientsList = data.sort((a: any, b: any) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const aValue = (a as any)[sort.active];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -175,18 +177,12 @@ export class ListPatientMComponent {
     if (this.totalPages % 1 != 0) {
       this.totalPages = Math.trunc(this.totalPages + 1);//10.6 o 10.9 11
     }
-    /* eslint no-var: off */
+
     for (var i = 1; i <= this.totalPages; i++) {
       const limit = pageSize * i;
       const skip = limit - pageSize;
       this.pageNumberArray.push(i);
-      this.pageSelection.push({ skip: skip, limit: limit });
-      // 1
-      // 0 - 10
-      // 2
-      // 10 - 20
-      // 3
-      // 20 - 30
+      this.pageSelection.push({skip: skip, limit: limit});
     }
   }
 

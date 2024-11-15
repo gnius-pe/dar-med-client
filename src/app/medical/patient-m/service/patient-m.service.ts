@@ -13,9 +13,10 @@ export class PatientMService {
     public authService: AuthService,
   ) { }
 
-  listPatients(page:number=1,search:string=''){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/patients?page="+page+"&search="+search;
+  listPatients(){
+    const headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
+    const URL = URL_SERVICIOS+"/patients";
+    console.log('URL',URL);
     return this.http.get(URL,{headers: headers});
   }
 
@@ -25,9 +26,9 @@ export class PatientMService {
     return this.http.post(URL,data,{headers: headers});
   }
 
-  showPatient(staff_id:string){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/patients/"+staff_id;
+  showPatient(patient_id:string){
+    const headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
+    const URL = URL_SERVICIOS+"/patients/"+patient_id;
     return this.http.get(URL,{headers: headers});
   }
 
