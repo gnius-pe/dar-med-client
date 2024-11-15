@@ -33,8 +33,8 @@ export class PatientMService {
   }
 
   updatePatient(staff_id:string,data:any){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/patients/"+staff_id;
+    const headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
+    const URL = URL_SERVICIOS+"/patients/"+staff_id;
     return this.http.post(URL,data,{headers: headers});
   }
 

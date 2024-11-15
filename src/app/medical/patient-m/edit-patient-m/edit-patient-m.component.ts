@@ -32,10 +32,10 @@ export class EditPatientMComponent implements OnInit {
 
   }
 
-  public save() {
+  public save(formData: Patient) {
 
-    /* this.patientService.updatePatient(this.patient_id,formData).subscribe((resp:any) => {
+    this.patientService.updatePatient(this.patient_id,formData).subscribe((resp:any) => {
        console.log(resp);
-     })*/
+     })
   }
 }
