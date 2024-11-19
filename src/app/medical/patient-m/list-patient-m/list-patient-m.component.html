@@ -65,7 +65,6 @@
                   <th mat-sort-header="email">Nombre completo</th>
                   <th mat-sort-header="mobile">Celular</th>
                   <th mat-sort-header="birth_date">Edad</th>
-                  <th mat-sort-header="n_document">N° Documento</th>
                   <th mat-sort-header="created_at">Fecha de registro</th>
                   <th></th>
                 </tr>
@@ -76,9 +75,8 @@
                   <td>{{ patient.identification_number }}</td>
                   <td>{{ patient.first_name }} {{ patient.last_name }}</td>
                   <td>{{ patient.first_phone }}</td>
-                  <td>{{ patient.birth_date }}</td>
-                  <td>{{ patient.identification_number }}</td>
-                  <td>{{ patient.created_at }}</td>
+                  <td>{{ calculateAge(patient.birth_date, patient.created_at) }}</td>
+                  <td>{{ formatDate(patient.created_at) }}</td>
                   <td class="flex flex-col gap-2">
                     <a *ngIf="isPermission('edit_patient')"
                        [routerLink]="[ '/patient-m/list/edit/', patient.id ]"><i

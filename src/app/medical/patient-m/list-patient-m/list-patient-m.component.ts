@@ -50,6 +50,27 @@ export class ListPatientMComponent implements OnInit {
 
   }
 
+  calculateAge(birthDate: string, registrationDate: string): number {
+    const birth = new Date(birthDate);
+    const registration = new Date(registrationDate);
+    let age = registration.getFullYear() - birth.getFullYear();
+    const monthDiff = registration.getMonth() - birth.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && registration.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
+  }
+
+  formatDate(date: string): string {
+    const parsedDate = new Date(date);
+    const day = parsedDate.getDate().toString().padStart(2, '0');
+    const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0'); // Los meses son 0-indexados
+    const year = parsedDate.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+
   private getTableData(page: number ): void {
     this.patientsList = [];
     this.serialNumberArray = [];
