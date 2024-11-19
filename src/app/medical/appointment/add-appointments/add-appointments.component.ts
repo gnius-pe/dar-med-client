@@ -17,18 +17,18 @@ export class AddAppointmentsComponent implements OnInit {
 
   name: string = '';
   surname: string = '';
-  mobile: string = '';
+  //mobile: string = '';
   n_document: number = 0;
-  name_companion: string = '';
-  surname_companion: string = '';
+  //name_companion: string = '';
+  //surname_companion: string = '';
 
-  amount: number = 0;
-  amount_add: number = 0;
-  method_payment: string = '';
+  //amount: number = 0;
+  //amount_add: number = 0;
+ // method_payment: string = '';
 
   DOCTORS: any = [];
   DOCTOR_SELECTED: any;
-  selected_segment_hour: any;
+  selected_segment_hour:any;
 
   public text_success: string = '';
   public text_validation: string = '';
@@ -63,13 +63,13 @@ export class AddAppointmentsComponent implements OnInit {
       return;  // Si la validación falla, no continuar con el registro
     }
 
-    if (this.amount < this.amount_add) {
+    /*if (this.amount < this.amount_add) {
       this.text_validation = "EL MONTO INGRESADO COMO ADELANTO NO PUEDE SER MAYOR AL COSTO DE LA CITA MEDICA";
       return;
     }
-
-    if (!this.name || !this.surname || !this.mobile || !this.n_document || !this.name_companion || !this.surname_companion || !this.date_appointment
-      || !this.specialitie_id || !this.selected_segment_hour || !this.amount || !this.amount_add || !this.method_payment) {
+  */
+    if (!this.name || !this.surname || !this.n_document  || !this.date_appointment
+      || !this.specialitie_id || !this.selected_segment_hour ) {
       this.text_validation = "LOS CAMPOS SON NECESARIOS (SEGMENTO DE HORA, LA FECHA, LA ESPECIALIDAD, PACIENTE Y PAGOS)";
       return;
     }
@@ -78,16 +78,16 @@ export class AddAppointmentsComponent implements OnInit {
       "doctor_id": this.DOCTOR_SELECTED.doctor.id,
       name: this.name,
       surname: this.surname,
-      mobile: this.mobile,
+      //mobile: this.mobile,
       n_document: this.n_document,
-      name_companion: this.name_companion,
-      surname_companion: this.surname_companion,
+     // name_companion: this.name_companion,
+      //surname_companion: this.surname_companion,
       "date_appointment": this.date_appointment,
       "specialitie_id": this.specialitie_id,
       "doctor_schedule_join_hour_id": this.selected_segment_hour.id,
-      amount: this.amount,
-      amount_add: this.amount_add,
-      method_payment: this.method_payment,
+     // amount: this.amount,
+    //  amount_add: this.amount_add,
+     // method_payment: this.method_payment,
     };
 
     this.appointmentService.registerAppointment(data).subscribe((resp: any) => {
@@ -130,7 +130,7 @@ export class AddAppointmentsComponent implements OnInit {
       } else {
         this.name = resp.name;
         this.surname = resp.surname;
-        this.mobile = resp.mobile;
+       // this.mobile = resp.mobile;
         this.n_document = resp.n_document;
       }
     });
@@ -139,7 +139,7 @@ export class AddAppointmentsComponent implements OnInit {
   resetPatient() {
     this.name = '';
     this.surname = '';
-    this.mobile = '';
+    //this.mobile = '';
     this.n_document = 0;
   }
-}
+} 
