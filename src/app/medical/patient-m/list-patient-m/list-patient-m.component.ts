@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PatientMService} from '../service/patient-m.service';
 import {MatTableDataSource} from '@angular/material/table';
+import {Patient} from "../models/patient.model";
 
 @Component({
   selector: 'app-list-patient-m',
@@ -9,7 +10,7 @@ import {MatTableDataSource} from '@angular/material/table';
 })
 export class ListPatientMComponent implements OnInit {
 
-  public patientsList: any = [];
+  public patientsList: Patient[] = [];
   dataSource!: MatTableDataSource<any>;
 
   public showFilter = false;
@@ -25,8 +26,8 @@ export class ListPatientMComponent implements OnInit {
   public pageNumberArray: Array<number> = [];
   public pageSelection: Array<any> = [];
   public totalPages = 0;
+  public totalPagesArray: number[] = [];
 
-  public patient_generals: any = [];
   public patient_selected: any;
   public user: any;
 
@@ -37,7 +38,7 @@ export class ListPatientMComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getTableData();
+    this.getTableData(this.currentPage);
     this.user = this.patientService.authService.user;
   }
 
@@ -49,38 +50,17 @@ export class ListPatientMComponent implements OnInit {
 
   }
 
-  private getTableData(page = 1): void {
+  private getTableData(page: number ): void {
     this.patientsList = [];
     this.serialNumberArray = [];
 
-    this.patientService.listPatients().subscribe((resp: any) => {
-
-      console.log(resp);
-
-      /*    this.totalData = resp.total;*/
+    this.patientService.listPatients(page).subscribe((resp: any) => {
       this.patientsList = resp.data;
-      // this.getTableDataGeneral();
-      //this.dataSource = new MatTableDataSource<any>(this.patientsList);
-      //this.calculateTotalPages(this.totalData, this.pageSize);
+      this.currentPage = resp.current_page;
+      this.totalPages = resp.last_page;
+      this.totalPagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
     })
 
-
-  }
-
-  getTableDataGeneral() {
-    this.patientsList = [];
-    this.serialNumberArray = [];
-
-    this.patient_generals.map((res: any, index: number) => {
-      const serialNumber = index + 1;
-      if (index >= this.skip && serialNumber <= this.limit) {
-
-        this.patientsList.push(res);
-        this.serialNumberArray.push(serialNumber);
-      }
-    });
-    this.dataSource = new MatTableDataSource<any>(this.patientsList);
-    this.calculateTotalPages(this.totalData, this.pageSize);
   }
 
   selectUser(rol: any) {
@@ -106,16 +86,11 @@ export class ListPatientMComponent implements OnInit {
     })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public searchData() {
-    // this.dataSource.filter = value.trim().toLowerCase();
-    // this.patientsList = this.dataSource.filteredData;
-    this.pageSelection = [];
-    this.limit = this.pageSize;
-    this.skip = 0;
-    this.currentPage = 1;
-
-    this.getTableData();
+  public changePage(page: number): void {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) {
+      return;
+    }
+    this.getTableData(page);
   }
 
   public sortData(sort: any) {
@@ -133,57 +108,4 @@ export class ListPatientMComponent implements OnInit {
       });
     }
   }
-
-  public getMoreData(event: string): void {
-    if (event == 'next') {
-      this.currentPage++;
-      this.pageIndex = this.currentPage - 1;
-      this.limit += this.pageSize;
-      this.skip = this.pageSize * this.pageIndex;
-      this.getTableData(this.currentPage);
-    } else if (event == 'previous') {
-      this.currentPage--;
-      this.pageIndex = this.currentPage - 1;
-      this.limit -= this.pageSize;
-      this.skip = this.pageSize * this.pageIndex;
-      this.getTableData(this.currentPage);
-    }
-  }
-
-  public moveToPage(pageNumber: number): void {
-    this.currentPage = pageNumber;
-    this.skip = this.pageSelection[pageNumber - 1].skip;
-    this.limit = this.pageSelection[pageNumber - 1].limit;
-    if (pageNumber > this.currentPage) {
-      this.pageIndex = pageNumber - 1;
-    } else if (pageNumber < this.currentPage) {
-      this.pageIndex = pageNumber + 1;
-    }
-    this.getTableData(this.currentPage);
-  }
-
-  public PageSize(): void {
-    this.pageSelection = [];
-    this.limit = this.pageSize;
-    this.skip = 0;
-    this.currentPage = 1;
-    this.searchDataValue = '';
-    this.getTableData();
-  }
-
-  private calculateTotalPages(totalData: number, pageSize: number): void {
-    this.pageNumberArray = [];
-    this.totalPages = totalData / pageSize;
-    if (this.totalPages % 1 != 0) {
-      this.totalPages = Math.trunc(this.totalPages + 1);//10.6 o 10.9 11
-    }
-
-    for (var i = 1; i <= this.totalPages; i++) {
-      const limit = pageSize * i;
-      const skip = limit - pageSize;
-      this.pageNumberArray.push(i);
-      this.pageSelection.push({skip: skip, limit: limit});
-    }
-  }
-
 }

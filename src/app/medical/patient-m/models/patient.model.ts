@@ -1,4 +1,5 @@
 export interface Patient {
+  id: number;
   identification_type: string;
   identification_number: string;
   first_name: string;
@@ -14,4 +15,5 @@ export interface Patient {
   medical_examination: boolean;
   spiritual_support: boolean;
   permission_to_call: boolean;
+  created_at: string;
 }

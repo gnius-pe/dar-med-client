@@ -8,16 +8,19 @@ import { AuthService } from 'src/app/shared/auth/auth.service';
 })
 export class PatientMService {
 
+  private baseUrl = `${URL_SERVICIOS}/patients`;
+
   constructor(
     public http: HttpClient,
     public authService: AuthService,
   ) { }
 
-  listPatients(){
-    const headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    const URL = URL_SERVICIOS+"/patients";
-    console.log('URL',URL);
-    return this.http.get(URL,{headers: headers});
+  listPatients(page = 1) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.token}`
+    });
+    const url = `${this.baseUrl}?page=${page}`;
+    return this.http.get(url, { headers });
   }
 
   registerPatient(data:any){
