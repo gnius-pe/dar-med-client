@@ -1,12 +1,22 @@
 img {
-  object-fit: cover;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 button {
   transition: background-color 0.3s ease;
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.75);
   }
 }
+
+.relative {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+

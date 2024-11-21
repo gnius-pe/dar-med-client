@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 
 @Component({
   selector: 'app-carousel',
@@ -9,9 +9,11 @@ export class CarouselComponent implements OnInit, OnDestroy {
 
   public currentIndex = 0;
   public slides = [
-    { src: 'assets/img/carousel-1.webp', alt: 'Slide 1' },
-    { src: 'assets/img/carousel-2.webp', alt: 'Slide 2' },
-    { src: 'assets/img/carousel-3.webp', alt: 'Slide 3' }
+    {src: 'assets/img/foto-1-min.jpg', alt: 'Slide 1'},
+    {src: 'assets/img/foto-2-min.jpg', alt: 'Slide 2'},
+    {src: 'assets/img/foto-3-min.jpg', alt: 'Slide 3'},
+    {src: 'assets/img/foto-4-min.jpg', alt: 'Slide 4'},
+    {src: 'assets/img/foto-5-min.jpg', alt: 'Slide 5'},
   ];
 
   private slideInterval: any;

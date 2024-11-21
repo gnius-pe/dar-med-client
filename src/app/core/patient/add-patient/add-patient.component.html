@@ -1,6 +1,6 @@
 <div class="page-wrapper">
     <div class="content">
-    
+
         <!-- Page Header -->
         <div class="page-header">
             <div class="row">
@@ -8,7 +8,7 @@
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a [routerLink]="routes.patientsList">Patients </a></li>
                         <li class="breadcrumb-item"><i class="feather icon-chevron-right"></i></li>
-                        <li class="breadcrumb-item active">Add Patient</li>
+                        <li class="breadcrumb-item active">Añadir paciente</li>
                     </ul>
                 </div>
             </div>
@@ -16,7 +16,7 @@
         <!-- /Page Header -->
         <div class="row">
             <div class="col-sm-12">
-            
+
                 <div class="card">
                     <div class="card-body">
                         <form>
@@ -26,7 +26,7 @@
                                         <h4>Patinets Details</h4>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6 col-xl-4">  
+                                <div class="col-12 col-md-6 col-xl-4">
                                     <div class="form-group local-forms">
                                         <label >First Name <span class="login-danger">*</span></label>
                                         <input class="form-control" type="text" placeholder="" >
@@ -106,7 +106,7 @@
                                 <div class="col-12 col-md-6 col-xl-4">
                                     <div class="form-group local-forms">
                                         <label >Department <span class="login-danger">*</span></label>
-                                        
+
                                         <mat-select [(ngModel)]="selectedValue" [ngModelOptions]="{standalone: true}" class="form-control select"  placeholder="Select  Department">
                                             <mat-option *ngFor="let data of selectedList1" [value]="data.value">
                                             {{data.value}}
@@ -123,7 +123,7 @@
                                 <div class="col-12 col-md-6 col-xl-3">
                                     <div class="form-group local-forms">
                                         <label >City <span class="login-danger">*</span></label>
-                                        
+
                                         <mat-select [(ngModel)]="selectedValue" [ngModelOptions]="{standalone: true}" class="form-control select"  placeholder="Select City">
                                             <mat-option *ngFor="let data of selectedList2" [value]="data.value">
                                             {{data.value}}
@@ -134,7 +134,7 @@
                                 <div class="col-12 col-md-6 col-xl-3">
                                     <div class="form-group local-forms">
                                         <label >Country  <span class="login-danger">*</span></label>
-                                        
+
                                         <mat-select [(ngModel)]="selectedValue" [ngModelOptions]="{standalone: true}" class="form-control select"  placeholder="Select Country">
                                             <mat-option *ngFor="let data of selectedList3" [value]="data.value">
                                             {{data.value}}
@@ -145,7 +145,7 @@
                                 <div class="col-12 col-md-6 col-xl-3">
                                     <div class="form-group local-forms">
                                         <label >State/Province <span class="login-danger">*</span></label>
-                                        
+
                                         <mat-select [(ngModel)]="selectedValue" [ngModelOptions]="{standalone: true}" class="form-control select"  placeholder="Select State">
                                             <mat-option *ngFor="let data of selectedList4" [value]="data.value">
                                             {{data.value}}
@@ -198,9 +198,8 @@
                             </div>
                         </form>
                     </div>
-                </div>							
-            </div>					
+                </div>
+            </div>
         </div>
     </div>
 </div>
- 
