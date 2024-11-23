@@ -35,9 +35,9 @@ export class AppointmentService {
     return this.http.get(URL,{headers: headers});
   }
 
-  listPatient(n_document:string = ''){
+  listPatient(identification_number:string = ''){
     let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/appointmet/patient?n_document="+n_document;
+    let URL = URL_SERVICIOS+"/appointmet/patient?identification_number="+identification_number;
     return this.http.get(URL,{headers: headers});
   }
 

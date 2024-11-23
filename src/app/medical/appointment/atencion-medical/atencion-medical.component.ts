@@ -12,7 +12,7 @@ export class AtencionMedicalComponent {
   name:string = '';
   surname:string = '';
   mobile:string = '';
-  n_document:number = 0;
+  identification_number:number = 0;
   name_companion:string = '';
   surname_companion:string = '';
 
@@ -50,7 +50,7 @@ export class AtencionMedicalComponent {
       this.name = this.appointment_selected.patient.name;
       this.surname = this.appointment_selected.patient.surname;
       this.mobile = this.appointment_selected.patient.mobile;
-      this.n_document = this.appointment_selected.patient.n_document;
+      this.identification_number = this.appointment_selected.patient.identification_numbe;
       this.name_companion = this.appointment_selected.patient.name_companion;
       this.surname_companion = this.appointment_selected.patient.surname_companion;
     })
