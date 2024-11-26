@@ -15,10 +15,12 @@ export class AddAppointmentsComponent implements OnInit {
   hour: any;
   specialitie_id: any;
 
-  name: string = '';
-  surname: string = '';
-  //mobile: string = '';
-  n_document: number = 0;
+  first_name: string = '';
+  last_name: string = '';
+  identification_number: number = 0;
+
+ 
+  
   //name_companion: string = '';
   //surname_companion: string = '';
 
@@ -68,7 +70,7 @@ export class AddAppointmentsComponent implements OnInit {
       return;
     }
   */
-    if (!this.name || !this.surname || !this.n_document  || !this.date_appointment
+    if (!this.first_name || !this.last_name || !this.identification_number || !this.date_appointment
       || !this.specialitie_id || !this.selected_segment_hour ) {
       this.text_validation = "LOS CAMPOS SON NECESARIOS (SEGMENTO DE HORA, LA FECHA, LA ESPECIALIDAD, PACIENTE Y PAGOS)";
       return;
@@ -76,18 +78,15 @@ export class AddAppointmentsComponent implements OnInit {
 
     let data = {
       "doctor_id": this.DOCTOR_SELECTED.doctor.id,
-      name: this.name,
-      surname: this.surname,
-      //mobile: this.mobile,
-      n_document: this.n_document,
-     // name_companion: this.name_companion,
-      //surname_companion: this.surname_companion,
+      first_name: this.first_name,
+      last_name: this.last_name,
+    
+      identification_number: this.identification_number,
+   
       "date_appointment": this.date_appointment,
       "specialitie_id": this.specialitie_id,
       "doctor_schedule_join_hour_id": this.selected_segment_hour.id,
-     // amount: this.amount,
-    //  amount_add: this.amount_add,
-     // method_payment: this.method_payment,
+        
     };
 
     this.appointmentService.registerAppointment(data).subscribe((resp: any) => {
@@ -123,23 +122,25 @@ export class AddAppointmentsComponent implements OnInit {
   }
 
   filterPatient() {
-    this.appointmentService.listPatient(this.n_document + "").subscribe((resp: any) => {
+    this.appointmentService.listPatient(this.identification_number + "").subscribe((resp: any) => {
       console.log(resp);
       if (resp.message == 403) {
         this.resetPatient();
       } else {
-        this.name = resp.name;
-        this.surname = resp.surname;
+        this.first_name = resp.first_name;
+        this.last_name = resp.last_name;
        // this.mobile = resp.mobile;
-        this.n_document = resp.n_document;
+        this.identification_number = resp.identification_number;
       }
     });
   }
 
   resetPatient() {
-    this.name = '';
-    this.surname = '';
+    this.first_name = '';
+    this.last_name = '';
     //this.mobile = '';
-    this.n_document = 0;
+    this.identification_number= 0;
+
+   
   }
 } 

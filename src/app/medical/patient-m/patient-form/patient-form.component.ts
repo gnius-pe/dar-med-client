@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {Validators} from "ngx-editor";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Patient} from "../models/patient.model";
 
 @Component({
@@ -15,6 +14,7 @@ export class PatientFormComponent implements OnChanges {
   @Output() sendPatientData: EventEmitter<Patient> = new EventEmitter<Patient>();
 
   public patientForm: FormGroup;
+  public showMessage = false;
 
   constructor(
     private fb: FormBuilder,
@@ -31,9 +31,8 @@ export class PatientFormComponent implements OnChanges {
   public preparePatientData(): void {
     this.patientForm.get('identification_type')?.setValue('DNI');
 
-
     if (this.patientForm.invalid) {
-      console.log('error');
+      this.patientForm.markAllAsTouched();
       return
     }
 
@@ -41,17 +40,31 @@ export class PatientFormComponent implements OnChanges {
     formData.birth_date = new Date(formData.birth_date).toISOString().split('T')[0]; // Format date for bd
 
     this.sendPatientData.emit(formData);
+    this.resetForm();
+    this.triggerMessage();
+  }
+
+  private resetForm(): void {
+    this.patientForm.reset();
+  }
+
+  public triggerMessage(): void {
+    this.showMessage = true;
+
+    setTimeout(() => {
+      this.showMessage = false;
+    }, 5000);
   }
 
   private createPersonalForm(): FormGroup {
     return this.fb.group({
       identification_type: ['', [Validators.required]],
-      identification_number: ['', [Validators.required]],
+      identification_number: ['', [Validators.required, Validators.pattern(/^\d{1,8}$/)]],
       first_name: ['', [Validators.required]],
       last_name: ['', [Validators.required]],
       email: [''],
-      birth_date: [''],
-      first_phone: [''],
+      birth_date: ['', [Validators.required]],
+      first_phone: ['', [Validators.required]],
       second_phone: [''],
       gender: ['', [Validators.required]],
       message: [''],
@@ -61,6 +74,22 @@ export class PatientFormComponent implements OnChanges {
       spiritual_support: [false],
       permission_to_call: [false]
     });
+  }
+
+  public allowOnlyNumbers(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const regex = /^[0-9]*$/;
+
+    if (!regex.test(input.value)) {
+      input.value = input.value.replace(/[^0-9]/g, '');
+    }
+  }
+
+  public toUpperCase(field: string): void {
+    const value = this.patientForm.get(field)?.value;
+    if (value) {
+      this.patientForm.get(field)?.setValue(value.toUpperCase(), {emitEvent: false});
+    }
   }
 
 }

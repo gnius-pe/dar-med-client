@@ -14,10 +14,12 @@ export class EditAppointmentsComponent {
   hour:any;
   specialitie_id:any;
 
-  name:string = '';
-  surname:string = '';
+  first_name:string = '';
+  last_name:string = '';
+
+ 
   mobile:string = '';
-  n_document:number = 0;
+  identification_number:number = 0;
   name_companion:string = '';
   surname_companion:string = '';
 
@@ -57,10 +59,10 @@ export class EditAppointmentsComponent {
   
         this.appointment_selected = resp.appointment;
         // Datos del paciente
-        this.name = this.appointment_selected.patient.name;
-        this.surname = this.appointment_selected.patient.surname;
+        this.first_name= this.appointment_selected.patient.first_name;
+        this.last_name = this.appointment_selected.patient.last_name;
         this.mobile = this.appointment_selected.patient.mobile;
-        this.n_document = this.appointment_selected.patient.n_document;
+        this.identification_number = this.appointment_selected.patient.identification_number;
         this.name_companion = this.appointment_selected.patient.name_companion;
         this.surname_companion = this.appointment_selected.patient.surname_companion;
 
@@ -162,26 +164,26 @@ export class EditAppointmentsComponent {
   }
 
   filterPatient(){
-    this.appointmentService.listPatient(this.n_document+"").subscribe((resp:any) => {
+    this.appointmentService.listPatient(this.identification_number+"").subscribe((resp:any) => {
       console.log(resp);
       if(resp.message == 403){
-        this.name = '';
-        this.surname = '';
+        this.first_name = '';
+        this.last_name = '';
         this.mobile = ''
-        this.n_document = 0;
+        this.identification_number = 0;
       }else{
-        this.name = resp.name;
-        this.surname = resp.surname;
+        this.first_name= resp.first_name;
+        this.last_name = resp.last_name;
         this.mobile = resp.mobile;
-        this.n_document = resp.n_document;
+        this.identification_number = resp.identification_number;
       }
     })
   }
 
   resetPatient(){
-    this.name = '';
-    this.surname = '';
-    this.mobile = ''
-    this.n_document = 0;
+    this.first_name = '';
+    this.last_name = '';
+    //this.mobile = ''
+    this.identification_number = 0;
   }
 }

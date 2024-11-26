@@ -11,68 +11,132 @@
         <div class="col-12 col-md-6 col-xl-6">
           <div class="form-group local-forms">
             <label>N° Documento <span class="login-danger">*</span></label>
-            <input class="form-control" formControlName="identification_number" type="text" placeholder="DNI">
+            <input
+              class="form-control"
+              formControlName="identification_number"
+              type="text"
+              placeholder="DNI"
+              maxlength="8"
+              (input)="allowOnlyNumbers($event)">
+            <div class="text-danger"
+                 *ngIf="patientForm.get('identification_number')?.touched && patientForm.get('identification_number')?.invalid">
+              <small *ngIf="patientForm.get('identification_number')?.errors?.['required']">El DNI es
+                obligatorio.</small>
+              <small *ngIf="patientForm.get('identification_number')?.errors?.['pattern']">El DNI debe contener solo
+                números (máx. 8).</small>
+            </div>
           </div>
         </div>
 
         <div class="col-12 col-md-6 col-xl-6">
           <div class="form-group local-forms">
             <label>Nombres <span class="login-danger">*</span></label>
-            <input formControlName="first_name" class="form-control" type="text">
+            <input
+              formControlName="first_name"
+              class="form-control"
+              type="text"
+              (input)="toUpperCase('first_name')">
+            <div class="text-danger"
+                 *ngIf="patientForm.get('first_name')?.touched && patientForm.get('first_name')?.invalid">
+              <small *ngIf="patientForm.get('first_name')?.errors?.['required']">El nombre es obligatorio.</small>
+            </div>
           </div>
         </div>
 
         <div class="col-12 col-md-6 col-xl-6">
           <div class="form-group local-forms">
             <label>Apellidos <span class="login-danger">*</span></label>
-            <input formControlName="last_name" class="form-control" type="text">
+            <input
+              formControlName="last_name"
+              class="form-control"
+              type="text"
+              (input)="toUpperCase('last_name')">
+            <div class="text-danger"
+                 *ngIf="patientForm.get('last_name')?.touched && patientForm.get('last_name')?.invalid">
+              <small *ngIf="patientForm.get('last_name')?.errors?.['required']">El apellido es obligatorio.</small>
+            </div>
           </div>
         </div>
 
         <div class="col-12 col-md-6 col-xl-6">
           <div class="form-group local-forms">
-            <label>Email</label>
-            <input class="form-control" formControlName="email" name="email" type="email">
+            <label>Email (opcional)</label>
+            <input
+              class="form-control"
+              formControlName="email"
+              type="email">
+            <div class="text-danger" *ngIf="patientForm.get('email')?.touched && patientForm.get('email')?.invalid">
+              <small *ngIf="patientForm.get('email')?.errors?.['email']">Por favor, introduce un email válido.</small>
+            </div>
           </div>
         </div>
 
         <div class="col-12 col-md-6 col-xl-6">
           <div class="form-group local-forms">
-            <label>Fecha de nacimiento</label>
-            <input class="form-control datetimepicker" type="text" [matDatepicker]="picker" formControlName="birth_date">
+            <label>Fecha de nacimiento <span class="login-danger">*</span></label>
+            <input
+              class="form-control datetimepicker"
+              type="text"
+              [matDatepicker]="picker"
+              formControlName="birth_date">
             <mat-datepicker #picker></mat-datepicker>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <div class="text-danger"
+                 *ngIf="patientForm.get('birth_date')?.touched && patientForm.get('birth_date')?.invalid">
+              <small *ngIf="patientForm.get('birth_date')?.errors?.['required']">La fecha de nacimiento es
+                obligatoria.</small>
+            </div>
           </div>
         </div>
 
         <div class="col-12 col-md-6 col-xl-6">
           <div class="form-group local-forms">
-            <label>Celular o telefono</label>
-            <input class="form-control" type="text" formControlName="first_phone">
+            <label>Celular o teléfono <span class="login-danger">*</span></label>
+            <input
+              class="form-control"
+              type="text"
+              formControlName="first_phone"
+              (input)="allowOnlyNumbers($event)">
+            <div class="text-danger"
+                 *ngIf="patientForm.get('first_phone')?.touched && patientForm.get('first_phone')?.invalid">
+              <small *ngIf="patientForm.get('first_phone')?.errors?.['required']">El número de teléfono es
+                obligatorio.</small>
+            </div>
           </div>
         </div>
 
         <div class="col-12 col-md-6 col-xl-6">
           <div class="form-group local-forms">
-            <label>Segundo celular</label>
+            <label>Segundo celular (opcional)</label>
             <input class="form-control" type="text" formControlName="second_phone">
           </div>
         </div>
 
         <div class="col-12 col-md-6 col-xl-6">
           <div class="form-group select-gender">
-            <label class="gen-label">Sexo:</label>
+            <label class="gen-label">Sexo: <span class="login-danger">*</span></label>
             <div class="form-check-inline">
               <label class="form-check-label">
-                <input type="radio" formControlName="gender" class="form-check-input" name="gender" value="M">
-                Masculino
+                <input
+                  type="radio"
+                  formControlName="gender"
+                  class="form-check-input"
+                  name="gender"
+                  value="M"> Masculino
               </label>
             </div>
             <div class="form-check-inline">
               <label class="form-check-label">
-                <input type="radio" formControlName="gender" class="form-check-input" name="gender" value="F">
-                Femenino
+                <input
+                  type="radio"
+                  formControlName="gender"
+                  class="form-check-input"
+                  name="gender"
+                  value="F"> Femenino
               </label>
+            </div>
+            <div class="text-danger" *ngIf="patientForm.get('gender')?.touched && patientForm.get('gender')?.invalid">
+              <small *ngIf="patientForm.get('gender')?.errors?.['required']">Selecciona un género.</small>
             </div>
           </div>
         </div>
@@ -85,7 +149,7 @@
 
         <div class="col-12">
           <div class="form-group local-forms">
-            <label>Mensaje</label>
+            <label>Mensaje (opcional)</label>
             <textarea class="form-control" rows="3" cols="30" formControlName="message"></textarea>
           </div>
         </div>
@@ -93,7 +157,8 @@
         <div class="col-12 mb-2">
           <div class="checkbox">
             <label>
-              <input type="checkbox" formControlName="medical_examination"> ¿Cuentas con exámenes o algún análisis sobre tu consulta, que tenga menos
+              <input type="checkbox" formControlName="medical_examination"> ¿Cuentas con exámenes o algún análisis sobre
+              tu consulta, que tenga menos
               de 30 días?
             </label>
           </div>
@@ -110,7 +175,8 @@
         <div class="col-12 mb-2">
           <div class="checkbox">
             <label>
-              <input type="checkbox" formControlName="permission_to_call"> ¿Desea ser contactado para futuras actividades o eventos religiosos?
+              <input type="checkbox" formControlName="permission_to_call"> ¿Desea ser contactado para futuras
+              actividades o eventos religiosos?
             </label>
           </div>
         </div>
@@ -133,45 +199,40 @@
             <label class="gen-label">Estado de visita:</label>
             <div class="form-check-inline">
               <label class="form-check-label">
-                <input type="radio" formControlName="visit_condition" class="form-check-input" name="visit_condition" value="urgent">
+                <input type="radio" formControlName="visit_condition" class="form-check-input" name="visit_condition"
+                       value="urgent">
                 Urgente
               </label>
             </div>
             <div class="form-check-inline">
               <label class="form-check-label">
-                <input type="radio" formControlName="visit_condition" class="form-check-input" name="visit_condition" value="program">
+                <input type="radio" formControlName="visit_condition" class="form-check-input" name="visit_condition"
+                       value="program">
                 Programado
               </label>
             </div>
           </div>
         </div>
-        <!--   <div class="col-12">
-             <div class="form-group row my-4">
-               <div class="col-md-8">
-                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                   <strong>Exito!</strong>
-                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                     <span aria-hidden="true"> </span>
-                   </button>
-                 </div>
-               </div>
-             </div>
 
-             <div class="form-group row my-4">
-               <div class="col-md-8">
-                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                   <strong>!</strong>
-                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                     <span aria-hidden="true"> </span>
-                   </button>
-                 </div>
-               </div>
-             </div>
-           </div>-->
+        <ng-container *ngIf="showMessage">
+          <div class="col-12">
+            <div class="form-group row my-4">
+              <div class="col-md-8">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <strong>Guardado correctamente</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true"> </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
 
         <div class="col-12">
           <div class="doctor-submit text-end">
-            <button type="button" (click)="preparePatientData()" class="btn btn-primary submit-form me-2">Guardar</button>
+            <button type="button" (click)="preparePatientData()" class="btn btn-primary submit-form me-2">Guardar
+            </button>
           </div>
         </div>
       </div>
