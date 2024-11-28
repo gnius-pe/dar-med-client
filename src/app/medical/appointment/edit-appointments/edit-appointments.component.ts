@@ -18,7 +18,8 @@ export class EditAppointmentsComponent {
   last_name:string = '';
 
  
-  mobile:string = '';
+  //mobile:string = '';
+  first_phone:string = '';
   identification_number:number = 0;
   name_companion:string = '';
   surname_companion:string = '';
@@ -61,10 +62,10 @@ export class EditAppointmentsComponent {
         // Datos del paciente
         this.first_name= this.appointment_selected.patient.first_name;
         this.last_name = this.appointment_selected.patient.last_name;
-        this.mobile = this.appointment_selected.patient.mobile;
+        this.first_phone = this.appointment_selected.patient.first_phone;
         this.identification_number = this.appointment_selected.patient.identification_number;
-        this.name_companion = this.appointment_selected.patient.name_companion;
-        this.surname_companion = this.appointment_selected.patient.surname_companion;
+       // this.name_companion = this.appointment_selected.patient.name_companion;
+        //this.surname_companion = this.appointment_selected.patient.surname_companion;
 
         this.date_appointment = new Date(this.appointment_selected.date_appointment).toISOString();
 
@@ -169,12 +170,12 @@ export class EditAppointmentsComponent {
       if(resp.message == 403){
         this.first_name = '';
         this.last_name = '';
-        this.mobile = ''
+        this.first_phone = ''
         this.identification_number = 0;
       }else{
         this.first_name= resp.first_name;
         this.last_name = resp.last_name;
-        this.mobile = resp.mobile;
+        this.first_phone = resp.first_phone;
         this.identification_number = resp.identification_number;
       }
     })
@@ -183,7 +184,7 @@ export class EditAppointmentsComponent {
   resetPatient(){
     this.first_name = '';
     this.last_name = '';
-    //this.mobile = ''
+    this.first_phone = '';
     this.identification_number = 0;
   }
 }

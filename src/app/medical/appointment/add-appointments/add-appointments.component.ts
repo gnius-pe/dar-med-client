@@ -18,6 +18,7 @@ export class AddAppointmentsComponent implements OnInit {
   first_name: string = '';
   last_name: string = '';
   identification_number: number = 0;
+  first_phone:string='';
 
  
   
@@ -72,7 +73,7 @@ export class AddAppointmentsComponent implements OnInit {
   */
     if (!this.first_name || !this.last_name || !this.identification_number || !this.date_appointment
       || !this.specialitie_id || !this.selected_segment_hour ) {
-      this.text_validation = "LOS CAMPOS SON NECESARIOS (SEGMENTO DE HORA, LA FECHA, LA ESPECIALIDAD, PACIENTE Y PAGOS)";
+      this.text_validation = "LOS CAMPOS SON NECESARIOS (SEGMENTO DE HORA, LA FECHA, LA ESPECIALIDAD, PACIENTE )";
       return;
     }
 
@@ -91,8 +92,36 @@ export class AddAppointmentsComponent implements OnInit {
 
     this.appointmentService.registerAppointment(data).subscribe((resp: any) => {
       console.log(resp);
+      this.resetForm();
       this.text_success = "LA CITA MEDICA SE REGISTRO CON EXITO";
+      setTimeout(() => {
+        this.text_success = '';  // Limpiar el mensaje
+      }, 500);  
     });
+
+    
+  }
+
+  resetForm() {
+    this.first_name = '';
+  this.last_name = '';
+  this.identification_number = 0;
+  this.date_appointment = new Date();  // Resetea la fecha a la actual
+  this.hour= " ";
+  
+  this.specialitie_id = null;
+  
+  this.DOCTOR_SELECTED = null;
+  this.text_success = '';  // Limpiar mensaje de éxito
+  this.text_validation = '';  // Limpiar mensaje de validación
+
+  // Limpiar los campos relacionados con la especialidad y el doctor seleccionado
+  this.specialitie_id = null;
+  this.selected_segment_hour = null;
+  this.DOCTOR_SELECTED = null;
+
+  // Opcional: Resetear la lista de doctores para que no se queden opciones previas
+  this.DOCTORS = [];
   }
 
   filtro() {
@@ -129,7 +158,7 @@ export class AddAppointmentsComponent implements OnInit {
       } else {
         this.first_name = resp.first_name;
         this.last_name = resp.last_name;
-       // this.mobile = resp.mobile;
+        this.first_phone = resp.first_phone;
         this.identification_number = resp.identification_number;
       }
     });
@@ -138,7 +167,7 @@ export class AddAppointmentsComponent implements OnInit {
   resetPatient() {
     this.first_name = '';
     this.last_name = '';
-    //this.mobile = '';
+    this.first_phone = '';
     this.identification_number= 0;
 
    
