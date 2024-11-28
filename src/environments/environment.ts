@@ -1,5 +1,5 @@
 export const environment = {
-    URL_BACKEND: 'http://api.v1.core.dar.reformaperu.org',
-    URL_SERVICIOS: 'http://api.v1.core.dar.reformaperu.org/api',
-    URL_FRONTEND: 'http://app.dar.reformaperu.org/'
+    URL_BACKEND: 'https://api.v1.core.dar.reformaperu.org',
+    URL_SERVICIOS: 'https://api.v1.core.dar.reformaperu.org/api',
+    URL_FRONTEND: 'https://app.dar.reformaperu.org/'
 };

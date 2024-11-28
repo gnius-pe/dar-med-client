@@ -9,12 +9,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AtencionMedicalComponent {
 
-  name:string = '';
-  surname:string = '';
-  mobile:string = '';
+  first_name:string = '';
+  last_name:string = '';
+  //mobile:string = '';
+  
   identification_number:number = 0;
-  name_companion:string = '';
-  surname_companion:string = '';
+  first_phone:string = ' ';
+  //name_companion:string = '';
+  //surname_companion:string = '';
 
   public text_success:string = '';
   public text_validation:string = '';
@@ -47,12 +49,14 @@ export class AtencionMedicalComponent {
       console.log(resp);
       this.appointment_selected = resp.appointment;
       // Datos del paciente
-      this.name = this.appointment_selected.patient.name;
-      this.surname = this.appointment_selected.patient.surname;
-      this.mobile = this.appointment_selected.patient.mobile;
-      this.identification_number = this.appointment_selected.patient.identification_numbe;
-      this.name_companion = this.appointment_selected.patient.name_companion;
-      this.surname_companion = this.appointment_selected.patient.surname_companion;
+      this.first_name = this.appointment_selected.patient.first_name;
+      this.last_name = this.appointment_selected.patient.last_name;
+      
+      this.first_phone = this.appointment_selected.patient.first_phone;
+      
+      this.identification_number = this.appointment_selected.patient.identification_number;
+     // this.name_companion = this.appointment_selected.patient.name_companion;
+     // this.surname_companion = this.appointment_selected.patient.surname_companion;
     })
 
     this.appointmentService.showAppointmentAttention(this.appointment_id).subscribe((resp:any) => {
