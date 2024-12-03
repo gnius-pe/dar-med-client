@@ -150,6 +150,12 @@ export class AddAppointmentsComponent implements OnInit {
     this.selected_segment_hour = SEGMENT;
   }
 
+  validateNumbers() {
+    // Asegurarse de que el valor sea un string y solo contenga números
+     this.identification_number.toString().replace(/[^0-9]/g, '');
+  }
+  
+  
   filterPatient() {
     this.appointmentService.listPatient(this.identification_number + "").subscribe((resp: any) => {
       console.log(resp);
