@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { URL_SERVICIOS } from 'src/app/config/config';
 import { AuthService } from 'src/app/shared/auth/auth.service';
+import {PatientData} from "../models/patient.model";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +11,7 @@ import { AuthService } from 'src/app/shared/auth/auth.service';
 export class PatientMService {
 
   private baseUrl = `${URL_SERVICIOS}/patients`;
+  private pdfServiceUrl = 'http://localhost:8080/generate-pdf';
 
   constructor(
     public http: HttpClient,
@@ -51,6 +54,24 @@ export class PatientMService {
     let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
     let URL = URL_SERVICIOS+"/patients/profile/"+staff_id;
     return this.http.get(URL,{headers: headers});
+  }
+
+  getPatientDataWithAppointments(patientId: string): Observable<PatientData> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.authService.token}`,
+    });
+    const url = `${this.baseUrl}/${patientId}/data`;
+    return this.http.get<PatientData>(url, { headers });
+  }
+
+  generatePDF(patientData: any) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.authService.token}`,
+    });
+    return this.http.post(this.pdfServiceUrl, patientData, {
+      headers,
+      responseType: 'blob',
+    });
   }
 
 }
