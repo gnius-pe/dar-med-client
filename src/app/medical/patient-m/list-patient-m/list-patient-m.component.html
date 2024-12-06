@@ -85,6 +85,9 @@
                        (click)="selectUser(patient)" data-bs-toggle="modal"
                        [attr.data-bs-target]="'#delete_staff-'+patient.id"
                     ><i class="fa fa-trash-alt m-r-5"></i></a>
+                    <a href="javascript:void(0)" (click)="printPatientData(patient.id.toString())">
+                      <i class="fa fa-print"></i>
+                    </a>
                   </td>
 
                   <!--  <td class="text-end">
@@ -173,4 +176,7 @@
       </div>
     </div>
   </div>
+</div>
+<div #qrCodeContainer style="display: none">
+  <qrcode [qrdata]="'https://dar.reformaperu.org/'" [width]="100" [errorCorrectionLevel]="'M'"></qrcode>
 </div>

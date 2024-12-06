@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { PatientMProfileComponent } from './patient-m-profile/patient-m-profile.component';
 import { PatientFormComponent } from './patient-form/patient-form.component';
+import {QRCodeModule} from "angularx-qrcode";
 
 
 @NgModule({
@@ -23,15 +24,16 @@ import { PatientFormComponent } from './patient-form/patient-form.component';
     PatientMProfileComponent,
     PatientFormComponent
   ],
-  imports: [
-    CommonModule,
-    PatientMRoutingModule,
-    SharedModule,
-    // 
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    RouterModule
-  ]
+    imports: [
+        CommonModule,
+        PatientMRoutingModule,
+        SharedModule,
+        //
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        RouterModule,
+        QRCodeModule
+    ]
 })
 export class PatientMModule { }

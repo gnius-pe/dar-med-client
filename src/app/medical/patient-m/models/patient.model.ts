@@ -17,3 +17,30 @@ export interface Patient {
   permission_to_call: boolean;
   created_at: string;
 }
+
+export interface PatientData {
+  patient: {
+    id: number;
+    name: string;
+    email: string;
+    birth_date: string;
+    first_phone: string;
+    second_phone?: string;
+    gender: string;
+    identification_number: string;
+    message?: string;
+    spiritual_support: boolean;
+    medical_examination: boolean;
+    permission_to_call: boolean;
+  };
+  appointments: {
+    id: number;
+    date: string;
+    status: number;
+    status_pay: number;
+    amount?: string;
+    doctor_name: string;
+    specialty: string;
+  }[];
+}
+
