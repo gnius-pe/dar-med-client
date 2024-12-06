@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {PatientMService} from '../service/patient-m.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {Patient, PatientData} from "../models/patient.model";
@@ -10,6 +10,8 @@ import {jsPDF} from 'jspdf';
   styleUrls: ['./list-patient-m.component.scss']
 })
 export class ListPatientMComponent implements OnInit {
+
+  @ViewChild('qrCodeContainer', { static: false }) qrCodeContainer!: ElementRef;
 
   public patientsList: Patient[] = [];
   dataSource!: MatTableDataSource<any>;
@@ -131,28 +133,25 @@ export class ListPatientMComponent implements OnInit {
     }
   }
 
-  printPatientData(patientId: string) {
+  public printPatientData(patientId: string) {
     this.patientService.getPatientDataWithAppointments(patientId).subscribe({
       next: (patientData: PatientData) => {
         const doc = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',
-          format: [80, 250], // Tamaño para ticket (80 mm x longitud ajustable)
+          format: [80, 300],
         });
 
-        // Configuración general
         const marginLeft = 5;
-        let y = 10; // Posición inicial en el eje Y
-        const lineHeight = 6;
+        let y = 8;
+        const lineHeight = 5;
 
-        // Agregar imagen al inicio
         const img = new Image();
-        img.src = 'assets/img/logo_ticket.png'; // Ruta relativa a la carpeta de assets
+        img.src = 'assets/img/logo_ticket.png';
         img.onload = () => {
-          doc.addImage(img, 'PNG', marginLeft, y, 70, 20); // Posición (x, y), ancho, alto
-          y += 25; // Ajustar el espacio después de la imagen
+          doc.addImage(img, 'PNG', marginLeft, y, 70, 20);
+          y += 22;
 
-          // Encabezado
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(10);
           doc.text('Dirección de Asistencia Reformista', marginLeft, y);
@@ -166,7 +165,6 @@ export class ListPatientMComponent implements OnInit {
           doc.text(`REGISTRO: ANCON-001`, marginLeft, y);
           y += lineHeight;
 
-          // Información del Paciente
           doc.setFontSize(9);
           doc.setFont('helvetica', 'bold');
           doc.text('Paciente:', marginLeft, y);
@@ -180,8 +178,7 @@ export class ListPatientMComponent implements OnInit {
           doc.text(`Celular: ${patientData.patient.first_phone}`, marginLeft, y);
           y += lineHeight;
 
-          // Prediagnóstico
-          y += 5;
+          y += 3;
           doc.setFont('helvetica', 'bold');
           doc.text('PRE-DIAGNÓSTICO:', marginLeft, y);
           y += lineHeight;
@@ -190,30 +187,25 @@ export class ListPatientMComponent implements OnInit {
           if (patientData.patient.message) {
             const splitMessage = doc.splitTextToSize(patientData.patient.message, 70);
             doc.text(splitMessage, marginLeft, y);
-            y += splitMessage.length * 4; // Ajustar espacio para texto largo
+            y += splitMessage.length * 3.5;
           } else {
             doc.text('No hay prediagnóstico disponible.', marginLeft, y);
             y += lineHeight;
           }
 
-          // Separador
-          y += 5;
+          y += 3;
           doc.setDrawColor(0);
           doc.setLineWidth(0.2);
-          doc.line(marginLeft, y, 75, y); // Línea horizontal
+          doc.line(marginLeft, y, 75, y);
           y += lineHeight;
 
-          // Título de Áreas Médicas
           doc.setFont('helvetica', 'bold');
           doc.text('Citas Médicas:', marginLeft, y);
           y += lineHeight;
 
-          // Listar las citas
           patientData.appointments.forEach((appointment) => {
             doc.setFontSize(8);
             doc.setFont('helvetica', 'normal');
-
-            // Información de la cita
             doc.text(`Especialidad: ${appointment.specialty}`, marginLeft, y);
             y += lineHeight;
 
@@ -223,23 +215,20 @@ export class ListPatientMComponent implements OnInit {
             doc.text(`Fecha: ${appointment.date}`, marginLeft, y);
             y += lineHeight;
 
-            // Separador entre citas
-            y += 3;
-            doc.line(marginLeft, y, 75, y); // Línea horizontal
+            y += 2;
+            doc.line(marginLeft, y, 75, y);
             y += lineHeight;
           });
 
-          // Declaración
-          y += 5; // Espaciado adicional
+          y += 4;
           const declaration =
             'Declaro estar de acuerdo con los servicios y autorizo el uso de mi imagen para fines de publicidad.';
-          doc.setFontSize(6); // Reducir el tamaño de la letra
-          const splitDeclaration = doc.splitTextToSize(declaration, 70); // Ajustar al ancho del ticket
+          doc.setFontSize(6);
+          const splitDeclaration = doc.splitTextToSize(declaration, 70);
           doc.text(splitDeclaration, marginLeft, y);
-          y += splitDeclaration.length * 3;
+          y += splitDeclaration.length * 2.5; // Compactado
 
-          // Firma
-          y += 10;
+          y += 8;
           doc.setFontSize(9);
           doc.text('Nombre: _______________________', marginLeft, y);
           y += lineHeight;
@@ -248,13 +237,31 @@ export class ListPatientMComponent implements OnInit {
           doc.text('Firma: ________________________', marginLeft, y);
           y += lineHeight;
 
-          // Footer
-          y += 10;
-          doc.setFontSize(8);
-          doc.text('¡Gracias por asistir a Misiones DAR!', marginLeft, y);
+          const qrCodeElement = this.qrCodeContainer.nativeElement.querySelector('canvas');
+          if (qrCodeElement) {
+            const qrDataUrl = qrCodeElement.toDataURL();
+            y += 8;
+            doc.addImage(qrDataUrl, 'PNG', marginLeft + 15, y, 40, 40);
+            y += 42;
+          }
 
-          // Descargar el PDF
-          doc.save(`Paciente_${patientData.patient.name}.pdf`);
+          const bottomImg = new Image();
+          bottomImg.src = 'assets/img/ticket_bottom.png';
+          bottomImg.onload = () => {
+            y += 5;
+            doc.addImage(bottomImg, 'JPEG', marginLeft, y, 70, 20);
+            y += 25;
+
+            doc.setFontSize(8);
+            doc.text('¡Gracias por asistir a Misiones DAR!', marginLeft, y);
+            y += lineHeight;
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(9);
+            doc.text(patientData.patient.name, marginLeft, y);
+
+            doc.save(`Paciente_${patientData.patient.name}.pdf`);
+          };
         };
       },
       error: (err) => {
@@ -262,6 +269,4 @@ export class ListPatientMComponent implements OnInit {
       },
     });
   }
-
-
 }
