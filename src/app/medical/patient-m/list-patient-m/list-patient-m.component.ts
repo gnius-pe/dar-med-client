@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {PatientMService} from '../service/patient-m.service';
 import {MatTableDataSource} from '@angular/material/table';
-import {Patient} from "../models/patient.model";
+import {Patient, PatientData} from "../models/patient.model";
+import {jsPDF} from 'jspdf';
 
 @Component({
   selector: 'app-list-patient-m',
@@ -9,6 +10,8 @@ import {Patient} from "../models/patient.model";
   styleUrls: ['./list-patient-m.component.scss']
 })
 export class ListPatientMComponent implements OnInit {
+
+  @ViewChild('qrCodeContainer', { static: false }) qrCodeContainer!: ElementRef;
 
   public patientsList: Patient[] = [];
   dataSource!: MatTableDataSource<any>;
@@ -71,7 +74,7 @@ export class ListPatientMComponent implements OnInit {
     return `${day}/${month}/${year}`;
   }
 
-  private getTableData(page: number ): void {
+  private getTableData(page: number): void {
     this.patientsList = [];
     this.serialNumberArray = [];
 
@@ -79,7 +82,7 @@ export class ListPatientMComponent implements OnInit {
       this.patientsList = resp.data;
       this.currentPage = resp.current_page;
       this.totalPages = resp.last_page;
-      this.totalPagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+      this.totalPagesArray = Array.from({length: this.totalPages}, (_, i) => i + 1);
     })
 
   }
@@ -128,5 +131,142 @@ export class ListPatientMComponent implements OnInit {
         return (aValue < bValue ? -1 : 1) * (sort.direction === 'asc' ? 1 : -1);
       });
     }
+  }
+
+  public printPatientData(patientId: string) {
+    this.patientService.getPatientDataWithAppointments(patientId).subscribe({
+      next: (patientData: PatientData) => {
+        const doc = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: [80, 300],
+        });
+
+        const marginLeft = 5;
+        let y = 8;
+        const lineHeight = 5;
+
+        const img = new Image();
+        img.src = 'assets/img/logo_ticket.png';
+        img.onload = () => {
+          doc.addImage(img, 'PNG', marginLeft, y, 70, 20);
+          y += 22;
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(10);
+          doc.text('Dirección de Asistencia Reformista', marginLeft, y);
+          y += lineHeight;
+
+          doc.setFontSize(9);
+          doc.text('Misión: "Ancón 2024"', marginLeft, y);
+          y += lineHeight;
+
+          doc.setFontSize(8);
+          doc.text(`REGISTRO: ANCON-001`, marginLeft, y);
+          y += lineHeight;
+
+          doc.setFontSize(9);
+          doc.setFont('helvetica', 'bold');
+          doc.text('Paciente:', marginLeft, y);
+          doc.setFont('helvetica', 'normal');
+          doc.text(`${patientData.patient.name}`, marginLeft + 20, y);
+          y += lineHeight;
+
+          doc.text(`DNI: ${patientData.patient.identification_number}`, marginLeft, y);
+          y += lineHeight;
+
+          doc.text(`Celular: ${patientData.patient.first_phone}`, marginLeft, y);
+          y += lineHeight;
+
+          y += 3;
+          doc.setFont('helvetica', 'bold');
+          doc.text('PRE-DIAGNÓSTICO:', marginLeft, y);
+          y += lineHeight;
+
+          doc.setFont('helvetica', 'normal');
+          if (patientData.patient.message) {
+            const splitMessage = doc.splitTextToSize(patientData.patient.message, 70);
+            doc.text(splitMessage, marginLeft, y);
+            y += splitMessage.length * 3.5;
+          } else {
+            doc.text('No hay prediagnóstico disponible.', marginLeft, y);
+            y += lineHeight;
+          }
+
+          y += 3;
+          doc.setDrawColor(0);
+          doc.setLineWidth(0.2);
+          doc.line(marginLeft, y, 75, y);
+          y += lineHeight;
+
+          doc.setFont('helvetica', 'bold');
+          doc.text('Citas Médicas:', marginLeft, y);
+          y += lineHeight;
+
+          patientData.appointments.forEach((appointment) => {
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Especialidad: ${appointment.specialty}`, marginLeft, y);
+            y += lineHeight;
+
+            doc.text(`Doctor: ${appointment.doctor_name}`, marginLeft, y);
+            y += lineHeight;
+
+            doc.text(`Fecha: ${appointment.date}`, marginLeft, y);
+            y += lineHeight;
+
+            y += 2;
+            doc.line(marginLeft, y, 75, y);
+            y += lineHeight;
+          });
+
+          y += 4;
+          const declaration =
+            'Declaro estar de acuerdo con los servicios y autorizo el uso de mi imagen para fines de publicidad.';
+          doc.setFontSize(6);
+          const splitDeclaration = doc.splitTextToSize(declaration, 70);
+          doc.text(splitDeclaration, marginLeft, y);
+          y += splitDeclaration.length * 2.5; // Compactado
+
+          y += 8;
+          doc.setFontSize(9);
+          doc.text('Nombre: _______________________', marginLeft, y);
+          y += lineHeight;
+          doc.text('DNI: __________________________', marginLeft, y);
+          y += lineHeight;
+          doc.text('Firma: ________________________', marginLeft, y);
+          y += lineHeight;
+
+          const qrCodeElement = this.qrCodeContainer.nativeElement.querySelector('canvas');
+          if (qrCodeElement) {
+            const qrDataUrl = qrCodeElement.toDataURL();
+            y += 8;
+            doc.addImage(qrDataUrl, 'PNG', marginLeft + 15, y, 40, 40);
+            y += 42;
+          }
+
+          const bottomImg = new Image();
+          bottomImg.src = 'assets/img/ticket_bottom.png';
+          bottomImg.onload = () => {
+            y += 5;
+            doc.addImage(bottomImg, 'JPEG', marginLeft, y, 70, 20);
+            y += 25;
+
+            doc.setFontSize(8);
+            doc.text('¡Gracias por asistir a Misiones DAR!', marginLeft, y);
+            y += lineHeight;
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(9);
+            doc.text(patientData.patient.name, marginLeft, y);
+
+            doc.save(`Paciente_${patientData.patient.name}.pdf`);
+          };
+        };
+      },
+      error: (err) => {
+        console.error('Error obteniendo los datos del paciente:', err);
+      },
+    });
   }
 }
