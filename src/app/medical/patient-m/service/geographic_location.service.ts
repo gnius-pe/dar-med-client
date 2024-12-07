@@ -25,15 +25,15 @@ export class GeographicLocationService {
     return this.http.post(this.baseUrl, data, {headers});
   }
 
-  updateLocation(locationId: string, data: GeographicLocation): Observable<any> {
+  public updateLocation(locationId: number, data: GeographicLocation): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.authService.token}`
+      'Authorization': `Bearer ${this.authService.token}`,
     });
     const url = `${this.baseUrl}/${locationId}`;
-    return this.http.put(url, data, {headers});
+    return this.http.put(url, data, { headers });
   }
 
-  getLocationByPatient(patientId: string): Observable<any> {
+  getLocationByPatient(patientId: number): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.authService.token}`
     });

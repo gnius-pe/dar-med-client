@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
-import {GeographicLocation} from "../models/patient.model";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { GeographicLocation } from "../models/patient.model";
 
 @Component({
   selector: 'app-geographic-location-form',
@@ -10,7 +10,7 @@ import {GeographicLocation} from "../models/patient.model";
 })
 export class GeographicLocationFormComponent implements OnInit, OnChanges {
 
-  @Input() geographicLocation: GeographicLocation | undefined
+  @Input() geographicLocation: GeographicLocation | undefined;
   @Output() saveLocationData: EventEmitter<GeographicLocation> = new EventEmitter<GeographicLocation>();
 
   public locationForm: FormGroup;
@@ -29,17 +29,21 @@ export class GeographicLocationFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.loadNationalities();
-    this.loadDepartments();
-    this.loadProvinces();
-    this.loadDistricts();
+    Promise.all([
+      this.loadNationalities(),
+      this.loadDepartments(),
+      this.loadProvinces(),
+      this.loadDistricts()
+    ]).then(() => {
+      if (this.geographicLocation) {
+        this.patchLocationForm(this.geographicLocation);
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.hasOwnProperty('geographicLocation') && this.geographicLocation != undefined) {
-      this.locationForm.patchValue(this.geographicLocation);
-      this.onDepartmentChange();
-      this.onProvinceChange();
+    if (changes['geographicLocation'] && this.geographicLocation) {
+      this.patchLocationForm(this.geographicLocation);
     }
   }
 
@@ -54,45 +58,64 @@ export class GeographicLocationFormComponent implements OnInit, OnChanges {
     });
   }
 
-  private loadNationalities(): void {
-    this.http.get('/assets/locations/nacionalidades.json').subscribe((data: any) => {
+  private loadNationalities(): Promise<void> {
+    return this.http.get('/assets/locations/nacionalidades.json').toPromise().then((data: any) => {
       this.nationalities = data;
     });
   }
 
-  private loadDepartments(): void {
-    this.http.get('/assets/locations/departamentos.json').subscribe((data: any) => {
+  private loadDepartments(): Promise<void> {
+    return this.http.get('/assets/locations/departamentos.json').toPromise().then((data: any) => {
       this.departments = data;
     });
   }
 
-  private loadProvinces(): void {
-    this.http.get('/assets/locations/provincias.json').subscribe((data: any) => {
+  private loadProvinces(): Promise<void> {
+    return this.http.get('/assets/locations/provincias.json').toPromise().then((data: any) => {
       this.provinces = data;
     });
   }
 
-  private loadDistricts(): void {
-    this.http.get('/assets/locations/distritos.json').subscribe((data: any) => {
+  private loadDistricts(): Promise<void> {
+    return this.http.get('/assets/locations/distritos.json').toPromise().then((data: any) => {
       this.districts = data;
     });
   }
 
-  public onDepartmentChange(): void {
+  private patchLocationForm(location: GeographicLocation): void {
+    this.locationForm.patchValue(location);
 
+    const department = location.department;
+    const province = location.province;
+
+    // Filtrar provincias y distritos
+    if (department) {
+      this.filteredProvinces = this.provinces.filter(
+        (provinceItem) => provinceItem.department_id === department
+      );
+    }
+
+    if (province) {
+      this.filteredDistricts = this.districts.filter(
+        (districtItem) => districtItem.province_id === province
+      );
+    }
+  }
+
+  public onDepartmentChange(): void {
     const selectedDepartment = this.locationForm.get('department')?.value;
 
     this.filteredProvinces = this.provinces.filter(
       (province) => province.department_id === selectedDepartment
     );
     this.filteredDistricts = [];
-
     this.locationForm.get('district')?.reset();
     this.locationForm.get('province')?.reset();
   }
 
   public onProvinceChange(): void {
     const selectedProvince = this.locationForm.get('province')?.value;
+
     this.filteredDistricts = this.districts.filter(
       (district) => district.province_id === selectedProvince
     );
