@@ -44,3 +44,15 @@ export interface PatientData {
   }[];
 }
 
+export interface GeographicLocation {
+  id: number;
+  country: string;
+  department: string;
+  province: string;
+  district: string;
+  address: string;
+  reference?: string;
+  patient_id: number;
+}
+
+

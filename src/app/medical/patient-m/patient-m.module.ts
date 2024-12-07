@@ -13,6 +13,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { PatientMProfileComponent } from './patient-m-profile/patient-m-profile.component';
 import { PatientFormComponent } from './patient-form/patient-form.component';
 import {QRCodeModule} from "angularx-qrcode";
+import { GeographicLocationFormComponent } from './geographic-location-form/geographic-location-form.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {QRCodeModule} from "angularx-qrcode";
     EditPatientMComponent,
     ListPatientMComponent,
     PatientMProfileComponent,
-    PatientFormComponent
+    PatientFormComponent,
+    GeographicLocationFormComponent
   ],
     imports: [
         CommonModule,

@@ -48,7 +48,7 @@ export class PatientFormComponent implements OnChanges {
     this.patientForm.reset();
   }
 
-  public triggerMessage(): void {
+  private triggerMessage(): void {
     this.showMessage = true;
 
     setTimeout(() => {
