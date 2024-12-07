@@ -150,6 +150,9 @@ export class AddAppointmentsComponent implements OnInit {
     this.selected_segment_hour = SEGMENT;
   }
 
+ 
+  
+  
   filterPatient() {
     this.appointmentService.listPatient(this.identification_number + "").subscribe((resp: any) => {
       console.log(resp);

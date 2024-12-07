@@ -146,28 +146,33 @@
                             </div>
 
                             <div class="row align-items-center py-4">
-                                <div class="col-12 py-4">  
+                                <div class="col-12 py-4">
                                     <h4>Datos del paciente: </h4>
-                                    <button class="btn btn-sm btn-dark" (click)="resetPatient()">O</button>
-                                </div>
-                                <div class="col-12 col-md-6 col-xl-4">
+                                    <button class="btn btn-sm btn-primary button-spacing"(click)="filterPatient()"[disabled]="identification_number.toString().length !== 8"> Buscar</button>
+                                    <button class="btn btn-sm btn-primary button-spacing" (click)="resetPatient()">Limpiar</button>
+                                    <style>
+                                      .button-spacing {
+                                        margin-right: 10px; /* Ajusta el valor según el espacio que necesites */
+                                      }
+                                    </style>
+                                  </div>
+                                  <div class="col-12 col-md-6 col-xl-4">
                                     <div class="form-group local-forms">
-                                        <label >N° Documento <span class="login-danger">*</span></label>
-                                        <input class="form-control" (keyup.enter)="filterPatient()"  [(ngModel)]="identification_number" name="identification_number"  type="number"  >
+                                      <label>N° Documento <span class="login-danger">*</span></label>
+                                      <input class="form-control"(keyup.enter)="identification_number.toString().length === 8 ? filterPatient() : null"[(ngModel)]="identification_number"name="identification_number" type="number">
                                     </div>
-                                </div>
-
+                                  </div>
                                 <div class="col-12 col-md-6 col-xl-4">  
                                     <div class="form-group local-forms">
                                         <label >First Name <span class="login-danger">*</span></label>
-                                        <input class="form-control" [(ngModel)]="first_name" name="first_name" type="text"  >
+                                        <input class="form-control" disabled [(ngModel)]="first_name" name="first_name" type="text"  >
                                     </div>
                                 </div>
 
                                 <div class="col-12 col-md-6 col-xl-4">
                                     <div class="form-group local-forms">
                                         <label >Surname <span class="login-danger">*</span></label>
-                                        <input class="form-control" [(ngModel)]="last_name" name="surname" type="text"  >
+                                        <input class="form-control" disabled [(ngModel)]="last_name" name="last_name" type="text"  >
                                     </div>
                                 </div>
                                 <!-- 
