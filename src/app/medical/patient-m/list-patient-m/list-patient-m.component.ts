@@ -74,17 +74,17 @@ export class ListPatientMComponent implements OnInit {
     return `${day}/${month}/${year}`;
   }
 
-  private getTableData(page: number): void {
-    this.patientsList = [];
-    this.serialNumberArray = [];
+  public searchData() {
+    this.getTableData(this.currentPage, this.searchDataValue);
+  }
 
-    this.patientService.listPatients(page).subscribe((resp: any) => {
+  private getTableData(page: number, search = ''): void {
+    this.patientService.listPatients(page, search).subscribe((resp: any) => {
       this.patientsList = resp.data;
       this.currentPage = resp.current_page;
       this.totalPages = resp.last_page;
-      this.totalPagesArray = Array.from({length: this.totalPages}, (_, i) => i + 1);
-    })
-
+      this.totalPagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    });
   }
 
   selectUser(rol: any) {
