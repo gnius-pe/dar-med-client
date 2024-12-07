@@ -53,21 +53,19 @@ export class HeaderComponent {
   }
   public toggleMobileSideBar(): void {
     this.sideBar.switchMobileSideBarPosition();
-    
-      this.addClass = !this.addClass;
-      /* eslint no-var: off */
-      var root = document.getElementsByTagName( 'html' )[0];
-      /* eslint no-var: off */
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      var sidebar:any = document.getElementById('sidebar')
-  
-      if (this.addClass) {
-        root.classList.add('menu-opened');
-        sidebar.classList.add('opened');
-      }
-      else {
-        root.classList.remove('menu-opened');
-        sidebar.classList.remove('opened');
-      }
+
+    const overlay = document.querySelector('.sidebar-overlay') as HTMLElement;
+    const root = document.querySelector('html') as HTMLElement;
+    const sidebar = document.getElementById('sidebar');
+
+    if (this.sideBar.toggleMobileSideBar.value === 'true') {
+      root?.classList.add('menu-opened');
+      sidebar?.classList.add('opened');
+      overlay?.classList.add('opened');
+    } else {
+      root?.classList.remove('menu-opened');
+      sidebar?.classList.remove('opened');
+      overlay?.classList.remove('opened');
     }
+  }
   }

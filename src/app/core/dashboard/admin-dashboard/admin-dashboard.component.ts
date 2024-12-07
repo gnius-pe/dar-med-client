@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { routes } from 'src/app/shared/routes/routes';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {routes} from 'src/app/shared/routes/routes';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -16,24 +16,25 @@ import {
   ApexTitleSubtitle,
   ApexTooltip,
   ApexYAxis,
-  
+
 } from 'ng-apexcharts';
-import { Sort } from '@angular/material/sort';
-import { DataService } from 'src/app/shared/data/data.service';
-import { recentPatients, upcomingAppointments } from 'src/app/shared/models/models';
-import { DashboardService } from '../service/dashboard.service';
+import {Sort} from '@angular/material/sort';
+import {DataService} from 'src/app/shared/data/data.service';
+import {recentPatients, upcomingAppointments} from 'src/app/shared/models/models';
+import {DashboardService} from '../service/dashboard.service';
+
 export type ChartOptions = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   series: ApexAxisChartSeries | any;
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   chart: ApexChart | any;
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataLabels: ApexDataLabels | any;
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   plotOptions: ApexPlotOptions | any;
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   responsive: ApexResponsive[] | any;
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   xaxis: ApexXAxis | any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   legend: ApexLegend | any;
@@ -49,9 +50,11 @@ export type ChartOptions = {
   labels: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 };
+
 interface data {
-  value: string ;
+  value: string;
 }
+
 export type ChartOptionsTwo = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   series: ApexAxisChartSeries | any;
@@ -91,42 +94,43 @@ export type ChartOptionsTwo = {
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.scss'],
 })
-export class AdminDashboardComponent {
+export class AdminDashboardComponent implements OnInit {
   public routes = routes;
-  public selectedValue : string = "2023";
+  public selectedValue = "2023";
   @ViewChild('chart') chart!: ChartComponent;
   public chartOptionsOne: Partial<ChartOptions>;
   public chartOptionsOneTwo: Partial<ChartOptionsTwo>;
-  
+
   public chartOptionsTwo: Partial<ChartOptions>;
 
   public recentPatients: Array<recentPatients> = [];
   public upcomingAppointments: Array<upcomingAppointments> = [];
- 
-  public appointments:any = [];
 
-  public num_appointments_current:number = 0;
-  public num_appointments_before:number = 0;
-  public porcentaje_d:number = 0;
+  public appointments: any = [];
 
-  public num_patients_current:number = 0;
-  public num_patients_before:number = 0;
-  public porcentaje_dp:number = 0;
+  public num_appointments_current = 0;
+  public num_appointments_before = 0;
+  public porcentaje_d = 0;
 
-  public num_appointments_attetion_current:number = 0;
-  public num_appointments_attetion_before:number = 0;
-  public porcentaje_da:number = 0;
+  public num_patients_current = 0;
+  public num_patients_before = 0;
+  public porcentaje_dp = 0;
 
-  public appointments_total_current:number = 0;
-  public appointments_total_before:number = 0;
-  public porcentaje_dt:number = 0;
+  public num_appointments_attetion_current = 0;
+  public num_appointments_attetion_before = 0;
+  public porcentaje_da = 0;
 
-  public query_patient_by_genders:any = [];
-  public query_patients_speciality:any = [];
-  public query_patients_speciality_percentage:any = [];
-  public query_income_year:any = [];
-  public user:any;
-  constructor(public data : DataService,public dashboardService: DashboardService,) {
+  public appointments_total_current = 0;
+  public appointments_total_before = 0;
+  public porcentaje_dt = 0;
+
+  public query_patient_by_genders: any = [];
+  public query_patients_speciality: any = [];
+  public query_patients_speciality_percentage: any = [];
+  public query_income_year: any = [];
+  public user: any;
+
+  constructor(public data: DataService, public dashboardService: DashboardService,) {
     this.chartOptionsOne = {
       chart: {
         height: 230,
@@ -135,21 +139,21 @@ export class AdminDashboardComponent {
         toolbar: {
           show: false,
         },
-      
+
       },
       grid: {
-        show: true, 
+        show: true,
         xaxis: {
           lines: {
             show: false
-           }
-         },  
-        yaxis: {
-          lines: { 
-            show: true 
-           }
-         },   
+          }
         },
+        yaxis: {
+          lines: {
+            show: true
+          }
+        },
+      },
       responsive: [
         {
           breakpoint: 480,
@@ -198,10 +202,10 @@ export class AdminDashboardComponent {
           'Nov',
           'Dec',
         ],
-          axisBorder: {
-            show: false, // set to false to hide the vertical gridlines
-          },
+        axisBorder: {
+          show: false, // set to false to hide the vertical gridlines
         },
+      },
     };
     this.chartOptionsTwo = {
       series: [],
@@ -219,24 +223,24 @@ export class AdminDashboardComponent {
       },
       plotOptions: {
         bar: {
-            horizontal: false,
-            columnWidth: '50%'
+          horizontal: false,
+          columnWidth: '50%'
         },
-    },
+      },
       dataLabels: {
         enabled: false,
       },
       responsive: [{
         breakpoint: 480,
         options: {
-            chart: {
-                width: 200
-            },
-            legend: {
-              show: false
-            }
+          chart: {
+            width: 200
+          },
+          legend: {
+            show: false
+          }
         }
-    }],
+      }],
     };
     this.chartOptionsOneTwo = {
       chart: {
@@ -247,18 +251,18 @@ export class AdminDashboardComponent {
         },
       },
       grid: {
-        show: true, 
+        show: true,
         xaxis: {
           lines: {
             show: false
-           }
-         },  
-        yaxis: {
-          lines: { 
-            show: true 
-           }
-         },   
+          }
         },
+        yaxis: {
+          lines: {
+            show: true
+          }
+        },
+      },
       dataLabels: {
         enabled: false,
       },
@@ -284,23 +288,28 @@ export class AdminDashboardComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.user = this.dashboardService.authService.user;
-    if(this.user.roles.includes("Super-Admin") || this.user.permissions.includes("admin_dashboard")){
-      this.dashboardService.dashboardAdmin({}).subscribe((resp:any) => {
-        console.log(resp);
+
+    console.log('user', this.user);
+
+    if (this.user.roles.includes("Super-Admin") || this.user.permissions.includes("admin_dashboard")) {
+      this.dashboardService.dashboardAdmin({}).subscribe((resp: any) => {
+
+        console.log('resp', resp);
+
         this.appointments = resp.appointments.data;
-  
+
         this.num_appointments_current = resp.num_appointments_current;
         this.num_appointments_before = resp.num_appointments_before;
         this.porcentaje_d = resp.porcentaje_d;
-  
+
         this.num_patients_current = resp.num_patients_current;
         this.num_patients_before = resp.num_patients_before;
         this.porcentaje_dp = resp.porcentaje_dp;
-  
+
         this.num_appointments_attetion_current = resp.num_appointments_attetion_current;
         this.num_appointments_attetion_before = resp.num_appointments_attetion_before;
         this.porcentaje_da = resp.porcentaje_da;
-  
+
         this.appointments_total_current = resp.num_appointments_total_current;
         this.appointments_total_before = resp.num_appointments_total_before;
         this.porcentaje_dt = resp.porcentaje_dt;
@@ -309,26 +318,26 @@ export class AdminDashboardComponent {
     }
   }
 
-  dashboardAdminYear(){
+  dashboardAdminYear() {
 
-    let data = {
+    const data = {
       year: this.selectedValue,
     }
     this.query_income_year = null;
-    this.dashboardService.dashboardAdminYear(data).subscribe((resp:any) => {
+    this.dashboardService.dashboardAdminYear(data).subscribe((resp: any) => {
       console.log(resp);
 
       // START
       this.query_patient_by_genders = resp.query_patient_by_genders;
 
-      let data_male:any = [];
-      let data_female:any = [];
-      this.query_patient_by_genders.forEach((item:any) => {
+      const data_male: any = [];
+      const data_female: any = [];
+      this.query_patient_by_genders.forEach((item: any) => {
         data_male.push(item.hombre);
         data_female.push(item.mujer);
       });
 
-      let Patient_by_Genders = [
+      const Patient_by_Genders = [
         {
           name: 'Male',
           color: '#2E37A4',
@@ -346,23 +355,23 @@ export class AdminDashboardComponent {
       // START
       this.query_patients_speciality = resp.query_patients_speciality;
 
-      let labels_spe:any = [];
-      let series_spe:any = [];
-      this.query_patients_speciality.forEach((patients_special:any) => {
+      const labels_spe: any = [];
+      const series_spe: any = [];
+      this.query_patients_speciality.forEach((patients_special: any) => {
         labels_spe.push(patients_special.name);
         series_spe.push(patients_special.count);
       });
 
       this.chartOptionsTwo.labels = labels_spe;
       this.chartOptionsTwo.series = series_spe;
-       // END
+      // END
 
-       this.query_patients_speciality_percentage = resp.query_patients_speciality_percentage;
-      //  
+      this.query_patients_speciality_percentage = resp.query_patients_speciality_percentage;
+      //
 
       this.query_income_year = resp.query_income_year;
-      let data_income:any = [];
-      this.query_income_year.forEach((element:any) => {
+      const data_income: any = [];
+      this.query_income_year.forEach((element: any) => {
         data_income.push(element.income);
       });
 
@@ -375,18 +384,18 @@ export class AdminDashboardComponent {
           },
         },
         grid: {
-          show: true, 
+          show: true,
           xaxis: {
             lines: {
               show: false
-             }
-           },  
-          yaxis: {
-            lines: { 
-              show: true 
-             }
-           },   
+            }
           },
+          yaxis: {
+            lines: {
+              show: true
+            }
+          },
+        },
         dataLabels: {
           enabled: false,
         },
@@ -434,17 +443,17 @@ export class AdminDashboardComponent {
         return (aValue < bValue ? -1 : 1) * (sort.direction === 'asc' ? 1 : -1);
       });
       this.upcomingAppointments = datas.sort((a, b) => {
-         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const aValue = (a as any)[sort.active];
-         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const bValue = (b as any)[sort.active];
         return (aValue < bValue ? -1 : 1) * (sort.direction === 'asc' ? 1 : -1);
       });
     }
   }
 
-  public selectedYear(){
-    console.log(this.selectedValue); 
+  public selectedYear() {
+    console.log(this.selectedValue);
     this.dashboardAdminYear();
   }
 
