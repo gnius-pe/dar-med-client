@@ -18,17 +18,19 @@ export class PatientMService {
     public authService: AuthService,
   ) { }
 
-  listPatients(page = 1) {
+  listPatients(page = 1, search = '') {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.authService.token}`
+      'Authorization': `Bearer ${this.authService.token}`,
     });
-    const url = `${this.baseUrl}?page=${page}`;
+
+    const url = `${this.baseUrl}?page=${page}&search=${encodeURIComponent(search)}`;
+
     return this.http.get(url, { headers });
   }
 
   registerPatient(data:any){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/patients";
+    const headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
+    const URL = URL_SERVICIOS+"/patients";
     return this.http.post(URL,data,{headers: headers});
   }
 
@@ -45,14 +47,14 @@ export class PatientMService {
   }
 
   deletePatient(staff_id:string){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/patients/"+staff_id;
+    const headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
+    const URL = URL_SERVICIOS+"/patients/"+staff_id;
     return this.http.delete(URL,{headers: headers});
   }
 
   profilePatient(staff_id:string){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/patients/profile/"+staff_id;
+    const headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
+    const URL = URL_SERVICIOS+"/patients/profile/"+staff_id;
     return this.http.get(URL,{headers: headers});
   }
 

@@ -28,19 +28,18 @@
                   <div class="doctor-table-blk">
                     <h3>Lista de pacientes</h3>
 
-                    <!--<div class="doctor-search-blk">
-                      <div class="top-nav-search table-search-blk">
-                        <input class="form-control" placeholder="Search here" [(ngModel)]="searchDataValue"
-                               (keyup.enter)="searchData()">
-                        <a class="btn"><img src="assets/img/icons/search-normal.svg" alt=""></a>
+                    <div class="doctor-search-blk">
+                      <div class="top-nav-search table-search-blk d-flex">
+                        <input
+                          class="form-control"
+                          placeholder="Buscar paciente"
+                          [(ngModel)]="searchDataValue"
+                          (keyup.enter)="searchData()">
+                        <a class="btn ms-2" (click)="searchData()">
+                          <img src="assets/img/icons/search-normal.svg" alt="">
+                        </a>
                       </div>
-                      <div class="add-group">
-                        <a routerLink="/patient-m/register" class="btn btn-primary add-pluss ms-2"><img
-                          src="assets/img/icons/plus.svg" alt=""></a>
-                        <a href="javascript:;" (click)="PageSize()" class="btn btn-primary doctor-refresh ms-2"><img
-                          src="assets/img/icons/re-fresh.svg" alt=""></a>
-                      </div>
-                    </div>-->
+                    </div>
 
                   </div>
                 </div>
@@ -77,19 +76,24 @@
                   <td>{{ patient.first_phone }}</td>
                   <td>{{ calculateAge(patient.birth_date, patient.created_at) }}</td>
                   <td>{{ formatDate(patient.created_at) }}</td>
-                  <td class="flex flex-col gap-2">
+                  <td class="icon-spacing">
                     <a *ngIf="isPermission('edit_patient')"
-                       [routerLink]="[ '/patient-m/list/edit/', patient.id ]"><i
-                      class="fa-solid fa-pen-to-square m-r-5"></i></a>
+                       [routerLink]="['/patient-m/list/edit/', patient.id]">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
                     <a *ngIf="isPermission('delete_patient')" href="javascript:void(0);"
                        (click)="selectUser(patient)" data-bs-toggle="modal"
-                       [attr.data-bs-target]="'#delete_staff-'+patient.id"
-                    ><i class="fa fa-trash-alt m-r-5"></i></a>
+                       [attr.data-bs-target]="'#delete_staff-' + patient.id">
+                      <i class="fa fa-trash-alt"></i>
+                    </a>
+                    <a [routerLink]="['/patient-m/edit-location/', patient.id]"
+                       href="javascript:void(0)">
+                      <i class="fa-solid fa-location-dot"></i>
+                    </a>
                     <a href="javascript:void(0)" (click)="printPatientData(patient.id.toString())">
                       <i class="fa fa-print"></i>
                     </a>
                   </td>
-
                   <!--  <td class="text-end">
                     <div class="dropdown dropdown-action" *ngIf="patient.id !== 1">
                       <a href="javascript:void(0);" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"

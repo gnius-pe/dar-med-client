@@ -7,7 +7,7 @@
           <ul class="breadcrumb">
             <li class="breadcrumb-item"><span>Pacientes</span></li>
             <li class="breadcrumb-item"><i class="feather icon-chevron-right"></i></li>
-            <li class="breadcrumb-item active">{{ showPatientForm ? 'Añadir paciente' : 'Añadir ubicación' }}</li>
+            <li class="breadcrumb-item active">Editar ubicación</li>
           </ul>
         </div>
       </div>
@@ -17,19 +17,24 @@
     <div class="row">
       <div class="col-sm-12">
 
-        <ng-container *ngIf="showPatientForm">
-          <app-patient-form
-            (sendPatientData)="createNewPatient($event)">
-          </app-patient-form>
+        <ng-container *ngIf="hasLocation === false">
+          <div class="alert alert-warning">
+            El paciente no tiene una ubicación registrada.
+          </div>
         </ng-container>
 
-
-        <ng-container *ngIf="!showPatientForm">
+        <ng-container *ngIf="hasLocation === true && geographicLocation">
           <app-geographic-location-form
-            (saveLocationData)="createLocation($event)">
+            [geographicLocation]="geographicLocation"
+            (saveLocationData)="updateGeographicLocation($event)">
           </app-geographic-location-form>
         </ng-container>
 
+        <ng-container *ngIf="hasLocation === null">
+          <div class="text-center">
+            <p>Cargando información de ubicación...</p>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

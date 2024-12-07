@@ -74,17 +74,17 @@ export class ListPatientMComponent implements OnInit {
     return `${day}/${month}/${year}`;
   }
 
-  private getTableData(page: number): void {
-    this.patientsList = [];
-    this.serialNumberArray = [];
+  public searchData() {
+    this.getTableData(this.currentPage, this.searchDataValue);
+  }
 
-    this.patientService.listPatients(page).subscribe((resp: any) => {
+  private getTableData(page: number, search = ''): void {
+    this.patientService.listPatients(page, search).subscribe((resp: any) => {
       this.patientsList = resp.data;
       this.currentPage = resp.current_page;
       this.totalPages = resp.last_page;
-      this.totalPagesArray = Array.from({length: this.totalPages}, (_, i) => i + 1);
-    })
-
+      this.totalPagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    });
   }
 
   selectUser(rol: any) {
@@ -149,8 +149,13 @@ export class ListPatientMComponent implements OnInit {
         const img = new Image();
         img.src = 'assets/img/logo_ticket.png';
         img.onload = () => {
-          doc.addImage(img, 'PNG', marginLeft, y, 70, 20);
-          y += 22;
+
+          const imgWidth = 70;
+          const imgAspectRatio = img.width / img.height;
+          const imgHeight = imgWidth / imgAspectRatio;
+
+          doc.addImage(img, 'PNG', marginLeft, y, imgWidth, imgHeight);
+          y += imgHeight + 5;
 
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(10);
@@ -249,8 +254,13 @@ export class ListPatientMComponent implements OnInit {
           bottomImg.src = 'assets/img/ticket_bottom.png';
           bottomImg.onload = () => {
             y += 5;
-            doc.addImage(bottomImg, 'JPEG', marginLeft, y, 70, 20);
-            y += 25;
+
+            const imgWidth = 70;
+            const imgAspectRatio = bottomImg.width / bottomImg.height;
+            const imgHeight = imgWidth / imgAspectRatio;
+
+            doc.addImage(bottomImg, 'JPEG', marginLeft, y, imgWidth, imgHeight);
+            y += imgHeight + 5;
 
             doc.setFontSize(8);
             doc.text('¡Gracias por asistir a Misiones DAR!', marginLeft, y);
