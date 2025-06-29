@@ -1,15 +1,16 @@
-import { Injectable } from '@angular/core';
-import { routes } from '../routes/routes';
-import { map, Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { apiResultFormat } from '../models/models';
+import {Injectable} from '@angular/core';
+import {routes} from '../routes/routes';
+import {map, Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {apiResultFormat} from '../models/models';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   public getDoctorsList(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/doctors-list.json').pipe(
@@ -18,6 +19,7 @@ export class DataService {
       })
     );
   }
+
   public getPatientsList(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/doctors-list.json').pipe(
       map((res: apiResultFormat) => {
@@ -25,6 +27,7 @@ export class DataService {
       })
     );
   }
+
   public getStaffList(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/staff-list.json').pipe(
       map((res: apiResultFormat) => {
@@ -32,6 +35,7 @@ export class DataService {
       })
     );
   }
+
   public getAppointmentList(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/appointment-list.json').pipe(
       map((res: apiResultFormat) => {
@@ -39,6 +43,7 @@ export class DataService {
       })
     );
   }
+
   public getStaffHoliday(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/staff-holiday.json').pipe(
       map((res: apiResultFormat) => {
@@ -46,6 +51,7 @@ export class DataService {
       })
     );
   }
+
   public getSchedule(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/schedule.json').pipe(
       map((res: apiResultFormat) => {
@@ -53,6 +59,7 @@ export class DataService {
       })
     );
   }
+
   public getInvoices(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/invoices.json').pipe(
       map((res: apiResultFormat) => {
@@ -60,6 +67,7 @@ export class DataService {
       })
     );
   }
+
   public getPayments(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/payments.json').pipe(
       map((res: apiResultFormat) => {
@@ -67,6 +75,7 @@ export class DataService {
       })
     );
   }
+
   public getExpenses(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/expenses.json').pipe(
       map((res: apiResultFormat) => {
@@ -74,6 +83,7 @@ export class DataService {
       })
     );
   }
+
   public getTaxes(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/taxes.json').pipe(
       map((res: apiResultFormat) => {
@@ -81,6 +91,7 @@ export class DataService {
       })
     );
   }
+
   public getProvidentFund(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/provident-fund.json').pipe(
       map((res: apiResultFormat) => {
@@ -88,6 +99,7 @@ export class DataService {
       })
     );
   }
+
   public getDepartmentList(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/department-list.json').pipe(
       map((res: apiResultFormat) => {
@@ -95,6 +107,7 @@ export class DataService {
       })
     );
   }
+
   public getSalary(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/salary.json').pipe(
       map((res: apiResultFormat) => {
@@ -102,6 +115,7 @@ export class DataService {
       })
     );
   }
+
   public getAssetsList(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/assets-list.json').pipe(
       map((res: apiResultFormat) => {
@@ -109,6 +123,7 @@ export class DataService {
       })
     );
   }
+
   public getExpenseReports(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/expense-reports.json').pipe(
       map((res: apiResultFormat) => {
@@ -116,6 +131,7 @@ export class DataService {
       })
     );
   }
+
   public getInvoiceReports(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/invoice-reports.json').pipe(
       map((res: apiResultFormat) => {
@@ -123,6 +139,7 @@ export class DataService {
       })
     );
   }
+
   public getAllInvoice(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/all-invoice.json').pipe(
       map((res: apiResultFormat) => {
@@ -130,6 +147,7 @@ export class DataService {
       })
     );
   }
+
   public getPatientDashboard(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/patient-dashboard.json').pipe(
       map((res: apiResultFormat) => {
@@ -137,6 +155,7 @@ export class DataService {
       })
     );
   }
+
   public getInvoicesPaid(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/invoices-paid.json').pipe(
       map((res: apiResultFormat) => {
@@ -144,6 +163,7 @@ export class DataService {
       })
     );
   }
+
   public getInvoicesOverdue(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/invoices-overdue.json').pipe(
       map((res: apiResultFormat) => {
@@ -151,6 +171,7 @@ export class DataService {
       })
     );
   }
+
   public getInvoicesDraft(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/invoices-draft.json').pipe(
       map((res: apiResultFormat) => {
@@ -158,6 +179,7 @@ export class DataService {
       })
     );
   }
+
   public getInvoicesCancelled(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/invoices-cancelled.json').pipe(
       map((res: apiResultFormat) => {
@@ -165,6 +187,7 @@ export class DataService {
       })
     );
   }
+
   public getInvoicesRecurring(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/invoices-recurring.json').pipe(
       map((res: apiResultFormat) => {
@@ -172,6 +195,7 @@ export class DataService {
       })
     );
   }
+
   public getStaffLeave(): Observable<apiResultFormat> {
     return this.http.get<apiResultFormat>('assets/json/staff-leave.json').pipe(
       map((res: apiResultFormat) => {
@@ -179,6 +203,7 @@ export class DataService {
       })
     );
   }
+
   public getEvents() {
     return this.http.get<apiResultFormat>('assets/json/scheduleevents.json').pipe(
       map((res: apiResultFormat) => {
@@ -186,6 +211,7 @@ export class DataService {
       })
     );
   }
+
   public getDataTables() {
     return this.http.get<apiResultFormat>('assets/json/data-tables.json').pipe(
       map((res: apiResultFormat) => {
@@ -193,9 +219,10 @@ export class DataService {
       })
     );
   }
+
   public sideBar = [
     {
-      tittle: 'Main',
+      tittle: '',
       showAsTab: false,
       separateRoute: false,
       menu: [
@@ -204,7 +231,7 @@ export class DataService {
           hasSubRoute: true,
           showSubRoute: false,
           base: 'dashboard',
-          route:'dashboard',
+          route: 'dashboard',
           img: 'assets/img/icons/menu-icon-01.svg',
           subMenus: [
             {
@@ -270,21 +297,21 @@ export class DataService {
           ],
         },
         {
-          menuValue: 'Staff',
+          menuValue: 'Personal',
           hasSubRoute: true,
           showSubRoute: false,
           base: 'staffs',
           img: 'assets/img/icons/menu-icon-08.svg',
           subMenus: [
             {
-              menuValue: 'Staff List',
+              menuValue: 'Lista de personal',
               route: routes.staffList,
               base: routes.staffList,
               permision: 'list_staff',
               show_nav: true,
             },
             {
-              menuValue: 'Add Staff',
+              menuValue: 'Añadir personal',
               route: routes.addStaff,
               base: routes.addStaff,
               permision: 'register_staff',
@@ -349,21 +376,21 @@ export class DataService {
           ],
         },
         {
-          menuValue: 'Doctors',
+          menuValue: 'Doctores',
           hasSubRoute: true,
           showSubRoute: false,
           base: 'doctor',
           img: 'assets/img/icons/menu-icon-02.svg',
           subMenus: [
             {
-              menuValue: 'Add Doctor',
+              menuValue: 'Añadir doctor',
               route: routes.addDoctor,
               base: routes.addDoctor,
               permision: 'register_doctor',
               show_nav: true,
             },
             {
-              menuValue: 'Doctor List',
+              menuValue: 'Lista de doctores',
               route: routes.doctorsList,
               base: routes.doctorsList,
               permision: 'list_doctor',
@@ -437,21 +464,21 @@ export class DataService {
           ],
         },
         {
-          menuValue: 'Appointments',
+          menuValue: 'Citas',
           hasSubRoute: true,
           showSubRoute: false,
           base: 'appointments',
           img: 'assets/img/icons/menu-icon-04.svg',
           subMenus: [
             {
-              menuValue: 'Register Appointment',
+              menuValue: 'Registrar cita',
               route: routes.addAppointment,
               base: routes.addAppointment,
               permision: 'register_appointment',
               show_nav: true,
             },
             {
-              menuValue: 'Appointment List',
+              menuValue: 'Lista de citas',
               route: routes.appointmentList,
               base: routes.appointmentList,
               permision: 'list_appointment',
@@ -480,44 +507,44 @@ export class DataService {
             },
           ],
         },
-        {
-          menuValue: 'Pagos',
-          hasSubRoute: true,
-          showSubRoute: false,
-          base: 'payroll',
-          img: 'assets/img/icons/menu-icon-09.svg',
-          subMenus: [
-            {
-              menuValue: 'Ver Pagos',
-              route: routes.salary,
-              base: routes.salary,
-              permision: 'show_payment',
-              show_nav: true,
-            },
-            {
-              menuValue: 'Edit Pagos',
-              route: '',
-              base: '',
-              permision: 'edit_payment',
-              show_nav: false,
-            },
-            {
-              menuValue: 'Delete Pagos',
-              route: '',
-              base: '',
-              permision: 'delete_payment',
-              show_nav: false,
-            },
-            {
-              menuValue: 'Add Pagos',
-              route: '',
-              base: '',
-              permision: 'add_payment',
-              show_nav: false,
-            },
-          ],
-        },
-        {
+        /*      {
+                menuValue: 'Pagos',
+                hasSubRoute: true,
+                showSubRoute: false,
+                base: 'payroll',
+                img: 'assets/img/icons/menu-icon-09.svg',
+                subMenus: [
+                  {
+                    menuValue: 'Ver Pagos',
+                    route: routes.salary,
+                    base: routes.salary,
+                    permision: 'show_payment',
+                    show_nav: true,
+                  },
+                  {
+                    menuValue: 'Edit Pagos',
+                    route: '',
+                    base: '',
+                    permision: 'edit_payment',
+                    show_nav: false,
+                  },
+                  {
+                    menuValue: 'Delete Pagos',
+                    route: '',
+                    base: '',
+                    permision: 'delete_payment',
+                    show_nav: false,
+                  },
+                  {
+                    menuValue: 'Add Pagos',
+                    route: '',
+                    base: '',
+                    permision: 'add_payment',
+                    show_nav: false,
+                  },
+                ],
+              },*/
+        /*{
           menuValue: 'Calendar',
           route: routes.calendar,
           hasSubRoute: false,
@@ -528,7 +555,7 @@ export class DataService {
           permision: 'calendar',
           show_nav: true,
           subMenus: [],
-        },
+        },*/
         // {
         //   menuValue: 'Activities',
         //   route: routes.activities,
@@ -646,111 +673,111 @@ export class DataService {
   ];
   public upcomingAppointments = [
     {
-      "no" : "R00001",
-      "patientName" : "Andrea Lalema",
-      "doctor" : "Dr.Jenny Smith",
-      "date" : "12.05.2022 at",
-      "time" : "7.00 PM",
-      "disease" : "Fracture",
-      "img" : "assets/img/profiles/avatar-03.jpg"
-  },
-  {
-      "no" : "R00002",
-      "patientName" : "Cristina Groves",
-      "doctor" : "Dr.Angelica Ramos",
-      "date" : "13.05.2022 at",
-      "time" : "7.00 PM",
-      "disease" : "Fever",
-      "img" : "assets/img/profiles/avatar-05.jpg"
-  },
-  {
-      "no" : "R00003",
-      "patientName" : "Bernardo",
-      "doctor" : "Dr.Martin Doe",
-      "date" : "14.05.2022 at",
-      "time" : "7.00 PM",
-      "disease" : "Fracture",
-      "img" : "assets/img/profiles/avatar-04.jpg"
-  },
-  {
-      "no" : "R00004",
-      "patientName" : "Galaviz Lalema",
-      "doctor" : "Dr.Martin Doe",
-      "date" : "15.05.2022 at",
-      "time" : "7.00 PM",
-      "disease" : "Fracture",
-      "img" : "assets/img/profiles/avatar-03.jpg"
-  },
-  {
-      "no" : "R00005",
-      "patientName" : "Dr.William Jerk",
-      "doctor" : "Dr.Angelica Ramos",
-      "date" : "16.05.2022 at",
-      "time" : "7.00 PM",
-      "disease" : "Fever",
-      "img" : "assets/img/profiles/avatar-02.jpg"
-  }
+      "no": "R00001",
+      "patientName": "Andrea Lalema",
+      "doctor": "Dr.Jenny Smith",
+      "date": "12.05.2022 at",
+      "time": "7.00 PM",
+      "disease": "Fracture",
+      "img": "assets/img/profiles/avatar-03.jpg"
+    },
+    {
+      "no": "R00002",
+      "patientName": "Cristina Groves",
+      "doctor": "Dr.Angelica Ramos",
+      "date": "13.05.2022 at",
+      "time": "7.00 PM",
+      "disease": "Fever",
+      "img": "assets/img/profiles/avatar-05.jpg"
+    },
+    {
+      "no": "R00003",
+      "patientName": "Bernardo",
+      "doctor": "Dr.Martin Doe",
+      "date": "14.05.2022 at",
+      "time": "7.00 PM",
+      "disease": "Fracture",
+      "img": "assets/img/profiles/avatar-04.jpg"
+    },
+    {
+      "no": "R00004",
+      "patientName": "Galaviz Lalema",
+      "doctor": "Dr.Martin Doe",
+      "date": "15.05.2022 at",
+      "time": "7.00 PM",
+      "disease": "Fracture",
+      "img": "assets/img/profiles/avatar-03.jpg"
+    },
+    {
+      "no": "R00005",
+      "patientName": "Dr.William Jerk",
+      "doctor": "Dr.Angelica Ramos",
+      "date": "16.05.2022 at",
+      "time": "7.00 PM",
+      "disease": "Fever",
+      "img": "assets/img/profiles/avatar-02.jpg"
+    }
   ];
   public recentPatients = [
     {
-      "no" : "R00001",
-      "patientName" : "Andrea Lalema",
-      "age" : "21",
-      "date" : "12.05.2022 at",
-      "dateOfBirth" : "07 January 2002",
-      "diagnosis" : "Heart attack",
-      "img" : "assets/img/profiles/avatar-02.jpg",
-      "triage" : "Non Urgent"
-  },
-  {
-      "no" : "R00002",
-      "patientName" : "Mark Hay Smith",
-      "age" : "23",
-      "date" : "13.05.2022 at",
-      "dateOfBirth" : "06 January 2002",
-      "diagnosis" : "Jaundice",
-      "img" : "assets/img/profiles/avatar-03.jpg",
-      "triage" : "Emergency"
-  },
-  {
-      "no" : "R00003",
-      "patientName" : "Cristina Groves",
-      "age" : "25",
-      "date" : "14.05.2022 at",
-      "dateOfBirth" : "10 January 2002",
-      "diagnosis" : "Malaria",
-      "img" : "assets/img/profiles/avatar-04.jpg",
-      "triage" : "Out Patient"
-  },
-  {
-      "no" : "R00004",
-      "patientName" : "Galaviz Lalema",
-      "age" : "21",
-      "date" : "15.05.2022 at",
-      "dateOfBirth" : "09 January 2002",
-      "diagnosis" : "Typhoid",
-      "img" : "assets/img/profiles/avatar-05.jpg",
-      "triage" : "Urgent"
-  }
+      "no": "R00001",
+      "patientName": "Andrea Lalema",
+      "age": "21",
+      "date": "12.05.2022 at",
+      "dateOfBirth": "07 January 2002",
+      "diagnosis": "Heart attack",
+      "img": "assets/img/profiles/avatar-02.jpg",
+      "triage": "Non Urgent"
+    },
+    {
+      "no": "R00002",
+      "patientName": "Mark Hay Smith",
+      "age": "23",
+      "date": "13.05.2022 at",
+      "dateOfBirth": "06 January 2002",
+      "diagnosis": "Jaundice",
+      "img": "assets/img/profiles/avatar-03.jpg",
+      "triage": "Emergency"
+    },
+    {
+      "no": "R00003",
+      "patientName": "Cristina Groves",
+      "age": "25",
+      "date": "14.05.2022 at",
+      "dateOfBirth": "10 January 2002",
+      "diagnosis": "Malaria",
+      "img": "assets/img/profiles/avatar-04.jpg",
+      "triage": "Out Patient"
+    },
+    {
+      "no": "R00004",
+      "patientName": "Galaviz Lalema",
+      "age": "21",
+      "date": "15.05.2022 at",
+      "dateOfBirth": "09 January 2002",
+      "diagnosis": "Typhoid",
+      "img": "assets/img/profiles/avatar-05.jpg",
+      "triage": "Urgent"
+    }
   ];
   public patientProfile = [
     {
-      date : "29/09/2022",
-      doctor : "Dr.Jenny Smith",
-      treatment : "Check up",
-      charges : "$ 60"
+      date: "29/09/2022",
+      doctor: "Dr.Jenny Smith",
+      treatment: "Check up",
+      charges: "$ 60"
     },
     {
-      date : "19/09/2022",
-      doctor : "Andrea Lalema",
-      treatment : "	Blood Test",
-      charges : "$ 50"
+      date: "19/09/2022",
+      doctor: "Andrea Lalema",
+      treatment: "	Blood Test",
+      charges: "$ 50"
     },
     {
-      date : "20/09/2022",
-      doctor : "Dr.William Stephin",
-      treatment : "Blood Pressure",
-      charges : "$ 30"
+      date: "20/09/2022",
+      doctor: "Dr.William Stephin",
+      treatment: "Blood Pressure",
+      charges: "$ 30"
     }
   ];
   public blogs = [

@@ -1,6 +1,6 @@
 <div class="page-wrapper">
     <div class="content">
-    
+
         <!-- Page Header -->
         <div class="page-header">
             <div class="row">
@@ -14,13 +14,13 @@
             </div>
         </div>
         <!-- /Page Header -->
-        
+
         <div class="row">
             <div class="col-sm-12">
-            
+
                 <div class="card card-table show-entire">
                     <div class="card-body">
-                    
+
                         <!-- Table Header -->
                         <div class="page-table-header mb-2">
                             <div class="row align-items-center">
@@ -29,7 +29,7 @@
                                         <h3>Staffs List</h3>
                                         <div class="doctor-search-blk">
                                             <div class="top-nav-search table-search-blk">
-                                                    <input  class="form-control" placeholder="Search here" [(ngModel)]="searchDataValue"
+                                                    <input  class="form-control" placeholder="Buscar" [(ngModel)]="searchDataValue"
                                                     (ngModelChange)="searchData(searchDataValue)">
                                                     <a class="btn"><img src="assets/img/icons/search-normal.svg" alt=""></a>
                                             </div>
@@ -45,12 +45,12 @@
                                     <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-02.svg" alt=""></a>
                                     <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-03.svg" alt=""></a>
                                     <a href="javascript:;" ><img src="assets/img/icons/pdf-icon-04.svg" alt=""></a>
-                                    
+
                                 </div>
                             </div>
                         </div>
                         <!-- /Table Header -->
-                        
+
                         <div class="table-responsive">
                             <table  matSort (matSortChange)="sortData($event)" class="table border-0 custom-table comman-table datatable mb-0">
                                 <thead>
@@ -104,7 +104,7 @@
                                     {{ totalData }} entries
                                   </div>
                                 </div>
-                
+
                                 <div class="col-sm-12 col-md-7">
                                   <div class="pagination_section">
                                     <ul class="pagination">
@@ -122,7 +122,7 @@
                                           >Previous</a
                                         >
                                       </li>
-                
+
                                       <ng-container
                                         *ngFor="let item of pageNumberArray; let i = index"
                                       >
@@ -182,7 +182,7 @@
                                           </a>
                                         </li>
                                       </ng-container>
-                
+
                                       <li
                                         class="page-item"
                                         [ngClass]="{
@@ -205,8 +205,8 @@
                               </div>
                         </div>
                     </div>
-                </div>							
-            </div>					
+                </div>
+            </div>
         </div>
     </div>
 </div>
