@@ -52,7 +52,7 @@ export class AddStaffNComponent implements OnInit {
 
     this.showLoading();
 
-    if (!this.name || !this.email || !this.surname || !this.FILE_AVATAR || !this.password) {
+    if (!this.name || !this.email || !this.surname || !this.password) {
       this.hideLoading();
       this.showWarning("COMPLETE LOS CAMPOS OBLIGATORIOS")
       return;
