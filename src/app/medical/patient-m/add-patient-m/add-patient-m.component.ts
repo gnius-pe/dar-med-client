@@ -12,6 +12,7 @@ import {GeographicLocationService} from "../service/geographic_location.service"
 export class AddPatientMComponent {
 
   public showPatientForm = true;
+  public isLoading = false;
   public patientData: Patient | null = null;
 
   constructor(
@@ -21,13 +22,16 @@ export class AddPatientMComponent {
   }
 
   public createNewPatient(formData: Patient) {
+    this.showLoading();
     this.patientService.registerPatient(formData).pipe(
       tap((resp: any) => {
         this.patientData = structuredClone(resp.data);
         this.showPatientForm = false;
+        this.hideLoading();
       }),
       catchError(error => {
         console.error('Error al registrar el paciente:', error);
+        this.hideLoading();
         return of(error);
       })
     ).subscribe();
@@ -40,19 +44,30 @@ export class AddPatientMComponent {
     if (patient_id === -1) return
 
     const dataWithPatientId: GeographicLocation = {...locationData, patient_id: patient_id};
+    this.showLoading();
 
     this.locationService.registerLocation(dataWithPatientId).pipe(
       tap((resp: any) => {
         console.log('Registro exitoso de ubicación:', resp);
         setTimeout(() => {
-        this.resetToPatientForm()
+          this.resetToPatientForm()
+          this.hideLoading();
         }, 1000);
       }),
       catchError(error => {
         console.error('Error al registrar la ubicación:', error);
+        this.hideLoading();
         return of(error);
       })
     ).subscribe();
+  }
+
+  private showLoading() {
+    this.isLoading = true;
+  }
+
+  private hideLoading() {
+    this.isLoading = false;
   }
 
   private resetToPatientForm(): void {
