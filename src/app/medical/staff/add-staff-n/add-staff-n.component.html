@@ -6,9 +6,9 @@
             <div class="row">
                 <div class="col-sm-12">
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Staffs </a></li>
+                        <li class="breadcrumb-item"><a href="#">Personal </a></li>
                         <li class="breadcrumb-item"><i class="feather icon-chevron-right"></i></li>
-                        <li class="breadcrumb-item active">Add Staffs</li>
+                        <li class="breadcrumb-item active">Añadir personal</li>
                     </ul>
                 </div>
             </div>
@@ -164,3 +164,11 @@
 </div>
 
 <app-loading-overlay [isBlock]="isLoading"></app-loading-overlay>
+
+<app-notification
+  [show]="showNotification"
+  [message]="notificationMessage"
+  [type]="notificationType"
+  [duration]="3000"
+  (close)="onNotificationClose()">
+</app-notification>
