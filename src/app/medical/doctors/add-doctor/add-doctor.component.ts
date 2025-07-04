@@ -29,8 +29,10 @@ export class AddDoctorComponent implements OnInit {
   public specialitie_id: any;
   public specialities: any = [];
 
-  public text_success = '';
-  public text_validation = '';
+  isLoading = false;
+  showNotification = false;
+  notificationMessage = '';
+  notificationType: 'success' | 'error' | 'warning' = 'success';
 
   public days_week = [
     {
@@ -81,19 +83,24 @@ export class AddDoctorComponent implements OnInit {
   }
 
   save() {
-    this.text_validation = '';
+
+    this.showLoading()
+
     if (!this.name || !this.email || !this.surname || !this.password) {
-      this.text_validation = "LOS CAMPOS SON NECESARIOS (name,surname,email,avatar)";
+      this.showWarning("COMPLETE LOS CAMPOS OBLIGATORIOS")
+      this.hideLoading();
       return;
     }
 
     if (this.password != this.password_confirmation) {
-      this.text_validation = "LAS CONTRASEÑA DEBEN SER IGUALES";
+      this.showWarning("LAS CONTRASEÑA DEBEN SER IGUALES")
+      this.hideLoading();
       return;
     }
 
     if (this.hours_selecteds.length == 0) {
-      this.text_validation = "NECESITAS SELECCIONAR UN HORARIO AL MENOS";
+      this.showWarning("NECESITAS SELECCIONAR UN HORARIO AL MENOS")
+      this.hideLoading();
       return;
     }
 
@@ -126,9 +133,12 @@ export class AddDoctorComponent implements OnInit {
     this.doctorsService.registerDoctor(formData).subscribe((resp: any) => {
 
       if (resp.message == 403) {
-        this.text_validation = resp.message_text;
+        this.hideLoading();
+        this.showError(resp.message_text)
       } else {
-        this.text_success = 'El usuario ha sido registrado correctamente';
+
+        this.hideLoading();
+        this.showSuccess("El usuario ha sido registrado correctamente")
 
         this.name = '';
         this.surname = '';
@@ -153,10 +163,10 @@ export class AddDoctorComponent implements OnInit {
 
   loadFile($event: any) {
     if ($event.target.files[0].type.indexOf("image") < 0) {
-      this.text_validation = "SOLAMENTE PUEDEN SER ARCHIVOS DE TIPO IMAGEN";
+      this.showWarning("SOLAMENTE PUEDEN SER ARCHIVOS DE TIPO IMAGEN")
       return;
     }
-    this.text_validation = '';
+
     this.FILE_AVATAR = $event.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(this.FILE_AVATAR);
@@ -278,5 +288,35 @@ export class AddDoctorComponent implements OnInit {
     } else {
       return false;
     }
+  }
+
+  private showLoading() {
+    this.isLoading = true;
+  }
+
+  private hideLoading() {
+    this.isLoading = false;
+  }
+
+  showSuccess(message: string) {
+    this.notificationMessage = message;
+    this.notificationType = 'success';
+    this.showNotification = true;
+  }
+
+  showError(message: string) {
+    this.notificationMessage = message;
+    this.notificationType = 'error';
+    this.showNotification = true;
+  }
+
+  showWarning(message: string) {
+    this.notificationMessage = message;
+    this.notificationType = 'warning';
+    this.showNotification = true;
+  }
+
+  onNotificationClose() {
+    this.showNotification = false;
   }
 }
