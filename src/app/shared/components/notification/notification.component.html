@@ -1,0 +1,15 @@
+<div class="notification" *ngIf="show" [ngClass]="'notification--' + type">
+  <div class="notification__content">
+    <div class="notification__icon">
+      <i class="feather" [ngClass]="{
+        'icon-check-circle': type === 'success',
+        'icon-x-circle': type === 'error',
+        'icon-alert-triangle': type === 'warning'
+      }"></i>
+    </div>
+    <span class="notification__message">{{ message }}</span>
+    <button class="notification__close" (click)="closeNotification()" type="button">
+      <i class="feather icon-x"></i>
+    </button>
+  </div>
+</div>

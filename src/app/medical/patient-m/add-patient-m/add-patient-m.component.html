@@ -35,4 +35,12 @@
   </div>
 </div>
 
+<app-notification
+  [show]="showNotification"
+  [message]="notificationMessage"
+  [type]="notificationType"
+  [duration]="3000"
+  (close)="onNotificationClose()">
+</app-notification>
+
 <app-loading-overlay [isBlock]="isLoading"></app-loading-overlay>
