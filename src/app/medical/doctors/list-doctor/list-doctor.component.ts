@@ -70,7 +70,7 @@ export class ListDoctorComponent {
     this.role_generals.map((res: any, index: number) => {
       const serialNumber = index + 1;
       if (index >= this.skip && serialNumber <= this.limit) {
-        
+
         this.usersList.push(res);
         this.serialNumberArray.push(serialNumber);
       }
@@ -87,7 +87,7 @@ export class ListDoctorComponent {
 
     this.doctorService.deleteDoctor(this.doctor_selected.id).subscribe((resp:any) => {
       console.log(resp);
-      let INDEX = this.usersList.findIndex((item:any) => item.id == this.doctor_selected.id);
+      const INDEX = this.usersList.findIndex((item:any) => item.id == this.doctor_selected.id);
       if(INDEX != -1){
         this.usersList.splice(INDEX,1);
 
@@ -166,16 +166,21 @@ export class ListDoctorComponent {
     if (this.totalPages % 1 != 0) {
       this.totalPages = Math.trunc(this.totalPages + 1);
     }
-    /* eslint no-var: off */
-    for (var i = 1; i <= this.totalPages; i++) {
+
+    for (let i = 1; i <= this.totalPages; i++) {
       const limit = pageSize * i;
       const skip = limit - pageSize;
       this.pageNumberArray.push(i);
       this.pageSelection.push({ skip: skip, limit: limit });
-      // 1
-      // 0 - 10
-      // 2
-      // 10 - 20
     }
+  }
+
+  formatDate(date: string): string {
+    const parsedDate = new Date(date);
+    const day = parsedDate.getDate().toString().padStart(2, '0');
+    const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+    const year = parsedDate.getFullYear();
+
+    return `${day}/${month}/${year}`;
   }
 }

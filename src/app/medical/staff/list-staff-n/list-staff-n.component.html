@@ -73,9 +73,9 @@
                   <td>{{ data.name + ' ' + (data.surname ? data.surname : '') }}</td>
                   <td>{{ data.email }}</td>
                   <td>{{ data.mobile }}</td>
-                  <td>{{ data.birth_date }}</td>
+                  <td>{{ formatDate(data.birth_date) }}</td>
                   <td>{{ data.role.name }}</td>
-                  <td>{{ data.created_at }}</td>
+                  <td>{{ formatDate(data.created_at) }}</td>
                   <td class="text-end">
                     <div class="dropdown dropdown-action" *ngIf="data.id != 30">
                       <a href="javascript:void(0);" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
