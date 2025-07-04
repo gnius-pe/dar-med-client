@@ -34,6 +34,8 @@ export class ListPatientMComponent implements OnInit {
   public patient_selected: any;
   public user: any;
 
+  isLoading = false;
+
   constructor(
     public patientService: PatientMService,
   ) {
@@ -79,11 +81,13 @@ export class ListPatientMComponent implements OnInit {
   }
 
   private getTableData(page: number, search = ''): void {
+    this.showLoading()
     this.patientService.listPatients(page, search).subscribe((resp: any) => {
       this.patientsList = resp.data;
       this.currentPage = resp.current_page;
       this.totalPages = resp.last_page;
       this.totalPagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+      this.hideLoading()
     });
   }
 
@@ -94,7 +98,7 @@ export class ListPatientMComponent implements OnInit {
   deletePatient() {
 
     this.patientService.deletePatient(this.patient_selected.id).subscribe((resp: any) => {
-      console.log(resp);
+
       const INDEX = this.patientsList.findIndex((item: any) => item.id == this.patient_selected.id);
       if (INDEX != -1) {
         this.patientsList.splice(INDEX, 1);
@@ -278,5 +282,13 @@ export class ListPatientMComponent implements OnInit {
         console.error('Error obteniendo los datos del paciente:', err);
       },
     });
+  }
+
+  private showLoading() {
+    this.isLoading = true;
+  }
+
+  private hideLoading() {
+    this.isLoading = false;
   }
 }
