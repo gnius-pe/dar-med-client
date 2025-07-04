@@ -11,7 +11,7 @@ import {jsPDF} from 'jspdf';
 })
 export class ListPatientMComponent implements OnInit {
 
-  @ViewChild('qrCodeContainer', { static: false }) qrCodeContainer!: ElementRef;
+  @ViewChild('qrCodeContainer', {static: false}) qrCodeContainer!: ElementRef;
 
   public patientsList: Patient[] = [];
   dataSource!: MatTableDataSource<any>;
@@ -86,7 +86,7 @@ export class ListPatientMComponent implements OnInit {
       this.patientsList = resp.data;
       this.currentPage = resp.current_page;
       this.totalPages = resp.last_page;
-      this.totalPagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+      this.totalPagesArray = Array.from({length: this.totalPages}, (_, i) => i + 1);
       this.hideLoading()
     });
   }
@@ -146,7 +146,7 @@ export class ListPatientMComponent implements OnInit {
           format: [80, 300],
         });
 
-        const marginLeft = 5;
+        const marginLeft = 3;
         let y = 8;
         const lineHeight = 5;
 
@@ -177,9 +177,12 @@ export class ListPatientMComponent implements OnInit {
           doc.setFontSize(9);
           doc.setFont('helvetica', 'bold');
           doc.text('Paciente:', marginLeft, y);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${patientData.patient.name}`, marginLeft + 20, y);
           y += lineHeight;
+
+          doc.setFont('helvetica', 'normal');
+          const splitName = doc.splitTextToSize(patientData.patient.name, 65);
+          doc.text(splitName, marginLeft, y);
+          y += splitName.length * lineHeight;
 
           doc.text(`DNI: ${patientData.patient.identification_number}`, marginLeft, y);
           y += lineHeight;
