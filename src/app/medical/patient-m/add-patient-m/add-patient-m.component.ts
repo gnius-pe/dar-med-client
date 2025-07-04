@@ -34,7 +34,7 @@ export class AddPatientMComponent {
         this.showSuccess('Paciente registrado con éxito');
       }),
       catchError(error => {
-        console.error('Error al registrar el paciente:', error);
+        //console.error('Error al registrar el paciente:', error);
         this.hideLoading();
 
         if (error.status === 422) {

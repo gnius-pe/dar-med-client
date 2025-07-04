@@ -14,7 +14,6 @@ export class PatientFormComponent implements OnChanges {
   @Output() sendPatientData: EventEmitter<Patient> = new EventEmitter<Patient>();
 
   public patientForm: FormGroup;
-  public showMessage = false;
 
   constructor(
     private fb: FormBuilder,
@@ -37,23 +36,14 @@ export class PatientFormComponent implements OnChanges {
     }
 
     const formData = this.patientForm.value;
-    formData.birth_date = new Date(formData.birth_date).toISOString().split('T')[0]; // Format date for bd
+    formData.birth_date = new Date(formData.birth_date).toISOString().split('T')[0];
 
     this.sendPatientData.emit(formData);
     this.resetForm();
-    this.triggerMessage();
   }
 
   private resetForm(): void {
     this.patientForm.reset();
-  }
-
-  private triggerMessage(): void {
-    this.showMessage = true;
-
-    setTimeout(() => {
-      this.showMessage = false;
-    }, 5000);
   }
 
   private createPersonalForm(): FormGroup {
