@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
-import { StaffService } from '../service/staff.service';
-import { MatTableDataSource } from '@angular/material/table';
+import {Component, OnInit} from '@angular/core';
+import {StaffService} from '../service/staff.service';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-list-staff-n',
   templateUrl: './list-staff-n.component.html',
   styleUrls: ['./list-staff-n.component.scss']
 })
-export class ListStaffNComponent {
+export class ListStaffNComponent implements OnInit {
 
-  public usersList:any = [];
+  public usersList: any = [];
   dataSource!: MatTableDataSource<any>;
 
   public showFilter = false;
@@ -25,43 +25,48 @@ export class ListStaffNComponent {
   public pageNumberArray: Array<number> = [];
   public pageSelection: Array<any> = [];
   public totalPages = 0;
+  isLoading = false;
 
-  public role_generals:any = [];
-  public staff_selected:any;
-  public user:any;
+  public role_generals: any = [];
+  public staff_selected: any;
+  public user: any;
+
   constructor(
     public staffService: StaffService,
-  ){
+  ) {
 
   }
+
   ngOnInit() {
     this.getTableData();
     this.user = this.staffService.authService.user;
   }
+
   private getTableData(): void {
     this.usersList = [];
     this.serialNumberArray = [];
+    this.showLoading();
 
-    this.staffService.listUsers().subscribe((resp:any) => {
-
-      console.log(resp);
-
+    this.staffService.listUsers().subscribe((resp: any) => {
       this.totalData = resp.users.data.length;
       this.role_generals = resp.users.data;
       this.getTableDataGeneral();
+      this.hideLoading();
     })
 
 
   }
-  isPermision(permission:string){
-    if(this.user.roles.includes('Super-Admin')){
+
+  isPermission(permission: string) {
+    if (this.user.roles.includes('Super-Admin')) {
       return true;
     }
-    if(this.user.permissions.includes(permission)){
+    if (this.user.permissions.includes(permission)) {
       return true;
     }
     return false;
   }
+
   getTableDataGeneral() {
     this.usersList = [];
     this.serialNumberArray = [];
@@ -69,7 +74,7 @@ export class ListStaffNComponent {
     this.role_generals.map((res: any, index: number) => {
       const serialNumber = index + 1;
       if (index >= this.skip && serialNumber <= this.limit) {
-        
+
         this.usersList.push(res);
         this.serialNumberArray.push(serialNumber);
       }
@@ -78,17 +83,17 @@ export class ListStaffNComponent {
     this.calculateTotalPages(this.totalData, this.pageSize);
   }
 
-  selectUser(rol:any){
+  selectUser(rol: any) {
     this.staff_selected = rol;
   }
 
-  deleteUser(){
+  deleteUser() {
 
-    this.staffService.deleteUser(this.staff_selected.id).subscribe((resp:any) => {
+    this.staffService.deleteUser(this.staff_selected.id).subscribe((resp: any) => {
       console.log(resp);
-      let INDEX = this.usersList.findIndex((item:any) => item.id == this.staff_selected.id);
-      if(INDEX != -1){
-        this.usersList.splice(INDEX,1);
+      const INDEX = this.usersList.findIndex((item: any) => item.id == this.staff_selected.id);
+      if (INDEX != -1) {
+        this.usersList.splice(INDEX, 1);
 
         $('#delete_patient').hide();
         $("#delete_patient").removeClass("show");
@@ -100,6 +105,7 @@ export class ListStaffNComponent {
       }
     })
   }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public searchData(value: any): void {
     this.dataSource.filter = value.trim().toLowerCase();
@@ -112,7 +118,7 @@ export class ListStaffNComponent {
     if (!sort.active || sort.direction === '') {
       this.usersList = data;
     } else {
-      this.usersList = data.sort((a:any, b:any) => {
+      this.usersList = data.sort((a: any, b: any) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const aValue = (a as any)[sort.active];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -170,12 +176,20 @@ export class ListStaffNComponent {
       const limit = pageSize * i;
       const skip = limit - pageSize;
       this.pageNumberArray.push(i);
-      this.pageSelection.push({ skip: skip, limit: limit });
+      this.pageSelection.push({skip: skip, limit: limit});
       // 1
       // 0 - 10
       // 2
       // 10 - 20
     }
+  }
+
+  private showLoading() {
+    this.isLoading = true;
+  }
+
+  private hideLoading() {
+    this.isLoading = false;
   }
 
 }
