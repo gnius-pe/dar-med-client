@@ -13,8 +13,8 @@ export class HeaderComponent {
   public routes = routes;
   public openBox = false;
   public miniSidebar  = false;
-  public addClass = false;
   public user:any;
+  isLoading = false;
 
   constructor(public router: Router,private sideBar: SideBarService,public auth: AuthService) {
     this.sideBar.toggleSideBar.subscribe((res: string) => {
@@ -46,7 +46,9 @@ export class HeaderComponent {
     }
   }
   logout(){
+    this.showLoading();
     this.auth.logout();
+    this.hideLoading();
   }
   public toggleSideBar(): void {
     this.sideBar.switchSideMenuPosition();
@@ -67,5 +69,13 @@ export class HeaderComponent {
       sidebar?.classList.remove('opened');
       overlay?.classList.remove('opened');
     }
+  }
+
+  private showLoading() {
+    this.isLoading = true;
+  }
+
+  private hideLoading() {
+    this.isLoading = false;
   }
   }
