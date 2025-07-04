@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
+import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
 
 
 @NgModule({
@@ -19,15 +20,16 @@ import { SharedModule } from 'src/app/shared/shared.module';
     EditStaffNComponent,
     ListStaffNComponent
   ],
-  imports: [
-    CommonModule,
-    StaffRoutingModule,
-    SharedModule,
-    // 
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    RouterModule
-  ]
+    imports: [
+        CommonModule,
+        StaffRoutingModule,
+        SharedModule,
+        //
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        RouterModule,
+        LoadingOverlayComponent
+    ]
 })
 export class StaffModule { }
