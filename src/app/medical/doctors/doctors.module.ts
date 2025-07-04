@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { DoctorMProfileComponent } from './doctor-m-profile/doctor-m-profile.component';
+import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
 
 
 @NgModule({
@@ -21,15 +22,16 @@ import { DoctorMProfileComponent } from './doctor-m-profile/doctor-m-profile.com
     ListDoctorComponent,
     DoctorMProfileComponent
   ],
-  imports: [
-    CommonModule,
-    DoctorsRoutingModule,
-    SharedModule,
-    // 
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    RouterModule
-  ]
+    imports: [
+        CommonModule,
+        DoctorsRoutingModule,
+        SharedModule,
+        //
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        RouterModule,
+        LoadingOverlayComponent
+    ]
 })
 export class DoctorsModule { }

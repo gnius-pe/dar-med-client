@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { DoctorService } from '../service/doctor.service';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './list-doctor.component.html',
   styleUrls: ['./list-doctor.component.scss']
 })
-export class ListDoctorComponent {
+export class ListDoctorComponent implements OnInit{
   public usersList:any = [];
   dataSource!: MatTableDataSource<any>;
 
@@ -24,6 +24,8 @@ export class ListDoctorComponent {
   public pageNumberArray: Array<number> = [];
   public pageSelection: Array<any> = [];
   public totalPages = 0;
+
+  isLoading = false;
 
   public role_generals:any = [];
   public doctor_selected:any;
@@ -48,16 +50,16 @@ export class ListDoctorComponent {
     return false;
   }
   private getTableData(): void {
+
+    this.showLoading();
     this.usersList = [];
     this.serialNumberArray = [];
 
     this.doctorService.listDoctors().subscribe((resp:any) => {
-
-      console.log(resp);
-
       this.totalData = resp.users.data.length;
       this.role_generals = resp.users.data;
       this.getTableDataGeneral();
+      this.hideLoading();
     })
 
 
@@ -182,5 +184,13 @@ export class ListDoctorComponent {
     const year = parsedDate.getFullYear();
 
     return `${day}/${month}/${year}`;
+  }
+
+  private showLoading() {
+    this.isLoading = true;
+  }
+
+  private hideLoading() {
+    this.isLoading = false;
   }
 }
