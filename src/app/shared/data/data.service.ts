@@ -493,90 +493,27 @@ export class DataService {
             },
           ],
         },
-        /*      {
-                menuValue: 'Pagos',
-                hasSubRoute: true,
-                showSubRoute: false,
-                base: 'payroll',
-                img: 'assets/img/icons/menu-icon-09.svg',
-                subMenus: [
-                  {
-                    menuValue: 'Ver Pagos',
-                    route: routes.salary,
-                    base: routes.salary,
-                    permision: 'show_payment',
-                    show_nav: true,
-                  },
-                  {
-                    menuValue: 'Edit Pagos',
-                    route: '',
-                    base: '',
-                    permision: 'edit_payment',
-                    show_nav: false,
-                  },
-                  {
-                    menuValue: 'Delete Pagos',
-                    route: '',
-                    base: '',
-                    permision: 'delete_payment',
-                    show_nav: false,
-                  },
-                  {
-                    menuValue: 'Add Pagos',
-                    route: '',
-                    base: '',
-                    permision: 'add_payment',
-                    show_nav: false,
-                  },
-                ],
-              },*/
-        /*{
-          menuValue: 'Calendar',
-          route: routes.calendar,
-          hasSubRoute: false,
+        {
+          menuValue: 'Misiones',
+          hasSubRoute: true,
           showSubRoute: false,
-          icon: 'fa-calendar',
-          faIcon: true,
-          base: 'calendar',
-          permision: 'calendar',
-          show_nav: true,
-          subMenus: [],
-        },*/
-        // {
-        //   menuValue: 'Activities',
-        //   route: routes.activities,
-        //   hasSubRoute: false,
-        //   showSubRoute: false,
-        //   img: 'assets/img/icons/menu-icon-14.svg',
-        //   base: 'activities',
-        //   permision: 'activitie',
-        //   show_nav: true,
-        //   subMenus: [],
-        // },
-
-        // {
-        //   menuValue: 'Reports',
-        //   hasSubRoute: true,
-        //   showSubRoute: false,
-        //   base: 'reports',
-        //   img: 'assets/img/icons/menu-icon-02.svg',
-        //   subMenus: [
-        //     {
-        //       menuValue: 'Expense Report',
-        //       route: routes.expenseReports,
-        //       base: routes.expenseReports,
-        //       permision: 'expense_report',
-        //       show_nav: true,
-        //     },
-        //     {
-        //       menuValue: 'Invoice Report',
-        //       route: routes.invoiceReports,
-        //       base: routes.invoiceReports,
-        //       permision: 'invoice_report',
-        //       show_nav: true,
-        //     },
-        //   ],
-        // },
+          base: 'missions',
+          img: 'assets/img/icons/medal-01.svg',
+          subMenus: [
+            {
+              menuValue: 'Lista de misiones',
+              route: routes.listMissions,
+              base: routes.listMissions,
+              show_nav: true,
+            },
+            {
+              menuValue: 'Crear misión',
+              route: routes.addMission,
+              base: routes.addMission,
+              show_nav: true,
+            },
+          ],
+        },
         {
           menuValue: 'Settings',
           route: routes.settings,
@@ -591,9 +528,6 @@ export class DataService {
       ],
     },
   ];
-  // public sideBarList = [
-
-  // ];
 
   public carousel1 = [
     {

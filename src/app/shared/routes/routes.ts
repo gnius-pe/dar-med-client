@@ -362,4 +362,10 @@ export class routes {
   public static get listadoRole(): string {
     return this.baseUrl + '/roles/list';
   }
+  public static get listMissions(): string {
+    return this.baseUrl + '/missions/list-missions';
+  }
+  public static get addMission(): string {
+    return this.baseUrl + '/missions/add-mission';
+  }
 }
