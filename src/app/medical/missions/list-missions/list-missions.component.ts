@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Mission} from "../models/mission.model";
 import {MissionService} from "../services/mission.service";
+import {SelectedMissionService} from "../services/selected-mission.service";
 
 @Component({
   selector: 'app-list-missions',
@@ -16,7 +17,8 @@ export class ListMissionsComponent implements OnInit {
   notificationType: 'success' | 'error' | 'warning' = 'success';
 
   constructor(
-    private missionService: MissionService
+    private missionService: MissionService,
+    private selectedMissionService: SelectedMissionService,
   ) {
   }
 
@@ -47,7 +49,8 @@ export class ListMissionsComponent implements OnInit {
   }
 
   selectMission(mission: Mission) {
-    // TODO: Implementar selección
+    this.selectedMissionService.selectMission(mission);
+    this.showSuccess(`Misión "${mission.name}" seleccionada correctamente`);
   }
 
   showSuccess(message: string) {
