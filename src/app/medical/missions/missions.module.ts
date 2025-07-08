@@ -5,7 +5,7 @@ import {MissionsRoutingModule} from "./missions-routing.module";
 import { CreateMissionComponent } from './create-mission/create-mission.component';
 import { MissionFormComponent } from './mission-form/mission-form.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import {NgIf} from "@angular/common";
+import {DatePipe, NgForOf, NgIf, SlicePipe} from "@angular/common";
 import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
 import {NotificationComponent} from "../../shared/components/notification/notification.component";
 
@@ -21,7 +21,10 @@ import {NotificationComponent} from "../../shared/components/notification/notifi
     ReactiveFormsModule,
     NgIf,
     LoadingOverlayComponent,
-    NotificationComponent
+    NotificationComponent,
+    SlicePipe,
+    DatePipe,
+    NgForOf
   ]
 })
 
