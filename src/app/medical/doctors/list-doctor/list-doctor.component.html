@@ -84,11 +84,11 @@
                         <!--  -->
                         <a class="dropdown-item" *ngIf="isPermision('edit_doctor')"
                            [routerLink]="[ '/doctors/list/edit/', data.id ]"><i
-                          class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
+                          class="fa-solid fa-pen-to-square m-r-5"></i>Editar</a>
                         <a class="dropdown-item" *ngIf="isPermision('delete_doctor')" href="javascript:void(0);"
                            (click)="selectUser(data)" data-bs-toggle="modal"
                            [attr.data-bs-target]="'#delete_staff-'+data.id"
-                        ><i class="fa fa-trash-alt m-r-5"></i> Delete</a>
+                        ><i class="fa fa-trash-alt m-r-5"></i>Eliminar</a>
                         <a class="dropdown-item" *ngIf="isPermision('profile_doctor')"
                            [routerLink]="[ '/doctors/list/profile/', data.id ]">+ Perfil del doctor</a>
                       </div>
