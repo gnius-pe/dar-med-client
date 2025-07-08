@@ -6,6 +6,8 @@ import { CreateMissionComponent } from './create-mission/create-mission.componen
 import { MissionFormComponent } from './mission-form/mission-form.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {NgIf} from "@angular/common";
+import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
+import {NotificationComponent} from "../../shared/components/notification/notification.component";
 
 @NgModule({
   declarations:[
@@ -17,7 +19,9 @@ import {NgIf} from "@angular/common";
   imports: [
     MissionsRoutingModule,
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    LoadingOverlayComponent,
+    NotificationComponent
   ]
 })
 

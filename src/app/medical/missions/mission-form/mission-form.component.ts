@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {Mission} from "../models/mission.model";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {Validators} from "ngx-editor";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-mission-form',
@@ -34,11 +33,13 @@ export class MissionFormComponent {
   }
 
   onSubmit() {
-    if (this.missionForm.valid) {
-      this.missionSubmit.emit(this.missionForm.value);
-    } else {
+    if (this.missionForm.invalid) {
       this.markFormGroupTouched();
+      return
     }
+
+    this.missionSubmit.emit(this.missionForm.getRawValue());
+    this.missionForm.reset();
   }
 
   private markFormGroupTouched() {
@@ -51,8 +52,21 @@ export class MissionFormComponent {
   getFieldError(fieldName: string): string {
     const field = this.missionForm.get(fieldName);
     if (field?.errors && field?.touched) {
-      if (field.errors['required']) return `${fieldName} es obligatorio`;
-      if (field.errors['maxlength']) return `${fieldName} no puede exceder ${field.errors['maxlength'].requiredLength} caracteres`;
+      if (field.errors['required']) {
+        switch(fieldName) {
+          case 'name': return 'El nombre es obligatorio';
+          case 'description': return 'La descripción es obligatoria';
+          case 'start_date': return 'La fecha de inicio es obligatoria';
+          case 'end_date': return 'La fecha de fin es obligatoria';
+          default: return `${fieldName} es obligatorio`;
+        }
+      }
+      if (field.errors['maxlength']) {
+        switch(fieldName) {
+          case 'name': return `El nombre no puede exceder ${field.errors['maxlength'].requiredLength} caracteres`;
+          default: return `${fieldName} no puede exceder ${field.errors['maxlength'].requiredLength} caracteres`;
+        }
+      }
     }
     return '';
   }
