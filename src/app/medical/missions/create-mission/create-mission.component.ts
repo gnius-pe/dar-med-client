@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Mission} from "../models/mission.model";
+import {MissionService} from "../services/mission.service";
 
 @Component({
   selector: 'app-create-mission',
@@ -12,16 +13,27 @@ export class CreateMissionComponent {
   notificationMessage = '';
   notificationType: 'success' | 'error' | 'warning' = 'success';
 
+  constructor(
+    private missionService: MissionService
+  ) {}
+
   onMissionSubmit(mission: Mission) {
     this.isLoading = true;
-    console.log('Mission to save:', mission);
 
-    setTimeout(() => {
-      this.isLoading = false;
-      this.showNotification = true;
-      this.notificationMessage = 'Misión creada exitosamente';
-      this.notificationType = 'success';
-    }, 1000);
+    this.missionService.registerMission(mission).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.showNotification = true;
+        this.notificationMessage = 'Misión creada exitosamente';
+        this.notificationType = 'success';
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.showNotification = true;
+        this.notificationMessage = error.error?.message || 'Error al crear la misión';
+        this.notificationType = 'error';
+      }
+    });
   }
 
   onNotificationClose() {
