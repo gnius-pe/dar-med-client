@@ -3,6 +3,7 @@ import {PatientMService} from '../service/patient-m.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {Patient, PatientData} from "../models/patient.model";
 import {jsPDF} from 'jspdf';
+import {SelectedMissionService} from "../../missions/services/selected-mission.service";
 
 @Component({
   selector: 'app-list-patient-m',
@@ -38,6 +39,7 @@ export class ListPatientMComponent implements OnInit {
 
   constructor(
     public patientService: PatientMService,
+    private selectedMissionService: SelectedMissionService,
   ) {
 
   }
@@ -138,6 +140,10 @@ export class ListPatientMComponent implements OnInit {
   }
 
   public printPatientData(patientId: string) {
+
+    const selectedMission = this.selectedMissionService.getSelectedMission();
+    const missionName = selectedMission ? selectedMission.name : '';
+
     this.patientService.getPatientDataWithAppointments(patientId).subscribe({
       next: (patientData: PatientData) => {
         const doc = new jsPDF({
@@ -167,7 +173,7 @@ export class ListPatientMComponent implements OnInit {
           y += lineHeight;
 
           doc.setFontSize(9);
-          doc.text('Misión: "Ancón 2024"', marginLeft, y);
+          doc.text(`Misión: "${missionName}"`, marginLeft, y);
           y += lineHeight;
 
           doc.setFontSize(8);
