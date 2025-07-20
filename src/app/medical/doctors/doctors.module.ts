@@ -13,6 +13,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { DoctorMProfileComponent } from './doctor-m-profile/doctor-m-profile.component';
 import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
 import {NotificationComponent} from "../../shared/components/notification/notification.component";
+import { DoctorFormComponent } from './doctor-form/doctor-form.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import {NotificationComponent} from "../../shared/components/notification/notifi
     AddDoctorComponent,
     EditDoctorComponent,
     ListDoctorComponent,
-    DoctorMProfileComponent
+    DoctorMProfileComponent,
+    DoctorFormComponent
   ],
   imports: [
     CommonModule,
