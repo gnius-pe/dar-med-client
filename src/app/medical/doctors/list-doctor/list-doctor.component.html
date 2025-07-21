@@ -62,40 +62,38 @@
                   <th mat-sort-header="email">Email</th>
                   <th mat-sort-header="mobile">Telefono</th>
                   <th mat-sort-header="birth_date">Fecha de cumpleaños</th>
-                  <th mat-sort-header="role">Rol</th>
                   <th mat-sort-header="created_at">Fecha de registro</th>
                   <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let data of usersList">
+                <tr *ngFor="let doctor of usersList">
 
-                  <td>{{ data.name + ' ' + (data.surname ? data.surname : '') }}</td>
-                  <td>{{ data.email }}</td>
-                  <td>{{ data.mobile }}</td>
-                  <td>{{ formatDate(data.birth_date) }}</td>
-                  <td>{{ data.role.name }}</td>
-                  <td>{{ formatDate(data.created_at) }}</td>
+                  <td>{{ doctor.name + ' ' + (doctor.surname ? doctor.surname : '') }}</td>
+                  <td>{{ doctor.email }}</td>
+                  <td>{{ doctor.mobile }}</td>
+                  <td>{{ formatDate(doctor.birth_date) }}</td>
+                  <td>{{ formatDate(doctor.created_at) }}</td>
                   <td class="text-end">
-                    <div class="dropdown dropdown-action" *ngIf="data.id != 1">
+                    <div class="dropdown dropdown-action" *ngIf="doctor.id != 1">
                       <a href="javascript:void(0);" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                          aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                       <div class="dropdown-menu dropdown-menu-end">
                         <!--  -->
-                        <a class="dropdown-item" *ngIf="isPermision('edit_doctor')"
-                           [routerLink]="[ '/doctors/list/edit/', data.id ]"><i
+                        <a class="dropdown-item" *ngIf="isPermission('edit_doctor')"
+                           [routerLink]="[ '/doctors/list/edit/', doctor.id ]"><i
                           class="fa-solid fa-pen-to-square m-r-5"></i>Editar</a>
-                        <a class="dropdown-item" *ngIf="isPermision('delete_doctor')" href="javascript:void(0);"
-                           (click)="selectUser(data)" data-bs-toggle="modal"
-                           [attr.data-bs-target]="'#delete_staff-'+data.id"
+                        <a class="dropdown-item" *ngIf="isPermission('delete_doctor')" href="javascript:void(0);"
+                           (click)="selectUser(doctor)" data-bs-toggle="modal"
+                           [attr.data-bs-target]="'#delete_staff-'+doctor.id"
                         ><i class="fa fa-trash-alt m-r-5"></i>Eliminar</a>
-                        <a class="dropdown-item" *ngIf="isPermision('profile_doctor')"
-                           [routerLink]="[ '/doctors/list/profile/', data.id ]">+ Perfil del doctor</a>
+                        <a class="dropdown-item" *ngIf="isPermission('profile_doctor')"
+                           [routerLink]="[ '/doctors/list/profile/', doctor.id ]">+ Perfil del doctor</a>
                       </div>
                     </div>
                   </td>
 
-                  <div [attr.id]="'delete_staff-'+data.id" class="modal fade delete-modal" role="dialog">
+                  <div [attr.id]="'delete_staff-'+doctor.id" class="modal fade delete-modal" role="dialog">
                     <div class="modal-dialog modal-dialog-centered">
                       <div class="modal-content">
                         <div class="modal-body text-center">

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { DoctorService } from '../service/doctor.service';
 import { MatTableDataSource } from '@angular/material/table';
+import {DoctorListResponse} from "../models/doctor.model";
 
 @Component({
   selector: 'app-list-doctor',
@@ -8,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./list-doctor.component.scss']
 })
 export class ListDoctorComponent implements OnInit{
+
   public usersList:any = [];
   dataSource!: MatTableDataSource<any>;
 
@@ -40,7 +42,7 @@ export class ListDoctorComponent implements OnInit{
     this.user = this.doctorService.authService.user;
   }
 
-  isPermision(permission:string){
+  isPermission(permission:string){
     if(this.user.roles.includes('Super-Admin')){
       return true;
     }
@@ -55,14 +57,13 @@ export class ListDoctorComponent implements OnInit{
     this.usersList = [];
     this.serialNumberArray = [];
 
-    this.doctorService.listDoctors().subscribe((resp:any) => {
-      this.totalData = resp.users.data.length;
-      this.role_generals = resp.users.data;
+    this.doctorService.listDoctors().subscribe((resp:DoctorListResponse) => {
+      console.log('resp',resp);
+      this.totalData = resp.users.length;
+      this.role_generals = resp.users;
       this.getTableDataGeneral();
       this.hideLoading();
     })
-
-
   }
 
   getTableDataGeneral() {
