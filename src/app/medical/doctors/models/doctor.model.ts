@@ -9,23 +9,6 @@ export interface Role {
   name: string;
 }
 
-export interface DoctorFormData {
-  name: string;
-  surname: string;
-  email: string;
-  password?: string;
-  phone?: string;
-  birth_date: string;
-  gender?: string;
-  education?: string;
-  designation?: string;
-  address?: string;
-  specialitie_id: number;
-  role_id: number;
-  state?: number;
-  imagen?: File;
-}
-
 export interface DoctorCreateData {
   name: string;
   surname: string;

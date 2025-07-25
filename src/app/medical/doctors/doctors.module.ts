@@ -14,6 +14,7 @@ import { DoctorMProfileComponent } from './doctor-m-profile/doctor-m-profile.com
 import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
 import {NotificationComponent} from "../../shared/components/notification/notification.component";
 import { DoctorFormComponent } from './doctor-form/doctor-form.component';
+import {MedicalModule} from "../medical.module";
 
 
 @NgModule({
@@ -25,17 +26,18 @@ import { DoctorFormComponent } from './doctor-form/doctor-form.component';
     DoctorMProfileComponent,
     DoctorFormComponent
   ],
-  imports: [
-    CommonModule,
-    DoctorsRoutingModule,
-    SharedModule,
-    //
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    RouterModule,
-    LoadingOverlayComponent,
-    NotificationComponent
-  ]
+    imports: [
+        CommonModule,
+        DoctorsRoutingModule,
+        SharedModule,
+        //
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        RouterModule,
+        LoadingOverlayComponent,
+        NotificationComponent,
+        MedicalModule
+    ]
 })
 export class DoctorsModule { }
