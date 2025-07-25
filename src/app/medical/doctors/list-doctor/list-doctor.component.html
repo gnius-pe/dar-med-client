@@ -89,6 +89,10 @@
                         ><i class="fa fa-trash-alt m-r-5"></i>Eliminar</a>
                         <a class="dropdown-item" *ngIf="isPermission('profile_doctor')"
                            [routerLink]="[ '/doctors/list/profile/', doctor.id ]">+ Perfil del doctor</a>
+                        <span
+                          class="dropdown-item" (click)="openCreateTicketsModal(doctor)">
+                          Crear cupo
+                        </span>
                       </div>
                     </div>
                   </td>
@@ -226,5 +230,21 @@
     </div>
   </div>
 </div>
+
+<app-notification
+  [show]="showNotification"
+  [message]="notificationMessage"
+  [type]="notificationType"
+  [duration]="3000"
+  (close)="onNotificationClose()">
+</app-notification>
+
+<app-create-doctor-tickets-modal
+  [doctorId]="selectedDoctorForTickets"
+  [isVisible]="showCreateTicketsModal"
+  (closeModalEvent)="onCloseTicketsModal()"
+  (successModalEvent)="onTicketsCreatedSuccess()"
+  (errorModalEvent)="onTicketsError($event)">
+</app-create-doctor-tickets-modal>
 
 <app-loading-overlay [isBlock]="isLoading"></app-loading-overlay>

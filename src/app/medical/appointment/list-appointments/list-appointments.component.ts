@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { AppointmentService } from '../service/appointment.service';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './list-appointments.component.html',
   styleUrls: ['./list-appointments.component.scss']
 })
-export class ListAppointmentsComponent {
+export class ListAppointmentsComponent implements OnInit{
   public appointmentList:any = [];
   dataSource!: MatTableDataSource<any>;
 
@@ -38,6 +38,7 @@ export class ListAppointmentsComponent {
 
   }
   ngOnInit() {
+
     this.getTableData();
 
     this.appointmentService.listConfig().subscribe((resp:any) => {
@@ -46,7 +47,7 @@ export class ListAppointmentsComponent {
     this.user = this.appointmentService.authService.user;
   }
 
-  isPermited(){
+  isPermitted(){
     let band = false;
     this.user.roles.forEach((rol:any) => {
       if((rol).toUpperCase().indexOf("DOCTOR") != -1){
@@ -56,31 +57,27 @@ export class ListAppointmentsComponent {
     return band;
   }
 
-  isPermision(permission:string){
+  isPermission(permission:string){
+
     if(this.user.roles.includes('Super-Admin')){
       return true;
     }
-    if(this.user.permissions.includes(permission)){
-      return true;
-    }
-    return false;
+
+    return !!this.user.permissions.includes(permission);
   }
-  private getTableData(page=1): void {
+
+  private getTableData(page = 1): void {
     this.appointmentList = [];
     this.serialNumberArray = [];
 
-    this.appointmentService.listAppointments(page,this.searchDataValue,this.specialitie_id,this.date).subscribe((resp:any) => {
+    this.appointmentService.listAppointments(page, this.searchDataValue, this.specialitie_id, this.date).subscribe((resp: any) => {
 
-      console.log(resp);
- 
-      this.totalData = resp.total;
+      this.totalData = resp.appointments.total;
       this.appointmentList = resp.appointments.data;
-      // this.getTableDataGeneral();
+
       this.dataSource = new MatTableDataSource<any>(this.appointmentList);
       this.calculateTotalPages(this.totalData, this.pageSize);
-    })
-
-
+    });
   }
 
   getTableDataGeneral() {
@@ -90,7 +87,7 @@ export class ListAppointmentsComponent {
     this.patient_generals.map((res: any, index: number) => {
       const serialNumber = index + 1;
       if (index >= this.skip && serialNumber <= this.limit) {
-        
+
         this.appointmentList.push(res);
         this.serialNumberArray.push(serialNumber);
       }
@@ -177,7 +174,7 @@ export class ListAppointmentsComponent {
     this.getTableData(this.currentPage);
   }
 
-  public PageSize(): void {
+  public clearFilters(): void {
     this.pageSelection = [];
     this.limit = this.pageSize;
     this.skip = 0;
