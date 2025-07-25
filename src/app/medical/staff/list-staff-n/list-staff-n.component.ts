@@ -48,8 +48,8 @@ export class ListStaffNComponent implements OnInit {
     this.showLoading();
 
     this.staffService.listUsers().subscribe((resp: any) => {
-      this.totalData = resp.users.data.length;
-      this.role_generals = resp.users.data;
+      this.totalData = resp.users.length;
+      this.role_generals = resp.users;
       this.getTableDataGeneral();
       this.hideLoading();
     })

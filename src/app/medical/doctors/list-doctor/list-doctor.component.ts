@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import { DoctorService } from '../service/doctor.service';
-import { MatTableDataSource } from '@angular/material/table';
-import {DoctorListResponse} from "../models/doctor.model";
+import {DoctorService} from '../service/doctor.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {Doctor, DoctorListResponse} from "../models/doctor.model";
 
 @Component({
   selector: 'app-list-doctor',
   templateUrl: './list-doctor.component.html',
   styleUrls: ['./list-doctor.component.scss']
 })
-export class ListDoctorComponent implements OnInit{
+export class ListDoctorComponent implements OnInit {
 
-  public usersList:any = [];
+  public usersList: any = [];
   dataSource!: MatTableDataSource<any>;
 
   public showFilter = false;
@@ -28,37 +28,45 @@ export class ListDoctorComponent implements OnInit{
   public totalPages = 0;
 
   isLoading = false;
+  showNotification = false;
+  notificationMessage = '';
+  notificationType: 'success' | 'error' | 'warning' = 'success';
 
-  public role_generals:any = [];
-  public doctor_selected:any;
-  public user:any;
+  showCreateTicketsModal = false;
+  selectedDoctorForTickets: number | null = null;
+
+  public role_generals: any = [];
+  public doctor_selected: any;
+  public user: any;
+
   constructor(
     public doctorService: DoctorService,
-  ){
+  ) {
 
   }
+
   ngOnInit() {
     this.getTableData();
     this.user = this.doctorService.authService.user;
   }
 
-  isPermission(permission:string){
-    if(this.user.roles.includes('Super-Admin')){
+  isPermission(permission: string) {
+    if (this.user.roles.includes('Super-Admin')) {
       return true;
     }
-    if(this.user.permissions.includes(permission)){
+    if (this.user.permissions.includes(permission)) {
       return true;
     }
     return false;
   }
+
   private getTableData(): void {
 
     this.showLoading();
     this.usersList = [];
     this.serialNumberArray = [];
 
-    this.doctorService.listDoctors().subscribe((resp:DoctorListResponse) => {
-      console.log('resp',resp);
+    this.doctorService.listDoctors().subscribe((resp: DoctorListResponse) => {
       this.totalData = resp.users.length;
       this.role_generals = resp.users;
       this.getTableDataGeneral();
@@ -82,28 +90,33 @@ export class ListDoctorComponent implements OnInit{
     this.calculateTotalPages(this.totalData, this.pageSize);
   }
 
-  selectUser(rol:any){
+  selectUser(rol: any) {
     this.doctor_selected = rol;
   }
 
-  deleteUser(){
+  deleteUser(): void {
+    this.doctorService.deleteDoctor(this.doctor_selected.id).subscribe({
+      next: () => {
 
-    this.doctorService.deleteDoctor(this.doctor_selected.id).subscribe((resp:any) => {
-      console.log(resp);
-      const INDEX = this.usersList.findIndex((item:any) => item.id == this.doctor_selected.id);
-      if(INDEX != -1){
-        this.usersList.splice(INDEX,1);
+        const INDEX = this.usersList.findIndex((item: any) => item.id == this.doctor_selected.id);
+        if (INDEX !== -1) {
+          this.usersList.splice(INDEX, 1);
 
-        $('#delete_patient').hide();
-        $("#delete_patient").removeClass("show");
-        $(".modal-backdrop").remove();
-        $("body").removeClass();
-        $("body").removeAttr("style");
+          $('#delete_patient').hide();
+          $("#delete_patient").removeClass("show");
+          $(".modal-backdrop").remove();
+          $("body").removeClass();
+          $("body").removeAttr("style");
 
-        this.doctor_selected = null;
+          this.doctor_selected = null;
+        }
+      },
+      error: (error) => {
+        console.error('Error response:', error);
       }
-    })
+    });
   }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public searchData(value: any): void {
     this.dataSource.filter = value.trim().toLowerCase();
@@ -116,7 +129,7 @@ export class ListDoctorComponent implements OnInit{
     if (!sort.active || sort.direction === '') {
       this.usersList = data;
     } else {
-      this.usersList = data.sort((a:any, b:any) => {
+      this.usersList = data.sort((a: any, b: any) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const aValue = (a as any)[sort.active];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -174,7 +187,7 @@ export class ListDoctorComponent implements OnInit{
       const limit = pageSize * i;
       const skip = limit - pageSize;
       this.pageNumberArray.push(i);
-      this.pageSelection.push({ skip: skip, limit: limit });
+      this.pageSelection.push({skip: skip, limit: limit});
     }
   }
 
@@ -187,11 +200,46 @@ export class ListDoctorComponent implements OnInit{
     return `${day}/${month}/${year}`;
   }
 
+  openCreateTicketsModal(doctor: Doctor): void {
+    console.log('doctor',doctor);
+    this.selectedDoctorForTickets = doctor.id;
+    this.showCreateTicketsModal = true;
+  }
+
+  onCloseTicketsModal(): void {
+    this.showCreateTicketsModal = false;
+    this.selectedDoctorForTickets = null;
+  }
+
+  onTicketsCreatedSuccess(): void {
+    this.showSuccess('Cupos creados exitosamente');
+  }
+
+  onTicketsError(errorMessage: string): void {
+    this.showError(errorMessage);
+  }
+
   private showLoading() {
     this.isLoading = true;
   }
 
   private hideLoading() {
     this.isLoading = false;
+  }
+
+  showSuccess(message: string): void {
+    this.notificationMessage = message;
+    this.notificationType = 'success';
+    this.showNotification = true;
+  }
+
+  showError(message: string): void {
+    this.notificationMessage = message;
+    this.notificationType = 'error';
+    this.showNotification = true;
+  }
+
+  onNotificationClose(): void {
+    this.showNotification = false;
   }
 }
