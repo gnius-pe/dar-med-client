@@ -1,86 +1,87 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { URL_SERVICIOS } from 'src/app/config/config';
-import { AuthService } from 'src/app/shared/auth/auth.service';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {URL_SERVICIOS} from 'src/app/config/config';
+import {AuthService} from 'src/app/shared/auth/auth.service';
+import {Observable} from "rxjs";
+import {ApiResponse} from "../../../shared/models/global.model";
+import {
+  AppointmentConfigResponse,
+  AppointmentCreateData,
+  AppointmentUpdateData,
+  FilterDoctorsResponse,
+  PatientSearchResponse
+} from "../models/appointment.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppointmentService {
-
   constructor(
     public http: HttpClient,
     public authService: AuthService,
-  ) { }
+  ) {}
 
-  listAppointments(page:number=1,search:string = '',specialitie_id:string = '',date:any = null){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': 'Bearer ' + this.authService.token
+    });
+  }
+
+  listConfig(): Observable<AppointmentConfigResponse> {
+    const headers = this.getHeaders();
+    const URL = URL_SERVICIOS + "/appointmet/config";
+    return this.http.get<AppointmentConfigResponse>(URL, { headers });
+  }
+
+  filterDoctors(data: { date_appointment: string; specialitie_id?: number }): Observable<FilterDoctorsResponse> {
+    const headers = this.getHeaders();
+    const URL = URL_SERVICIOS + "/appointmet/filter";
+    return this.http.post<FilterDoctorsResponse>(URL, data, { headers });
+  }
+
+  searchPatient(identification_number: string): Observable<PatientSearchResponse> {
+    const headers = this.getHeaders();
+    const URL = URL_SERVICIOS + `/appointmet/patient?identification_number=${identification_number}`;
+    return this.http.get<PatientSearchResponse>(URL, { headers });
+  }
+
+  createAppointment(data: AppointmentCreateData): Observable<ApiResponse> {
+    const headers = this.getHeaders();
+    const URL = URL_SERVICIOS + "/appointmet";
+    return this.http.post<ApiResponse>(URL, data, { headers });
+  }
+
+  listAppointments(page = 1, search = '', specialitie_id = '', date = null): Observable<any> {
+    const headers = this.getHeaders();
     let LINK = "";
-    if(search){
-      LINK+="&search="+search;
+    if (search) {
+      LINK += "&search=" + search;
     }
-    if(specialitie_id){
-      LINK+="&specialitie_id="+specialitie_id;
+    if (specialitie_id) {
+      LINK += "&specialitie_id=" + specialitie_id;
     }
-    if(date){
-      LINK+="&date="+date;
+    if (date) {
+      LINK += "&date=" + date;
     }
-    let URL = URL_SERVICIOS+"/appointmet?page="+page+LINK;
-    return this.http.get(URL,{headers: headers});
+    const URL = URL_SERVICIOS + "/appointmet?page=" + page + LINK;
+    return this.http.get(URL, { headers });
   }
 
-  listConfig(){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/appointmet/config";
-    return this.http.get(URL,{headers: headers});
+  updateAppointment(appointmentId: string, data: AppointmentUpdateData): Observable<ApiResponse> {
+    const headers = this.getHeaders();
+    const URL = URL_SERVICIOS + `/appointmet/${appointmentId}`;
+    return this.http.put<ApiResponse>(URL, data, { headers });
   }
 
-  listPatient(identification_number:string = ''){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/appointmet/patient?identification_number="+identification_number;
-    return this.http.get(URL,{headers: headers});
+  deleteAppointment(appointmentId: string): Observable<ApiResponse> {
+    const headers = this.getHeaders();
+    const URL = URL_SERVICIOS + `/appointmet/${appointmentId}`;
+    return this.http.delete<ApiResponse>(URL, { headers });
   }
 
-  registerAppointment(data:any){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/appointmet";
-    return this.http.post(URL,data,{headers: headers});
-  }
-
-  listFilter(data:any){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/appointmet/filter";
-    return this.http.post(URL,data,{headers: headers});
-  }
-
-  showAppointment(appointmet_id:string){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/appointmet/"+appointmet_id;
-    return this.http.get(URL,{headers: headers});
-  }
-
-  updateAppointment(appointmet_id:string,data:any){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/appointmet/"+appointmet_id;
-    return this.http.put(URL,data,{headers: headers});
-  }
-
-  deleteAppointment(appointmet_id:string){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/appointmet/"+appointmet_id;
-    return this.http.delete(URL,{headers: headers});
-  }
-  // 
-
-  registerAttention(data:any){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/appointmet-attention";
-    return this.http.post(URL,data,{headers: headers});
-  }
-
-  showAppointmentAttention(appointmet_id:string){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/appointmet-attention/"+appointmet_id;
-    return this.http.get(URL,{headers: headers});
+  showAppointment(appointmentId: string): Observable<any> {
+    const headers = this.getHeaders();
+    const URL = URL_SERVICIOS + `/appointmet/${appointmentId}`;
+    return this.http.get(URL, { headers });
   }
 }
