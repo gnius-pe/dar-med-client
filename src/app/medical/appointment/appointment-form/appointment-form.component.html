@@ -1,0 +1,223 @@
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="appointmentForm">
+
+      <!-- Header -->
+      <div class="row">
+        <div class="col-12">
+          <div class="form-heading">
+            <h4>{{ isEditMode ? 'Editar Cita' : 'Nueva Cita Médica' }}</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Date, Specialty and Filter -->
+      <div class="row align-items-end">
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="form-group local-forms">
+            <label>Fecha de la cita <span class="login-danger">*</span></label>
+            <input
+              class="form-control"
+              formControlName="date_appointment"
+              type="date"
+              [min]="minDate | date:'yyyy-MM-dd'"
+            >
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="form-group local-forms">
+            <label>Especialidad <span class="login-danger">*</span></label>
+            <mat-select formControlName="specialitie_id" class="form-control select" placeholder="Seleccionar especialidad">
+              <mat-option *ngFor="let speciality of specialities" [value]="speciality.id">
+                {{ speciality.name }}
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="form-group local-forms">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="filterDoctors()"
+              [disabled]="isLoadingDoctors"
+            >
+              <span *ngIf="isLoadingDoctors" class="spinner-border spinner-border-sm me-2"></span>
+              {{ isLoadingDoctors ? 'Buscando...' : 'Buscar Doctores' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Doctors List -->
+      <div class="row" *ngIf="showDoctorsList">
+        <div class="col-12">
+          <h5>Doctores Disponibles</h5>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <th>Doctor</th>
+                <th>Especialidad</th>
+                <th>Cupos Disponibles</th>
+                <th>Acción</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let doctor of availableDoctors"
+                  [class.table-success]="selectedDoctor?.doctor?.id === doctor.doctor.id">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <img *ngIf="doctor.doctor.avatar_url"
+                         [src]="doctor.doctor.avatar_url"
+                         alt="Doctor"
+                         class="avatar avatar-sm rounded-circle me-2">
+                    <span class="avatar-placeholder me-2" *ngIf="!doctor.doctor.avatar_url">
+                        {{ doctor.doctor.full_name | slice:0:1 }}
+                      </span>
+                    {{ doctor.doctor.full_name }}
+                  </div>
+                </td>
+                <td>
+                  <span class="badge bg-info">{{ doctor.doctor.specialitie.name }}</span>
+                </td>
+                <td>
+                  <span class="badge bg-success">{{ doctor.available_tickets }} / {{ doctor.total_tickets }}</span>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-sm"
+                    [ngClass]="{
+                        'btn-success': selectedDoctor?.doctor?.id === doctor.doctor.id,
+                        'btn-outline-primary': selectedDoctor?.doctor?.id !== doctor.doctor.id
+                      }"
+                    (click)="selectDoctor(doctor)"
+                  >
+                    {{ selectedDoctor?.doctor?.id === doctor.doctor.id ? 'Seleccionado' : 'Seleccionar' }}
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Patient Data -->
+      <div class="row py-4" *ngIf="!isEditMode">
+        <div class="col-12">
+          <h5>Datos del Paciente</h5>
+          <div class="d-flex gap-2 mb-3">
+            <button
+              type="button"
+              class="btn btn-sm btn-primary"
+              (click)="searchPatient()"
+            >
+              Buscar
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm btn-secondary"
+              (click)="resetPatient()"
+            >
+              Limpiar
+            </button>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="form-group local-forms">
+            <label>N° Documento <span class="login-danger">*</span></label>
+            <input
+              class="form-control"
+              formControlName="identification_number"
+              type="number"
+              placeholder="Ingrese DNI (8 dígitos)"
+              (keyup.enter)="appointmentForm.get('identification_number')?.value?.length === 8 ? searchPatient() : null"
+            >
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="form-group local-forms">
+            <label>Nombres <span class="login-danger">*</span></label>
+            <input
+              class="form-control"
+              formControlName="first_name"
+              type="text"
+              placeholder="Nombres del paciente"
+            >
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="form-group local-forms">
+            <label>Apellidos <span class="login-danger">*</span></label>
+            <input
+              class="form-control"
+              formControlName="last_name"
+              type="text"
+              placeholder="Apellidos del paciente"
+            >
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="form-group local-forms">
+            <label>Teléfono</label>
+            <input
+              class="form-control"
+              formControlName="first_phone"
+              type="tel"
+              placeholder="Teléfono del paciente"
+            >
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="form-group local-forms">
+            <label>Nombre del Acompañante</label>
+            <input
+              class="form-control"
+              formControlName="name_companion"
+              type="text"
+              placeholder="Opcional"
+            >
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="form-group local-forms">
+            <label>Apellido del Acompañante</label>
+            <input
+              class="form-control"
+              formControlName="surname_companion"
+              type="text"
+              placeholder="Opcional"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="row">
+        <div class="col-12">
+          <div class="doctor-submit text-end">
+            <button
+              type="button"
+              (click)="save()"
+              class="btn btn-primary submit-form me-2"
+              [disabled]="appointmentForm.invalid || !selectedDoctor"
+            >
+              {{ isEditMode ? 'Actualizar Cita' : 'Crear Cita' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
