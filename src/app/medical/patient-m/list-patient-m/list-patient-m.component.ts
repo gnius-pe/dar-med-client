@@ -3,6 +3,7 @@ import {PatientMService} from '../service/patient-m.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {Patient, PatientData} from "../models/patient.model";
 import {jsPDF} from 'jspdf';
+import {SelectedMissionService} from "../../missions/services/selected-mission.service";
 
 @Component({
   selector: 'app-list-patient-m',
@@ -11,7 +12,7 @@ import {jsPDF} from 'jspdf';
 })
 export class ListPatientMComponent implements OnInit {
 
-  @ViewChild('qrCodeContainer', { static: false }) qrCodeContainer!: ElementRef;
+  @ViewChild('qrCodeContainer', {static: false}) qrCodeContainer!: ElementRef;
 
   public patientsList: Patient[] = [];
   dataSource!: MatTableDataSource<any>;
@@ -34,8 +35,11 @@ export class ListPatientMComponent implements OnInit {
   public patient_selected: any;
   public user: any;
 
+  isLoading = false;
+
   constructor(
     public patientService: PatientMService,
+    private selectedMissionService: SelectedMissionService,
   ) {
 
   }
@@ -68,7 +72,7 @@ export class ListPatientMComponent implements OnInit {
   formatDate(date: string): string {
     const parsedDate = new Date(date);
     const day = parsedDate.getDate().toString().padStart(2, '0');
-    const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0'); // Los meses son 0-indexados
+    const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
     const year = parsedDate.getFullYear();
 
     return `${day}/${month}/${year}`;
@@ -79,11 +83,13 @@ export class ListPatientMComponent implements OnInit {
   }
 
   private getTableData(page: number, search = ''): void {
+    this.showLoading()
     this.patientService.listPatients(page, search).subscribe((resp: any) => {
       this.patientsList = resp.data;
       this.currentPage = resp.current_page;
       this.totalPages = resp.last_page;
-      this.totalPagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+      this.totalPagesArray = Array.from({length: this.totalPages}, (_, i) => i + 1);
+      this.hideLoading()
     });
   }
 
@@ -94,7 +100,7 @@ export class ListPatientMComponent implements OnInit {
   deletePatient() {
 
     this.patientService.deletePatient(this.patient_selected.id).subscribe((resp: any) => {
-      console.log(resp);
+
       const INDEX = this.patientsList.findIndex((item: any) => item.id == this.patient_selected.id);
       if (INDEX != -1) {
         this.patientsList.splice(INDEX, 1);
@@ -134,6 +140,10 @@ export class ListPatientMComponent implements OnInit {
   }
 
   public printPatientData(patientId: string) {
+
+    const selectedMission = this.selectedMissionService.getSelectedMission();
+    const missionName = selectedMission ? selectedMission.name : '';
+
     this.patientService.getPatientDataWithAppointments(patientId).subscribe({
       next: (patientData: PatientData) => {
         const doc = new jsPDF({
@@ -142,7 +152,7 @@ export class ListPatientMComponent implements OnInit {
           format: [80, 300],
         });
 
-        const marginLeft = 5;
+        const marginLeft = 3;
         let y = 8;
         const lineHeight = 5;
 
@@ -163,7 +173,7 @@ export class ListPatientMComponent implements OnInit {
           y += lineHeight;
 
           doc.setFontSize(9);
-          doc.text('Misión: "Ancón 2024"', marginLeft, y);
+          doc.text(`Misión: "${missionName}"`, marginLeft, y);
           y += lineHeight;
 
           doc.setFontSize(8);
@@ -173,9 +183,12 @@ export class ListPatientMComponent implements OnInit {
           doc.setFontSize(9);
           doc.setFont('helvetica', 'bold');
           doc.text('Paciente:', marginLeft, y);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${patientData.patient.name}`, marginLeft + 20, y);
           y += lineHeight;
+
+          doc.setFont('helvetica', 'normal');
+          const splitName = doc.splitTextToSize(patientData.patient.name, 65);
+          doc.text(splitName, marginLeft, y);
+          y += splitName.length * lineHeight;
 
           doc.text(`DNI: ${patientData.patient.identification_number}`, marginLeft, y);
           y += lineHeight;
@@ -278,5 +291,13 @@ export class ListPatientMComponent implements OnInit {
         console.error('Error obteniendo los datos del paciente:', err);
       },
     });
+  }
+
+  private showLoading() {
+    this.isLoading = true;
+  }
+
+  private hideLoading() {
+    this.isLoading = false;
   }
 }

@@ -15,6 +15,8 @@ import { PatientFormComponent } from './patient-form/patient-form.component';
 import {QRCodeModule} from "angularx-qrcode";
 import { GeographicLocationFormComponent } from './geographic-location-form/geographic-location-form.component';
 import { EditGeographicLocationComponent } from './edit-geographic-location/edit-geographic-location.component';
+import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
+import {NotificationComponent} from "../../shared/components/notification/notification.component";
 
 
 @NgModule({
@@ -28,16 +30,18 @@ import { EditGeographicLocationComponent } from './edit-geographic-location/edit
     GeographicLocationFormComponent,
     EditGeographicLocationComponent
   ],
-    imports: [
-        CommonModule,
-        PatientMRoutingModule,
-        SharedModule,
-        //
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        RouterModule,
-        QRCodeModule
-    ]
+  imports: [
+    CommonModule,
+    PatientMRoutingModule,
+    SharedModule,
+    //
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    RouterModule,
+    QRCodeModule,
+    LoadingOverlayComponent,
+    NotificationComponent
+  ]
 })
 export class PatientMModule { }

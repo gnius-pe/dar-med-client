@@ -94,35 +94,16 @@
                       <i class="fa fa-print"></i>
                     </a>
                   </td>
-                  <!--  <td class="text-end">
-                    <div class="dropdown dropdown-action" *ngIf="patient.id !== 1">
-                      <a href="javascript:void(0);" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
-                         aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                      <div class="dropdown-menu dropdown-menu-end">
-                        &lt;!&ndash;  &ndash;&gt;
-                        <a class="dropdown-item" *ngIf="isPermission('edit_patient')"
-                           [routerLink]="[ '/patient-m/list/edit/', patient.id ]"><i
-                          class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
-                        <a class="dropdown-item" *ngIf="isPermission('delete_patient')" href="javascript:void(0);"
-                           (click)="selectUser(patient)" data-bs-toggle="modal"
-                           [attr.data-bs-target]="'#delete_staff-'+patient.id"
-                        ><i class="fa fa-trash-alt m-r-5"></i> Delete</a>
-                        <a class="dropdown-item" *ngIf="isPermission('profile_patient')"
-                           [routerLink]="[ '/patient-m/list/profile/', patient.id ]">+ Perfil Paciente</a>
-                      </div>
-                    </div>
-                  </td>-->
 
                   <div [attr.id]="'delete_staff-'+patient.id" class="modal fade delete-modal" role="dialog">
                     <div class="modal-dialog modal-dialog-centered">
                       <div class="modal-content">
                         <div class="modal-body text-center">
                           <img src="assets/img/sent.png" alt="" width="50" height="46">
-                          <h3 *ngIf="patient_selected">Are you sure want to delete this
-                            patinet {{ patient_selected.name }}?</h3>
+                          <h3 *ngIf="patient_selected">¿Esta seguro de eliminar a {{ patient_selected.name }}?</h3>
                           <div class="m-t-20"><a href="javascript:void(0);" class="btn btn-white me-1"
-                                                 data-bs-dismiss="modal">Close</a>
-                            <button type="submit" class="btn btn-danger" (click)="deletePatient()">Delete</button>
+                                                 data-bs-dismiss="modal">Cerrar</a>
+                            <button type="submit" class="btn btn-danger" (click)="deletePatient()">Eliminar</button>
                           </div>
                         </div>
                       </div>
@@ -137,13 +118,6 @@
               <div class="table_footer">
 
                 <div></div>
-                <!--  <div class="col-sm-12 col-md-5">
-                    <div class="dataTables_info">
-                      Showing {{ serialNumberArray[0] }} to
-                      {{ serialNumberArray[serialNumberArray.length - 1] }} of
-                      {{ totalData }} entries
-                    </div>
-                  </div>-->
 
                 <div class="col-sm-12 col-md-7">
                   <div class="pagination_section">
@@ -184,3 +158,5 @@
 <div #qrCodeContainer style="display: none">
   <qrcode [qrdata]="'https://dar.reformaperu.org/'" [width]="100" [errorCorrectionLevel]="'M'"></qrcode>
 </div>
+
+<app-loading-overlay [isBlock]="isLoading"></app-loading-overlay>

@@ -11,6 +11,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AtencionMedicalComponent } from './atencion-medical/atencion-medical.component';
+import { AppointmentFormComponent } from './appointment-form/appointment-form.component';
+import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
+import {NotificationComponent} from "../../shared/components/notification/notification.component";
 
 
 @NgModule({
@@ -19,17 +22,20 @@ import { AtencionMedicalComponent } from './atencion-medical/atencion-medical.co
     AddAppointmentsComponent,
     EditAppointmentsComponent,
     ListAppointmentsComponent,
-    AtencionMedicalComponent
+    AtencionMedicalComponent,
+    AppointmentFormComponent
   ],
   imports: [
     CommonModule,
     AppointmentRoutingModule,
     SharedModule,
-    // 
+    //
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule
+    RouterModule,
+    LoadingOverlayComponent,
+    NotificationComponent
   ]
 })
 export class AppointmentModule { }

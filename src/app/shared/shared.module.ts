@@ -16,6 +16,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { HeaderComponent } from '../common-component/header/header.component';
 import { SidebarComponent } from '../common-component/sidebar/sidebar.component';
 import { RouterModule } from '@angular/router';
+import {LoadingOverlayComponent} from "./components/loading-overlay/loading-overlay.component";
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { RouterModule } from '@angular/router';
         ReactiveFormsModule,
         NgxMaterialTimepickerModule,
         RouterModule,
-        NgOptimizedImage
+        NgOptimizedImage,
+        LoadingOverlayComponent
     ],
   exports: [
     CommonModule,

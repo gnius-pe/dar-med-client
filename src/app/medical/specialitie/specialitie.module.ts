@@ -9,6 +9,7 @@ import { ListSpecialitieComponent } from './list-specialitie/list-specialitie.co
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
 
 
 @NgModule({
@@ -18,14 +19,15 @@ import { RouterModule } from '@angular/router';
     EditSpecialitieComponent,
     ListSpecialitieComponent
   ],
-  imports: [
-    CommonModule,
-    SpecialitieRoutingModule,
-    // 
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    RouterModule
-  ]
+    imports: [
+        CommonModule,
+        SpecialitieRoutingModule,
+        //
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        RouterModule,
+        LoadingOverlayComponent
+    ]
 })
 export class SpecialitieModule { }

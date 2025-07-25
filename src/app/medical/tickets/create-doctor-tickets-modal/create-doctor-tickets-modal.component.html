@@ -1,0 +1,144 @@
+<!-- Modal backdrop -->
+<div class="modal fade" [class.show]="isVisible" [style.display]="isVisible ? 'block' : 'none'"
+     tabindex="-1" role="dialog" *ngIf="isVisible">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fa fa-calendar-plus"></i>
+          Crear Cupos para Doctor
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+
+        <!-- Formulario para agregar tickets -->
+        <form [formGroup]="ticketForm" class="mb-4">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Fecha disponible <span class="text-danger">*</span></label>
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="available_date"
+                  [min]="getCurrentDate()"
+                >
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label">Cantidad de cupos <span class="text-danger">*</span></label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="total_tickets"
+                  min="1"
+                  max="200"
+                  placeholder="Ej: 20"
+                >
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label class="form-label">&nbsp;</label>
+                <button
+                  type="button"
+                  class="btn btn-primary w-100"
+                  (click)="addTicket()"
+                  [disabled]="ticketForm.invalid"
+                >
+                  <i class="fa fa-plus"></i> Agregar
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- Lista de tickets agregados -->
+        <div class="card" *ngIf="tickets.length > 0">
+          <div class="card-header">
+            <h6 class="card-title mb-0">
+              <i class="fa fa-list"></i>
+              Cupos a crear ({{ tickets.length }})
+            </h6>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                <tr>
+                  <th>Fecha</th>
+                  <th>Día</th>
+                  <th>Cupos</th>
+                  <th width="80">Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let ticket of tickets; let i = index">
+                  <td>
+                    <strong>{{ ticket.available_date | date:'dd/MM/yyyy' }}</strong>
+                  </td>
+                  <td>
+                    <span class="badge bg-info">{{ formatDate(ticket.available_date) | slice:0:10 }}</span>
+                  </td>
+                  <td>
+                    <span class="badge bg-success">{{ ticket.total_tickets }} cupos</span>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="removeTicket(i)"
+                      title="Eliminar"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mensaje cuando no hay tickets -->
+        <div class="alert alert-info text-center" *ngIf="tickets.length === 0">
+          <i class="fa fa-info-circle"></i>
+          Agregue fechas y cantidades de cupos para el doctor
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeModal()"
+          [disabled]="isLoading"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="saveTickets()"
+          [disabled]="tickets.length === 0 || isLoading"
+        >
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          <i class="fa fa-save" *ngIf="!isLoading"></i>
+          {{ isLoading ? 'Guardando...' : 'Guardar Cupos' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal backdrop overlay -->
+<div class="modal-backdrop fade" [class.show]="isVisible" *ngIf="isVisible"></div>

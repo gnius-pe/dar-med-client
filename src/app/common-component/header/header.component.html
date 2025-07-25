@@ -8,13 +8,23 @@
                                                                                alt=""></a>
   <a (click)="toggleMobileSideBar()" id="mobile_btn" class="mobile_btn float-start"><img
     src="assets/img/icons/bar-icon.svg" alt=""></a>
+
   <div class="top-nav-search mob-view">
     <form>
       <input type="text" class="form-control" placeholder="Search here">
       <a class="btn"><img src="assets/img/icons/search-normal.svg" alt=""></a>
     </form>
   </div>
+
   <ul class="nav user-menu float-end">
+    <li *ngIf="selectedMission" class="nav-item dropdown d-none d-sm-block">
+      <div class="mission-badge">
+        <span class="mission-text">{{ selectedMission.name }}</span>
+        <button class="btn-clear-mission" (click)="clearSelectedMission()" title="Deseleccionar misión">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+    </li>
     <li class="nav-item dropdown d-none d-sm-block">
       <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown"><img
         src="assets/img/icons/note-icon-02.svg" alt=""><span class="pulse"></span> </a>
@@ -27,9 +37,9 @@
             <li class="notification-message">
               <a [routerLink]="routes.activities">
                 <div class="media">
-                                    <span class="avatar">
-                                        <img alt="John Doe" src="assets/img/user.jpg" class="img-fluid">
-                                    </span>
+                  <span class="avatar">
+                    <img alt="John Doe" src="assets/img/user.jpg" class="img-fluid">
+                  </span>
                   <div class="media-body">
                     <p class="noti-details"><span class="noti-title">John Doe</span> added new task <span
                       class="noti-title">Patient appointment booking</span></p>
@@ -105,15 +115,14 @@
           <span>{{ getRole() }}</span>
         </div>
         <span class="user-img">
-                    <img src="assets/img/user-06.jpg" alt="Admin">
-                </span>
+          <img src="assets/img/user-06.jpg" alt="Admin">
+        </span>
       </a>
       <div class="dropdown-menu">
-        <a class="dropdown-item" [routerLink]="routes.profile">My Profile</a>
-        <a class="dropdown-item" [routerLink]="routes.editProfile">Edit Profile</a>
-        <a class="dropdown-item" [routerLink]="routes.settings">Settings</a>
-        <a class="dropdown-item" href="#" onclick="return false;" (click)="logout()">Logout</a>
-        <!-- [routerLink]="routes.login" -->
+        <a class="dropdown-item" [routerLink]="routes.profile">Mi perfil</a>
+        <a class="dropdown-item" [routerLink]="routes.editProfile">Editdar perfil</a>
+        <a class="dropdown-item" [routerLink]="routes.settings">Configuración</a>
+        <a class="dropdown-item" href="#" onclick="return false;" (click)="logout()">Cerrar sesión</a>
       </div>
     </li>
     <li class="nav-item ">
@@ -125,10 +134,10 @@
     <a href="javascript:void(0);" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i
       class="fa-solid fa-ellipsis-vertical"></i></a>
     <div class="dropdown-menu dropdown-menu-end">
-      <a class="dropdown-item" [routerLink]="routes.profile">My Profile</a>
-      <a class="dropdown-item" [routerLink]="routes.editProfile">Edit Profile</a>
-      <a class="dropdown-item" [routerLink]="routes.settings">Settings</a>
-      <a class="dropdown-item" [routerLink]="routes.login">Logout</a>
+      <a class="dropdown-item" [routerLink]="routes.profile">Mi perfil</a>
+      <a class="dropdown-item" [routerLink]="routes.editProfile">Editdar perfil</a>
+      <a class="dropdown-item" [routerLink]="routes.settings">Configuración</a>
+      <a class="dropdown-item" [routerLink]="routes.login">Cerrar sesión</a>
     </div>
   </div>
 </div>
@@ -341,3 +350,5 @@
     </div>
   </div>
 </div>
+
+<app-loading-overlay [isBlock]="isLoading"></app-loading-overlay>

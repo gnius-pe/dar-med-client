@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
-import { SpecialitieService } from '../service/specialitie.service';
-import { MatTableDataSource } from '@angular/material/table';
+import {Component, OnInit} from '@angular/core';
+import {SpecialitieService} from '../service/specialitie.service';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-list-specialitie',
   templateUrl: './list-specialitie.component.html',
   styleUrls: ['./list-specialitie.component.scss']
 })
-export class ListSpecialitieComponent {
-  public specialitiesList:any = [];
+export class ListSpecialitieComponent implements OnInit {
+  public specialitiesList: any = [];
   dataSource!: MatTableDataSource<any>;
 
   public showFilter = false;
@@ -25,42 +25,44 @@ export class ListSpecialitieComponent {
   public pageSelection: Array<any> = [];
   public totalPages = 0;
 
-  public specialitie_generals:any = [];
-  public specialitie_selected:any;
-  public user:any;
+  public specialitie_generals: any = [];
+  public specialitie_selected: any;
+  public user: any;
+  isLoading = false;
 
   constructor(
     public specialitiesService: SpecialitieService,
-  ){
+  ) {
 
   }
+
   ngOnInit() {
     this.getTableData();
     this.user = this.specialitiesService.authService.user;
   }
-  isPermision(permission:string){
-    if(this.user.roles.includes('Super-Admin')){
+
+  isPermision(permission: string) {
+    if (this.user.roles.includes('Super-Admin')) {
       return true;
     }
-    if(this.user.permissions.includes(permission)){
+    if (this.user.permissions.includes(permission)) {
       return true;
     }
     return false;
   }
+
   private getTableData(): void {
+
+    this.showLoading()
     this.specialitiesList = [];
     this.serialNumberArray = [];
 
-    this.specialitiesService.listSpecialities().subscribe((resp:any) => {
-
-      console.log(resp);
-
+    this.specialitiesService.listSpecialities().subscribe((resp: any) => {
       this.totalData = resp.specialities.length;
       this.specialitie_generals = resp.specialities;
       this.getTableDataGeneral();
+      this.hideLoading();
     })
-
-
   }
 
   getTableDataGeneral() {
@@ -70,7 +72,7 @@ export class ListSpecialitieComponent {
     this.specialitie_generals.map((res: any, index: number) => {
       const serialNumber = index + 1;
       if (index >= this.skip && serialNumber <= this.limit) {
-        
+
         this.specialitiesList.push(res);
         this.serialNumberArray.push(serialNumber);
       }
@@ -79,17 +81,17 @@ export class ListSpecialitieComponent {
     this.calculateTotalPages(this.totalData, this.pageSize);
   }
 
-  selectSpecialitie(rol:any){
-    this.specialitie_selected = rol;
+  selectSpeciality(speciality: any) {
+    this.specialitie_selected = speciality;
   }
 
-  deleteSpecialitie(){
+  deleteSpeciality() {
 
-    this.specialitiesService.deleteSpecialities(this.specialitie_selected.id).subscribe((resp:any) => {
-      console.log(resp);
-      let INDEX = this.specialitiesList.findIndex((item:any) => item.id == this.specialitie_selected.id);
-      if(INDEX != -1){
-        this.specialitiesList.splice(INDEX,1);
+    this.specialitiesService.deleteSpecialities(this.specialitie_selected.id).subscribe((resp: any) => {
+
+      const INDEX = this.specialitiesList.findIndex((item: any) => item.id == this.specialitie_selected.id);
+      if (INDEX != -1) {
+        this.specialitiesList.splice(INDEX, 1);
 
         $('#delete_patient').hide();
         $("#delete_patient").removeClass("show");
@@ -101,6 +103,7 @@ export class ListSpecialitieComponent {
       }
     })
   }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public searchData(value: any): void {
     this.dataSource.filter = value.trim().toLowerCase();
@@ -113,7 +116,7 @@ export class ListSpecialitieComponent {
     if (!sort.active || sort.direction === '') {
       this.specialitiesList = data;
     } else {
-      this.specialitiesList = data.sort((a:any, b:any) => {
+      this.specialitiesList = data.sort((a: any, b: any) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const aValue = (a as any)[sort.active];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -171,11 +174,24 @@ export class ListSpecialitieComponent {
       const limit = pageSize * i;
       const skip = limit - pageSize;
       this.pageNumberArray.push(i);
-      this.pageSelection.push({ skip: skip, limit: limit });
-      // 1
-      // 0 - 10
-      // 2
-      // 10 - 20
+      this.pageSelection.push({skip: skip, limit: limit});
     }
+  }
+
+  formatDate(date: string): string {
+    const parsedDate = new Date(date);
+    const day = parsedDate.getDate().toString().padStart(2, '0');
+    const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+    const year = parsedDate.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+
+  private showLoading() {
+    this.isLoading = true;
+  }
+
+  private hideLoading() {
+    this.isLoading = false;
   }
 }
