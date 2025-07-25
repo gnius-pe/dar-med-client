@@ -37,7 +37,7 @@ export class EditDoctorComponent implements OnInit {
 
     this.doctorService.showDoctor(this.doctorId).subscribe({
       next: (resp: DoctorShowResponse) => {
-        this.doctorData = resp.doctor;
+        this.doctorData = resp.doctor
         this.hideLoading();
       },
       error: () => {
