@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { routes } from 'src/app/shared/routes/routes';
 import {
   ChartComponent,
@@ -60,18 +60,18 @@ export type ChartOptions = {
   templateUrl: './doctor-dashboard.component.html',
   styleUrls: ['./doctor-dashboard.component.scss'],
 })
-export class DoctorDashboardComponent {
+export class DoctorDashboardComponent implements OnInit{
   public routes = routes;
   @ViewChild('chart') chart!: ChartComponent;
   public chartOptionsOne: Partial<ChartOptions>;
   public chartOptionsTwo: Partial<ChartOptions>;
   public chartOptionsThree: Partial<ChartOptions>;
-  public selectedValue : string = "2023"  ;
+  public selectedValue  = "2023";
 
   public doctors:any = [];
   public doctor_id:any;
 
-  
+
   selecedList: data[] = [
     {value: '2023'},
     {value: '2022'},
@@ -113,17 +113,17 @@ export class DoctorDashboardComponent {
         },
       },
       grid: {
-        show: true, 
+        show: true,
         xaxis: {
           lines: {
             show: false
            }
-         },  
+         },
         yaxis: {
-          lines: { 
-            show: true 
+          lines: {
+            show: true
            }
-         },   
+         },
         },
       dataLabels: {
         enabled: false,
@@ -184,17 +184,17 @@ export class DoctorDashboardComponent {
         },
       },
       grid: {
-        show: true, 
+        show: true,
         xaxis: {
           lines: {
             show: false
            }
-         },  
+         },
         yaxis: {
-          lines: { 
-            show: true 
+          lines: {
+            show: true
            }
-         },   
+         },
         },
       responsive: [
         {
@@ -254,23 +254,20 @@ export class DoctorDashboardComponent {
   }
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    this.serviceDashboard.getConfigdashboard().subscribe((resp:any) => {
-      console.log(resp);
+    this.serviceDashboard.getConfigDashboard().subscribe((resp:any) => {
       this.doctors = resp.doctors;
     })
   }
 
   dashboardDoctor(){
-    let data = {
+    const data = {
       doctor_id: this.doctor_id,
     }
     this.serviceDashboard.dashboardDoctor(data).subscribe((resp:any) => {
       console.log(resp);
 
       this.appointments = resp.apointments.data;
-      
+
       this.num_appointments_current = resp.num_appointments_current;
       this.num_appointments_before = resp.num_appointments_before;
       this.porcentaje_d = resp.porcentaje_d;
@@ -315,17 +312,17 @@ export class DoctorDashboardComponent {
           },
         },
         grid: {
-          show: true, 
+          show: true,
           xaxis: {
             lines: {
               show: false
              }
-           },  
+           },
           yaxis: {
-            lines: { 
-              show: true 
+            lines: {
+              show: true
              }
-           },   
+           },
           },
         dataLabels: {
           enabled: false,
@@ -384,17 +381,17 @@ export class DoctorDashboardComponent {
           },
         },
         grid: {
-          show: true, 
+          show: true,
           xaxis: {
             lines: {
               show: false
              }
-           },  
+           },
           yaxis: {
-            lines: { 
-              show: true 
+            lines: {
+              show: true
              }
-           },   
+           },
           },
         responsive: [
           {
