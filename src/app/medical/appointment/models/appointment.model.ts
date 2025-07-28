@@ -55,6 +55,7 @@ export interface PatientSearchResponse {
   first_name?: string;
   last_name?: string;
   first_phone?: string;
+  patient_id?: string;
   identification_number?: string;
 }
 

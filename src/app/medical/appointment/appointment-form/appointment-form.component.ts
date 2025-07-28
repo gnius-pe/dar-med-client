@@ -64,6 +64,7 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
       first_phone: [{value: '', disabled: true}],
       name_companion: [{value: '', disabled: true}],
       surname_companion: [{value: '', disabled: true}],
+      patient_id: [''],
       amount: [0],
       amount_add: [0],
       method_payment: ['EFECTIVO'],
@@ -163,13 +164,15 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
           this.appointmentForm.patchValue({
             first_name: '',
             last_name: '',
-            first_phone: ''
+            first_phone: '',
+            patient_id: '',
           });
         } else {
           this.appointmentForm.patchValue({
             first_name: resp.first_name || '',
             last_name: resp.last_name || '',
-            first_phone: resp.first_phone || ''
+            first_phone: resp.first_phone || '',
+            patient_id: resp.patient_id || '',
           });
         }
       },
@@ -231,6 +234,7 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
   private buildCreateData(formValues: any): AppointmentCreateData {
     return {
       doctor_id: formValues.doctor_id,
+      patient_id: formValues.patient_id || '',
       first_name: formValues.first_name,
       last_name: formValues.last_name,
       identification_number: formValues.identification_number,

@@ -15,6 +15,7 @@ import { AppointmentFormComponent } from './appointment-form/appointment-form.co
 import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
 import {NotificationComponent} from "../../shared/components/notification/notification.component";
 import {ConfirmationModalComponent} from "../../shared/components/confirmation-modal/confirmation-modal.component";
+import {QRCodeModule} from "angularx-qrcode";
 
 
 @NgModule({
@@ -26,18 +27,19 @@ import {ConfirmationModalComponent} from "../../shared/components/confirmation-m
     AtencionMedicalComponent,
     AppointmentFormComponent
   ],
-    imports: [
-        CommonModule,
-        AppointmentRoutingModule,
-        SharedModule,
-        //
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        RouterModule,
-        LoadingOverlayComponent,
-        NotificationComponent,
-        ConfirmationModalComponent
-    ]
+  imports: [
+    CommonModule,
+    AppointmentRoutingModule,
+    SharedModule,
+    //
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    RouterModule,
+    LoadingOverlayComponent,
+    NotificationComponent,
+    ConfirmationModalComponent,
+    QRCodeModule
+  ]
 })
 export class AppointmentModule { }
