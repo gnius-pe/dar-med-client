@@ -33,4 +33,13 @@
   (close)="onNotificationClose()">
 </app-notification>
 
+<app-confirmation-modal
+  [show]="showConfirmModal"
+  [message]="modalMessage"
+  acceptText="Sí, Imprimir"
+  cancelText="No"
+  (accept)="onModalAccept()"
+  (cancel)="onModalCancel()">
+</app-confirmation-modal>
+
 <app-loading-overlay [isBlock]="isLoading"></app-loading-overlay>

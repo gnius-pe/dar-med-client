@@ -14,6 +14,7 @@ import { AtencionMedicalComponent } from './atencion-medical/atencion-medical.co
 import { AppointmentFormComponent } from './appointment-form/appointment-form.component';
 import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
 import {NotificationComponent} from "../../shared/components/notification/notification.component";
+import {ConfirmationModalComponent} from "../../shared/components/confirmation-modal/confirmation-modal.component";
 
 
 @NgModule({
@@ -25,17 +26,18 @@ import {NotificationComponent} from "../../shared/components/notification/notifi
     AtencionMedicalComponent,
     AppointmentFormComponent
   ],
-  imports: [
-    CommonModule,
-    AppointmentRoutingModule,
-    SharedModule,
-    //
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    RouterModule,
-    LoadingOverlayComponent,
-    NotificationComponent
-  ]
+    imports: [
+        CommonModule,
+        AppointmentRoutingModule,
+        SharedModule,
+        //
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        RouterModule,
+        LoadingOverlayComponent,
+        NotificationComponent,
+        ConfirmationModalComponent
+    ]
 })
 export class AppointmentModule { }

@@ -14,11 +14,12 @@ export type NotificationType = 'success' | 'error' | 'warning';
   styleUrls: ['./notification.component.scss']
 })
 export class NotificationComponent implements OnChanges,OnDestroy{
+
   @Input() message = '';
   @Input() type: NotificationType = 'success';
   @Input() show = false;
-  @Input() duration = 3000; // Duración en milisegundos
-  // eslint-disable-next-line @angular-eslint/no-output-native
+  @Input() duration = 3000;
+
   @Output() close = new EventEmitter<void>();
 
   private timeoutId: any;

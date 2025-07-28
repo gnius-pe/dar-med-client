@@ -15,6 +15,9 @@ export class AddAppointmentsComponent {
   notificationMessage = '';
   notificationType: 'success' | 'error' | 'warning' = 'success';
 
+  showConfirmModal = false;
+  modalMessage = '';
+
   constructor(
     private appointmentService: AppointmentService
   ) {}
@@ -37,12 +40,24 @@ export class AddAppointmentsComponent {
         }
 
         this.showSuccess("La cita médica se registró exitosamente");
+
+        this.modalMessage = '¿Desea imprimir la cita?';
+        this.showConfirmModal = true;
       },
       error: () => {
         this.hideLoading();
         this.showError('Error en el servidor al crear la cita');
       }
     });
+  }
+
+  onModalAccept(): void {
+    this.showConfirmModal = false;
+    console.log('Imprimir cita confirmado');
+  }
+
+  onModalCancel(): void {
+    this.showConfirmModal = false;
   }
 
   onAppointmentError(errorMessage: string): void {
