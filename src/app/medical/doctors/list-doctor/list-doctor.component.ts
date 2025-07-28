@@ -201,7 +201,6 @@ export class ListDoctorComponent implements OnInit {
   }
 
   openCreateTicketsModal(doctor: Doctor): void {
-    console.log('doctor',doctor);
     this.selectedDoctorForTickets = doctor.id;
     this.showCreateTicketsModal = true;
   }

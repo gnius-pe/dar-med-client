@@ -5,9 +5,9 @@
       <div class="row">
         <div class="col-sm-12">
             <ul class="breadcrumb mb-0">
-              <li class="breadcrumb-item"><a href="#">Pacientes</a></li>
+              <li class="breadcrumb-item"><a href="#">Citas</a></li>
               <li class="breadcrumb-item"><i class="feather icon-chevron-right"></i></li>
-              <li class="breadcrumb-item active">Añadir paciente</li>
+              <li class="breadcrumb-item active">Registrar cita</li>
             </ul>
         </div>
       </div>
@@ -36,7 +36,7 @@
 <app-confirmation-modal
   [show]="showConfirmModal"
   [message]="modalMessage"
-  acceptText="Sí, Imprimir"
+  acceptText="Sí, imprimir"
   cancelText="No"
   (accept)="onModalAccept()"
   (cancel)="onModalCancel()">

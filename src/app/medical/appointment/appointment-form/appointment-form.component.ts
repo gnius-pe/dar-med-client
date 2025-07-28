@@ -65,8 +65,12 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
   }
 
   private setForm(): FormGroup {
+
+    const today = new Date();
+    const todayString = today.toISOString().split('T')[0]
+
     return this.fb.group({
-      date_appointment: ['', Validators.required],
+      date_appointment: [todayString, Validators.required],
       specialitie_id: ['', Validators.required],
       identification_number: ['', Validators.required],
       first_name: [{value: '', disabled: true}, Validators.required],
