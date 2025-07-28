@@ -3,6 +3,7 @@ import {PatientMService} from '../service/patient-m.service';
 import {GeographicLocation, Patient} from '../models/patient.model';
 import {tap, catchError, of} from 'rxjs';
 import {GeographicLocationService} from "../service/geographic_location.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-add-patient-m',
@@ -12,15 +13,21 @@ import {GeographicLocationService} from "../service/geographic_location.service"
 export class AddPatientMComponent {
 
   showPatientForm = true;
-  isLoading = false;
   patientData: Patient | null = null;
+
+  isLoading = false;
+
   showNotification = false;
   notificationMessage = '';
   notificationType: 'success' | 'error' | 'warning' = 'success';
 
+  showConfirmModal = false;
+  modalMessage = '';
+
   constructor(
     private patientService: PatientMService,
-    private locationService: GeographicLocationService
+    private locationService: GeographicLocationService,
+    private router: Router,
   ) {
   }
 
@@ -65,19 +72,37 @@ export class AddPatientMComponent {
     this.showLoading();
 
     this.locationService.registerLocation(dataWithPatientId).pipe(
-      tap((resp: any) => {
-        console.log('Registro exitoso de ubicación:', resp);
+      tap(() => {
         setTimeout(() => {
-          this.resetToPatientForm()
           this.hideLoading();
-        }, 1000);
+          this.showModal()
+        }, 0);
       }),
       catchError(error => {
-        console.error('Error al registrar la ubicación:', error);
         this.hideLoading();
         return of(error);
       })
     ).subscribe();
+  }
+
+  private showModal() {
+    this.modalMessage = '¿Desea crear cita?';
+    this.showConfirmModal = true;
+  }
+
+  onModalAccept() {
+    this.makeShowModalFalse()
+    const route = this.getCreateAppointmentRoute();
+    this.router.navigate(route);
+  }
+
+  onModalCancel() {
+    this.makeShowModalFalse()
+    this.resetToPatientForm()
+  }
+
+  private makeShowModalFalse() {
+    this.showConfirmModal = false;
   }
 
   showSuccess(message: string) {

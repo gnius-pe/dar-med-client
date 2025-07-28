@@ -43,6 +43,15 @@
   </div>
 </div>
 
+<app-confirmation-modal
+  [show]="showConfirmModal"
+  [message]="modalMessage"
+  acceptText="Crear cita"
+  cancelText="No"
+  (accept)="onModalAccept()"
+  (cancel)="onModalCancel()">
+</app-confirmation-modal>
+
 <app-notification
   [show]="showNotification"
   [message]="notificationMessage"

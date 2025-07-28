@@ -17,6 +17,7 @@ import { GeographicLocationFormComponent } from './geographic-location-form/geog
 import { EditGeographicLocationComponent } from './edit-geographic-location/edit-geographic-location.component';
 import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
 import {NotificationComponent} from "../../shared/components/notification/notification.component";
+import {ConfirmationModalComponent} from "../../shared/components/confirmation-modal/confirmation-modal.component";
 
 
 @NgModule({
@@ -30,18 +31,19 @@ import {NotificationComponent} from "../../shared/components/notification/notifi
     GeographicLocationFormComponent,
     EditGeographicLocationComponent
   ],
-  imports: [
-    CommonModule,
-    PatientMRoutingModule,
-    SharedModule,
-    //
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    RouterModule,
-    QRCodeModule,
-    LoadingOverlayComponent,
-    NotificationComponent
-  ]
+    imports: [
+        CommonModule,
+        PatientMRoutingModule,
+        SharedModule,
+        //
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        RouterModule,
+        QRCodeModule,
+        LoadingOverlayComponent,
+        NotificationComponent,
+        ConfirmationModalComponent
+    ]
 })
 export class PatientMModule { }
