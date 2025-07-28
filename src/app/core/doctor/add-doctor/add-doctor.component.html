@@ -82,12 +82,12 @@
                                         <label class="gen-label">Gender<span class="login-danger">*</span></label>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" name="gender" class="form-check-input">Male
+                                                <input type="radio" name="gender" class="form-check-input">Masculino
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" name="gender" class="form-check-input">Female
+                                                <input type="radio" name="gender" class="form-check-input">Femenino
                                             </label>
                                         </div>
                                     </div>
@@ -107,7 +107,7 @@
                                 <div class="col-12 col-md-6 col-xl-4">
                                     <div class="form-group local-forms">
                                         <label>Department <span class="login-danger">*</span></label>
-                                        
+
                                         <mat-select [(ngModel)]="selectedValue" [ngModelOptions]="{standalone: true}" class="form-control select"  placeholder="Select Department">
                                             <mat-option *ngFor="let data of selectedList1" [value]="data.value">
                                             {{data.value}}

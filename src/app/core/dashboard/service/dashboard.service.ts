@@ -13,36 +13,34 @@ export class DashboardService {
     public authService: AuthService,
   ) { }
 
-    
-  getConfigdashboard(){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/dashboard/config";
+  getConfigDashboard(){
+    const headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
+    const URL = URL_SERVICIOS+"/dashboard/config";
     return this.http.get(URL,{headers: headers});
   }
 
   dashboardAdmin(data:any){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/dashboard/admin";
+    const headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
+    const URL = URL_SERVICIOS+"/dashboard/admin";
     return this.http.post(URL,data,{headers: headers});
   }
 
   dashboardAdminYear(data:any){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/dashboard/admin-year";
+    const headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
+    const URL = URL_SERVICIOS+"/dashboard/admin-year";
     return this.http.post(URL,data,{headers: headers});
   }
 
   dashboardDoctor(data:any){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/dashboard/doctor";
+    const headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
+    const URL = URL_SERVICIOS+"/dashboard/doctor";
     return this.http.post(URL,data,{headers: headers});
   }
 
   dashboardDoctorYear(data:any){
-    let headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
-    let URL = URL_SERVICIOS+"/dashboard/doctor-year";
+    const headers = new HttpHeaders({'Authorization': 'Bearer '+this.authService.token});
+    const URL = URL_SERVICIOS+"/dashboard/doctor-year";
     return this.http.post(URL,data,{headers: headers});
   }
-
 
 }

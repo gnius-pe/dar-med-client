@@ -193,24 +193,10 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
     });
   }
 
-  private validateAppointmentDate(): boolean {
-    const appointmentDate = new Date(this.appointmentForm.get('date_appointment')?.value);
-    const today = new Date();
-
-    if (appointmentDate.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)) {
-      this.showError.emit('La fecha de la cita no puede ser anterior a la fecha actual');
-      return false;
-    }
-    return true;
-  }
-
   save(): void {
+
     if (this.appointmentForm.invalid) {
       this.showError.emit('Complete todos los campos obligatorios');
-      return;
-    }
-
-    if (!this.validateAppointmentDate()) {
       return;
     }
 
