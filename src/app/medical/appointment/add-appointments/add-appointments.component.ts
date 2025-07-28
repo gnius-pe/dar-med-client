@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
-import { AppointmentService } from '../service/appointment.service';
-import { ApiResponse } from "../../../shared/models/global.model";
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {AppointmentService} from '../service/appointment.service';
+import {ApiResponse} from "../../../shared/models/global.model";
 import {AppointmentCreateData} from "../models/appointment.model";
+import {PrintService} from "../../../shared/services/print.service";
 
 @Component({
   selector: 'app-add-appointments',
@@ -10,14 +11,23 @@ import {AppointmentCreateData} from "../models/appointment.model";
 })
 export class AddAppointmentsComponent {
 
+  @ViewChild('qrCodeContainer', {static: false}) qrCodeContainer!: ElementRef;
+
   isLoading = false;
   showNotification = false;
   notificationMessage = '';
   notificationType: 'success' | 'error' | 'warning' = 'success';
 
+  showConfirmModal = false;
+  modalMessage = '';
+
+  patientId = '';
+
   constructor(
-    private appointmentService: AppointmentService
-  ) {}
+    private appointmentService: AppointmentService,
+    private printService: PrintService,
+  ) {
+  }
 
   onAppointmentSave(appointmentData: AppointmentCreateData): void {
     this.showLoading();
@@ -36,13 +46,37 @@ export class AddAppointmentsComponent {
           return;
         }
 
+        this.patientId = appointmentData.patient_id?.toString() || '';
+
         this.showSuccess("La cita médica se registró exitosamente");
+
+        this.modalMessage = '¿Desea imprimir la cita?';
+        this.showConfirmModal = true;
       },
       error: () => {
         this.hideLoading();
         this.showError('Error en el servidor al crear la cita');
       }
     });
+  }
+
+  private resetPatientId(): void {
+    this.patientId = ''
+  }
+
+  onModalAccept(): void {
+    this.showConfirmModal = false;
+
+    if (this.patientId === '') return
+
+    const qrCodeElement = this.qrCodeContainer?.nativeElement?.querySelector('canvas');
+    this.printService.printPatientData(this.patientId, qrCodeElement).subscribe();
+
+    this.resetPatientId()
+  }
+
+  onModalCancel(): void {
+    this.showConfirmModal = false;
   }
 
   onAppointmentError(errorMessage: string): void {

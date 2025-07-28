@@ -14,6 +14,8 @@ import { AtencionMedicalComponent } from './atencion-medical/atencion-medical.co
 import { AppointmentFormComponent } from './appointment-form/appointment-form.component';
 import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
 import {NotificationComponent} from "../../shared/components/notification/notification.component";
+import {ConfirmationModalComponent} from "../../shared/components/confirmation-modal/confirmation-modal.component";
+import {QRCodeModule} from "angularx-qrcode";
 
 
 @NgModule({
@@ -35,7 +37,9 @@ import {NotificationComponent} from "../../shared/components/notification/notifi
     HttpClientModule,
     RouterModule,
     LoadingOverlayComponent,
-    NotificationComponent
+    NotificationComponent,
+    ConfirmationModalComponent,
+    QRCodeModule
   ]
 })
 export class AppointmentModule { }

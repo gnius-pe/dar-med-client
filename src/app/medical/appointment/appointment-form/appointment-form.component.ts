@@ -9,6 +9,7 @@ import {
 } from "../models/appointment.model";
 import {Speciality} from "../../doctors/models/doctor.model";
 import {AppointmentService} from "../service/appointment.service";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-appointment-form',
@@ -25,23 +26,32 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
   @Output() updateAppointment = new EventEmitter<AppointmentUpdateData>();
   @Output() showError = new EventEmitter<string>();
 
-  // Configuration data
   public specialities: Speciality[] = [];
 
-  // Doctors and selection
   public availableDoctors: AvailableDoctor[] = [];
   public selectedDoctor: AvailableDoctor | null = null;
 
-  // UI state
   public isLoadingDoctors = false;
   public showDoctorsList = false;
   public minDate: Date = new Date();
 
   constructor(
     private fb: FormBuilder,
-    private appointmentService: AppointmentService
+    private appointmentService: AppointmentService,
+    private route: ActivatedRoute,
   ) {
     this.appointmentForm = this.setForm();
+
+    const dni = this.route.snapshot.params['dni'];
+    if (dni) {
+      this.appointmentForm.patchValue({
+        identification_number: dni
+      });
+
+      setTimeout(() => {
+        this.searchPatient();
+      }, 100);
+    }
   }
 
   ngOnInit(): void {
@@ -59,11 +69,12 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
       date_appointment: ['', Validators.required],
       specialitie_id: ['', Validators.required],
       identification_number: ['', Validators.required],
-      first_name: ['', Validators.required],
-      last_name: ['', Validators.required],
-      first_phone: [''],
-      name_companion: [''],
-      surname_companion: [''],
+      first_name: [{value: '', disabled: true}, Validators.required],
+      last_name: [{value: '', disabled: true}, Validators.required],
+      first_phone: [{value: '', disabled: true}],
+      name_companion: [{value: '', disabled: true}],
+      surname_companion: [{value: '', disabled: true}],
+      patient_id: [''],
       amount: [0],
       amount_add: [0],
       method_payment: ['EFECTIVO'],
@@ -163,13 +174,15 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
           this.appointmentForm.patchValue({
             first_name: '',
             last_name: '',
-            first_phone: ''
+            first_phone: '',
+            patient_id: '',
           });
         } else {
           this.appointmentForm.patchValue({
             first_name: resp.first_name || '',
             last_name: resp.last_name || '',
-            first_phone: resp.first_phone || ''
+            first_phone: resp.first_phone || '',
+            patient_id: resp.patient_id || '',
           });
         }
       },
@@ -217,6 +230,7 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
   private buildCreateData(formValues: any): AppointmentCreateData {
     return {
       doctor_id: formValues.doctor_id,
+      patient_id: formValues.patient_id || '',
       first_name: formValues.first_name,
       last_name: formValues.last_name,
       identification_number: formValues.identification_number,

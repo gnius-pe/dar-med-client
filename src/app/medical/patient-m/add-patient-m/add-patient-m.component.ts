@@ -34,7 +34,7 @@ export class AddPatientMComponent {
         this.showSuccess('Paciente registrado con éxito');
       }),
       catchError(error => {
-        //console.error('Error al registrar el paciente:', error);
+
         this.hideLoading();
 
         if (error.status === 422) {
@@ -46,6 +46,13 @@ export class AddPatientMComponent {
         return of(error);
       })
     ).subscribe();
+  }
+
+  getCreateAppointmentRoute(): string[] {
+    if (this.patientData?.identification_number) {
+      return ['/appointment-m/register', this.patientData.identification_number];
+    }
+    return ['/appointment-m/register'];
   }
 
   public createLocation(locationData: GeographicLocation) {
