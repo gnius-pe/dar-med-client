@@ -12,6 +12,10 @@ const routes: Routes = [
     component: AppointmentComponent,
     children: [
       {
+        path: 'register/:dni',
+        component: AddAppointmentsComponent,
+      },
+      {
         path: 'register',
         component: AddAppointmentsComponent,
       },

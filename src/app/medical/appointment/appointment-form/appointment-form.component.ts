@@ -9,6 +9,7 @@ import {
 } from "../models/appointment.model";
 import {Speciality} from "../../doctors/models/doctor.model";
 import {AppointmentService} from "../service/appointment.service";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-appointment-form',
@@ -25,23 +26,32 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
   @Output() updateAppointment = new EventEmitter<AppointmentUpdateData>();
   @Output() showError = new EventEmitter<string>();
 
-  // Configuration data
   public specialities: Speciality[] = [];
 
-  // Doctors and selection
   public availableDoctors: AvailableDoctor[] = [];
   public selectedDoctor: AvailableDoctor | null = null;
 
-  // UI state
   public isLoadingDoctors = false;
   public showDoctorsList = false;
   public minDate: Date = new Date();
 
   constructor(
     private fb: FormBuilder,
-    private appointmentService: AppointmentService
+    private appointmentService: AppointmentService,
+    private route: ActivatedRoute,
   ) {
     this.appointmentForm = this.setForm();
+
+    const dni = this.route.snapshot.params['dni'];
+    if (dni) {
+      this.appointmentForm.patchValue({
+        identification_number: dni
+      });
+
+      setTimeout(() => {
+        this.searchPatient();
+      }, 100);
+    }
   }
 
   ngOnInit(): void {
