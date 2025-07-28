@@ -28,7 +28,8 @@
         <div class="col-12 col-md-6 col-xl-4">
           <div class="form-group local-forms">
             <label>Especialidad <span class="login-danger">*</span></label>
-            <mat-select formControlName="specialitie_id" class="form-control select" placeholder="Seleccionar especialidad">
+            <mat-select formControlName="specialitie_id" class="form-control select"
+                        placeholder="Seleccionar especialidad">
               <mat-option *ngFor="let speciality of specialities" [value]="speciality.id">
                 {{ speciality.name }}
               </mat-option>
