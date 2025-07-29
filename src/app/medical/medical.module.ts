@@ -4,15 +4,18 @@ import { MedicalRoutingModule } from './medical-routing.module';
 import { MedicalComponent } from './medical.component';
 import { SharedModule } from '../shared/shared.module';
 import { CreateDoctorTicketsModalComponent } from './tickets/create-doctor-tickets-modal/create-doctor-tickets-modal.component';
+import { ManageDoctorTicketsModalComponent } from './tickets/manage-doctor-tickets-modal/manage-doctor-tickets-modal.component';
 
 @NgModule({
     declarations: [
         MedicalComponent,
         CreateDoctorTicketsModalComponent,
+        ManageDoctorTicketsModalComponent,
     ],
-    exports: [
-        CreateDoctorTicketsModalComponent
-    ],
+  exports: [
+    CreateDoctorTicketsModalComponent,
+    ManageDoctorTicketsModalComponent
+  ],
     imports: [
         CommonModule,
         MedicalRoutingModule,

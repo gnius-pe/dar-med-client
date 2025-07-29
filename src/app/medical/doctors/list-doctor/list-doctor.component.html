@@ -89,7 +89,11 @@
                            [routerLink]="[ '/doctors/list/profile/', doctor.id ]">+ Perfil del doctor</a>
                         <span
                           class="dropdown-item" (click)="openCreateTicketsModal(doctor)">
-                          Crear cupo
+                            Crear cupo
+                        </span>
+                        <span
+                          class="dropdown-item" (click)="openManageTicketsModal(doctor)">
+                            Gestionar cupos
                         </span>
                       </div>
                     </div>
@@ -244,5 +248,14 @@
   (successModalEvent)="onTicketsCreatedSuccess()"
   (errorModalEvent)="onTicketsError($event)">
 </app-create-doctor-tickets-modal>
+
+<app-manage-doctor-tickets-modal
+  [doctorId]="selectedDoctorForManage?.id || null"
+  [doctorName]="selectedDoctorForManage?.name || ''"
+  [isVisible]="showManageTicketsModal"
+  (closeModalEvent)="onCloseManageTicketsModal()"
+  (successModalEvent)="onManageTicketsSuccess()"
+  (errorModalEvent)="onManageTicketsError($event)">
+</app-manage-doctor-tickets-modal>
 
 <app-loading-overlay [isBlock]="isLoading"></app-loading-overlay>

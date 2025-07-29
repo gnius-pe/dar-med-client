@@ -1,0 +1,168 @@
+<div class="modal fade" [class.show]="isVisible" [style.display]="isVisible ? 'block' : 'none'"
+     tabindex="-1" role="dialog" *ngIf="isVisible">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fa fa-calendar-check"></i>
+          Gestionar Cupos - {{ doctorName }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+
+        <!-- Loading state -->
+        <div class="text-center py-4" *ngIf="isLoading">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="mt-2">Cargando cupos del doctor...</p>
+        </div>
+
+        <!-- Tickets list -->
+        <div *ngIf="!isLoading">
+
+          <!-- Header info -->
+          <div class="alert alert-info mb-4" *ngIf="tickets.length > 0">
+            <i class="fa fa-info-circle"></i>
+            <strong>Total de fechas:</strong> {{ tickets.length }} |
+            <strong>Cupos activos:</strong> {{ (tickets | json | slice:0:100).split('is_active":true').length - 1 }}
+          </div>
+
+          <!-- Tickets table -->
+          <div class="table-responsive" *ngIf="tickets.length > 0">
+            <table class="table table-hover">
+              <thead class="table-light">
+              <tr>
+                <th>Fecha</th>
+                <th>Día</th>
+                <th>Total Cupos</th>
+                <th>Disponibles</th>
+                <th>Usados</th>
+                <th>Estado</th>
+                <th width="200">Acciones</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let ticket of tickets" [class.table-warning]="!ticket.is_active">
+                <td>
+                  <strong>{{ ticket.available_date | date:'dd/MM/yyyy' }}</strong>
+                </td>
+                <td>
+                  <span class="badge bg-info">{{ formatDate(ticket.available_date) | slice:0:10 }}</span>
+                </td>
+                <td>
+                  <!-- Edit mode -->
+                  <div *ngIf="editingTicket === ticket.id" class="d-flex align-items-center">
+                    <input
+                      type="number"
+                      class="form-control form-control-sm me-2"
+                      [(ngModel)]="tempValue"
+                      [min]="ticket.used_tickets"
+                      style="width: 80px;">
+                    <button
+                      class="btn btn-sm btn-success me-1"
+                      (click)="saveEdit(ticket)"
+                      [disabled]="isUpdating"
+                      title="Guardar">
+                      <i class="fa fa-check"></i>
+                    </button>
+                    <button
+                      class="btn btn-sm btn-secondary"
+                      (click)="cancelEdit()"
+                      [disabled]="isUpdating"
+                      title="Cancelar">
+                      <i class="fa fa-times"></i>
+                    </button>
+                  </div>
+                  <!-- View mode -->
+                  <div *ngIf="editingTicket !== ticket.id" class="d-flex align-items-center">
+                    <span class="me-2">{{ ticket.total_tickets }}</span>
+                    <button
+                      class="btn btn-sm btn-outline-primary"
+                      (click)="startEdit(ticket)"
+                      title="Editar cantidad"
+                      [disabled]="isUpdating">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge bg-primary">{{ ticket.available_tickets }}</span>
+                </td>
+                <td>
+                  <span class="badge bg-secondary">{{ ticket.used_tickets }}</span>
+                </td>
+                <td>
+                    <span class="badge" [ngClass]="getStatusBadgeClass(ticket)">
+                      {{ getStatusText(ticket) }}
+                    </span>
+                </td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <!-- Toggle active/inactive -->
+                    <button
+                      class="btn btn-sm"
+                      [ngClass]="ticket.is_active ? 'btn-warning' : 'btn-success'"
+                      (click)="toggleActiveStatus(ticket)"
+                      [disabled]="isUpdating"
+                      [title]="ticket.is_active ? 'Desactivar' : 'Activar'">
+                      <i class="fa" [ngClass]="ticket.is_active ? 'fa-pause' : 'fa-play'"></i>
+                    </button>
+
+                    <!-- Delete ticket -->
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="deleteTicket(ticket)"
+                      [disabled]="ticket.used_tickets > 0 || isUpdating"
+                      title="Eliminar">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty state -->
+          <div class="alert alert-warning text-center" *ngIf="tickets.length === 0">
+            <i class="fa fa-calendar-times"></i>
+            <h6>No hay cupos creados</h6>
+            <p class="mb-0">Este doctor no tiene fechas con cupos asignados.</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeModal()"
+          [disabled]="isUpdating"
+        >
+          Cerrar
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="loadDoctorTickets()"
+          [disabled]="isLoading || isUpdating"
+        >
+          <i class="fa fa-refresh"></i>
+          Actualizar
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade" [class.show]="isVisible" *ngIf="isVisible"></div>

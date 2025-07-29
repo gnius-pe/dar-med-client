@@ -120,7 +120,10 @@ export class CreateDoctorTicketsModalComponent implements OnChanges {
   }
 
   formatDate(dateString: string): string {
-    const date = new Date(dateString);
+
+    const [year, month, day] = dateString.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+
     return date.toLocaleDateString('es-ES', {
       weekday: 'long',
       year: 'numeric',
