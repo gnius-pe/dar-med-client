@@ -66,7 +66,7 @@ export class AppointmentCalendarComponent {
     //Add 'implements OnInit' to the class.
     this.appointmentPayService.listConfig().subscribe((resp:any) => {
       this.specialities = resp.specialities;
-      
+
     })
     this.user = this.appointmentPayService.authService.user;
     this.calendarAppointment();
@@ -78,7 +78,7 @@ export class AppointmentCalendarComponent {
       search_patient: this.search_patient,
     }
     this.appointmentCalendarService.calendarAppointment(data).subscribe((resp:any) => {
-      console.log(resp);
+
       this.options = { ...this.options, ...{ events: resp.appointments } };
     })
   }

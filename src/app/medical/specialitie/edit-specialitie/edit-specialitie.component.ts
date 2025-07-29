@@ -9,7 +9,7 @@ import { SpecialitieService } from '../service/specialitie.service';
 })
 export class EditSpecialitieComponent {
 
-  
+
   name:string = '';
   state:number = 1;
   valid_form: boolean = false;
@@ -21,7 +21,7 @@ export class EditSpecialitieComponent {
     public specialitieService: SpecialitieService,
     public activedRoute: ActivatedRoute,
   ) {
-    
+
   }
   ngOnInit(): void {
     this.activedRoute.params.subscribe((resp:any) => {
@@ -32,7 +32,7 @@ export class EditSpecialitieComponent {
 
   showSpecialitie(){
     this.specialitieService.showSpecialities(this.specialitie_id).subscribe((resp:any) => {
-      console.log(resp);
+
       this.name = resp.name;
       this.state = resp.state;
     })
@@ -51,7 +51,7 @@ export class EditSpecialitieComponent {
     this.valid_form_success = false;
     this.text_validation = null;
     this.specialitieService.editSpecialities(data,this.specialitie_id).subscribe((resp:any) => {
-      console.log(resp);
+
       if(resp.message == 403){
         this.text_validation = resp.message_text;
         return ;

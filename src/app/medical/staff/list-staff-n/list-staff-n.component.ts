@@ -90,7 +90,7 @@ export class ListStaffNComponent implements OnInit {
   deleteUser() {
 
     this.staffService.deleteUser(this.staff_selected.id).subscribe((resp: any) => {
-      console.log(resp);
+
       const INDEX = this.usersList.findIndex((item: any) => item.id == this.staff_selected.id);
       if (INDEX != -1) {
         this.usersList.splice(INDEX, 1);

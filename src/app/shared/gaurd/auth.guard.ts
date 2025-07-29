@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
-  
+
   CanActivate,
   Router,
-  
+
   UrlTree,
 } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -16,19 +16,12 @@ import { AuthService } from '../auth/auth.service';
 export class AuthGuard implements CanActivate {
   constructor(private router: Router,public auth: AuthService) {}
   canActivate(
-    
+
   ):
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-      // if (localStorage.getItem('authenticated')) {
-      //   return true;
-      // } else {
-      //   this.router.navigate([routes.login]);
-      //   return false;
-      // }
-      // console.log(this.auth.token,this.auth.user)
       if(!localStorage.getItem("token") || !localStorage.getItem("user")){
         this.router.navigate([routes.login]);
         return false;

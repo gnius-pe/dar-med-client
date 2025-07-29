@@ -103,7 +103,7 @@ export class ListAppointmentsComponent implements OnInit{
   deleteAppointment(){
 
     this.appointmentService.deleteAppointment(this.appointment_selected.id).subscribe((resp:any) => {
-      console.log(resp);
+
       let INDEX = this.appointmentList.findIndex((item:any) => item.id == this.appointment_selected.id);
       if(INDEX != -1){
         this.appointmentList.splice(INDEX,1);

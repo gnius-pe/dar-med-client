@@ -10,6 +10,7 @@ interface Medication {
 interface AppointmentData {
   id: number;
   patient: {
+    id: number;
     first_name: string;
     last_name: string;
     identification_number: string;
@@ -74,9 +75,9 @@ export class AtencionMedicalComponent implements OnInit {
   private loadAppointment(): void {
     this.appointmentService.showAppointment(this.appointmentId).subscribe({
       next: (resp: any) => {
+
         this.appointmentData = resp.appointment;
 
-        // Fill patient data
         if (this.appointmentData?.patient) {
           this.first_name = this.appointmentData.patient.first_name;
           this.last_name = this.appointmentData.patient.last_name;
@@ -106,14 +107,13 @@ export class AtencionMedicalComponent implements OnInit {
       },
       error: () => {
         this.hideLoading();
-        // Si no hay atención previa, no es un error crítico
         this.medical = [];
         this.description = '';
       }
     });
   }
 
-  addMedicamento(): void {
+  addMedicament(): void {
     if (!this.name_medical || !this.uso) {
       this.showWarning('Complete el nombre del medicamento y su uso');
       return;
@@ -148,12 +148,11 @@ export class AtencionMedicalComponent implements OnInit {
 
     const data = {
       appointment_id: this.appointmentId,
-      patient_id: this.appointmentData.patient_id,
+      patient_id: this.appointmentData.patient.id,
       description: this.description,
-      receta_medica: JSON.stringify(this.medical),
+      medical: this.medical,
     };
 
-    /*
     this.appointmentService.registerAttention(data).subscribe({
       next: (resp: any) => {
         this.hideLoading();
@@ -168,7 +167,7 @@ export class AtencionMedicalComponent implements OnInit {
         this.hideLoading();
         this.showError('Error en el servidor al guardar la atención');
       }
-    });*/
+    });
   }
 
   private showLoading(): void {

@@ -206,18 +206,14 @@ export class AdminDashboardComponent implements OnInit {
 
   private loadDashboardData() {
     this.dashboardService.dashboardAdmin({}).subscribe((resp: any) => {
-      console.log('Dashboard data:', resp);
 
-      // Actualizar datos principales
       this.appointments = resp.appointments.data;
 
-      // Estadísticas principales
       this.total_appointments = resp.total_appointments;
       this.total_patients = resp.total_patients;
       this.total_doctors = resp.total_doctors;
       this.total_staff = resp.total_staff;
 
-      // Estadísticas del día
       this.appointments_today = resp.appointments_today;
       this.pending_appointments = resp.pending_appointments;
       this.completed_appointments = resp.completed_appointments;
@@ -230,8 +226,6 @@ export class AdminDashboardComponent implements OnInit {
     };
 
     this.dashboardService.dashboardAdminYear(data).subscribe((resp: any) => {
-      console.log('Year data:', resp);
-
       this.query_patient_by_genders = resp.query_patient_by_genders;
       this.query_patients_speciality = resp.query_patients_speciality;
       this.query_patients_speciality_percentage = resp.query_patients_speciality_percentage;
@@ -242,7 +236,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   private updateCharts() {
-    // Actualizar gráfico de género
+
     const data_male: any = [];
     const data_female: any = [];
 

@@ -264,7 +264,6 @@ export class DoctorDashboardComponent implements OnInit{
       doctor_id: this.doctor_id,
     }
     this.serviceDashboard.dashboardDoctor(data).subscribe((resp:any) => {
-      console.log(resp);
 
       this.appointments = resp.apointments.data;
 
@@ -295,7 +294,7 @@ export class DoctorDashboardComponent implements OnInit{
     this.query_n_appointment_year = null;
     this.query_n_appointment_year_before = null;
     this.serviceDashboard.dashboardDoctorYear(data).subscribe((resp:any) => {
-      console.log(resp);
+
 
       this.query_income_year = resp.query_income_year;
       let data_income:any = [];

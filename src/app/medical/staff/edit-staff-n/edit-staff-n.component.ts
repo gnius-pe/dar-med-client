@@ -37,18 +37,18 @@ export class EditStaffNComponent {
     public staffService: StaffService,
     public activedRoute: ActivatedRoute
   ) {
-    
+
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.activedRoute.params.subscribe((resp:any) => {
-      console.log(resp);
+
       this.staff_id = resp.id;
     })
-    
+
     this.staffService.showUser(this.staff_id).subscribe((resp:any) => {
-      console.log(resp);
+
       this.staff_selected = resp.user;
 
       this.selectedValue = this.staff_selected.role.id;
@@ -65,7 +65,7 @@ export class EditStaffNComponent {
     })
 
     this.staffService.listConfig().subscribe((resp:any) => {
-      console.log(resp);
+
       this.roles = resp.roles;
     })
   }
@@ -107,9 +107,9 @@ export class EditStaffNComponent {
     if(this.FILE_AVATAR){
       formData.append("imagen",this.FILE_AVATAR);
     }
-    
+
     this.staffService.updateUser(this.staff_id,formData).subscribe((resp:any) => {
-      console.log(resp);
+
 
       if(resp.message == 403){
         this.text_validation = resp.message_text;

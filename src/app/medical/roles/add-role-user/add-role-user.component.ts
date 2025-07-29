@@ -19,7 +19,7 @@ export class AddRoleUserComponent {
     public DataService: DataService,
     public RoleService: RolesService,
   ) {
-    
+
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -52,14 +52,14 @@ export class AddRoleUserComponent {
     this.valid_form_success = false;
     this.text_validation = null;
     this.RoleService.storeRoles(data).subscribe((resp:any) => {
-      console.log(resp);
+
       if(resp.message == 403){
         this.text_validation = resp.message_text;
       }else{
         this.name = '';
         this.permissions = [];
         this.valid_form_success = true;
-  
+
         let SIDE_BAR = this.sideBar;
         this.sideBar = [];
         setTimeout(() => {
