@@ -61,8 +61,7 @@
                   <th mat-sort-header="name">Nombres y Apellidos</th>
                   <th mat-sort-header="email">Email</th>
                   <th mat-sort-header="mobile">Telefono</th>
-                  <th mat-sort-header="birth_date">Fecha de cumpleaños</th>
-                  <th mat-sort-header="created_at">Fecha de registro</th>
+                  <th mat-sort-header="mobile">Especialidad</th>
                   <th></th>
                 </tr>
                 </thead>
@@ -72,8 +71,7 @@
                   <td>{{ doctor.name + ' ' + (doctor.surname ? doctor.surname : '') }}</td>
                   <td>{{ doctor.email }}</td>
                   <td>{{ doctor.mobile }}</td>
-                  <td>{{ formatDate(doctor.birth_date) }}</td>
-                  <td>{{ formatDate(doctor.created_at) }}</td>
+                  <td>{{ doctor.specialitie.name }}</td>
                   <td class="text-end">
                     <div class="dropdown dropdown-action" *ngIf="doctor.id != 1">
                       <a href="javascript:void(0);" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
