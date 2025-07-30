@@ -37,12 +37,10 @@ export class AuthService {
     const URL = URL_SERVICIOS+"/auth/login";
     return this.http.post(URL,{email: email,password: password}).pipe(
       map((auth:any) => {
-        console.log(auth);
         const result = this.saveLocalStorage(auth);
         return result;
       }),
       catchError((error:any) => {
-        console.log(error);
         return of(undefined);
       })
     );

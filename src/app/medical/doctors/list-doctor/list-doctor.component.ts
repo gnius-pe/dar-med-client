@@ -35,6 +35,9 @@ export class ListDoctorComponent implements OnInit {
   showCreateTicketsModal = false;
   selectedDoctorForTickets: number | null = null;
 
+  showManageTicketsModal = false;
+  selectedDoctorForManage: { id: number; name: string } | null = null;
+
   public role_generals: any = [];
   public doctor_selected: any;
   public user: any;
@@ -215,6 +218,27 @@ export class ListDoctorComponent implements OnInit {
   }
 
   onTicketsError(errorMessage: string): void {
+    this.showError(errorMessage);
+  }
+
+  openManageTicketsModal(doctor: Doctor): void {
+    this.selectedDoctorForManage = {
+      id: doctor.id,
+      name: doctor.name + ' ' + (doctor.surname || '')
+    };
+    this.showManageTicketsModal = true;
+  }
+
+  onCloseManageTicketsModal(): void {
+    this.showManageTicketsModal = false;
+    this.selectedDoctorForManage = null;
+  }
+
+  onManageTicketsSuccess(): void {
+    this.showSuccess('Cupos actualizados exitosamente');
+  }
+
+  onManageTicketsError(errorMessage: string): void {
     this.showError(errorMessage);
   }
 

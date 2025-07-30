@@ -23,18 +23,18 @@ export class PatientMProfileComponent {
     public patientService: PatientMService,
     public activedRoute: ActivatedRoute,
   ) {
-    
+
   }
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.activedRoute.params.subscribe((resp:any) => {
-      console.log(resp);
+
       this.patient_id = resp.id;
     })
     this.patientService.profilePatient(this.patient_id).subscribe((resp:any) => {
-      console.log(resp);
+
       this.num_appointment = resp.num_appointment;
       this.money_of_appointments = resp.money_of_appointments;
       this.num_appointment_pendings = resp.num_appointment_pendings;

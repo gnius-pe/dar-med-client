@@ -84,4 +84,15 @@ export class AppointmentService {
     const URL = URL_SERVICIOS + `/appointmet/${appointmentId}`;
     return this.http.get(URL, { headers });
   }
+
+  registerAttention(data: {
+    appointment_id: string;
+    patient_id: number;
+    description: string;
+    medical: any[];
+  }): Observable<ApiResponse> {
+    const headers = this.getHeaders();
+    const URL = URL_SERVICIOS + "/appointmet-attention";
+    return this.http.post<ApiResponse>(URL, data, { headers });
+  }
 }

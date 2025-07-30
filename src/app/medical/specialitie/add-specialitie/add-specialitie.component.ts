@@ -15,7 +15,7 @@ export class AddSpecialitieComponent {
   constructor(
     public specialitieService: SpecialitieService,
   ) {
-    
+
   }
   ngOnInit(): void {
 
@@ -33,7 +33,7 @@ export class AddSpecialitieComponent {
     this.valid_form_success = false;
     this.text_validation = null;
     this.specialitieService.storeSpecialities(data).subscribe((resp:any) => {
-      console.log(resp);
+
       if(resp.message == 403){
         this.text_validation = resp.message_text;
       }else{

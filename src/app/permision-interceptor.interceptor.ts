@@ -16,7 +16,7 @@ export class PermisionInterceptorInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((response: HttpErrorResponse) => {
-        console.log(response);
+
         if(response.status == 403){
           alert(response.error.message);
         }

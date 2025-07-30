@@ -35,7 +35,7 @@ export class EditPatientMComponent implements OnInit {
   public updatePatient(formData: Patient) {
 
     this.patientService.updatePatient(this.patient_id,formData).subscribe((resp:any) => {
-       console.log(resp);
+
      })
   }
 }

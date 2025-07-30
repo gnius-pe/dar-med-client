@@ -14,7 +14,7 @@ export interface DoctorCreateData {
   surname: string;
   email: string;
   password: string;
-  phone?: string;
+  mobile?: string;
   birth_date: string;
   gender?: string;
   education?: string;
@@ -46,7 +46,7 @@ export interface Doctor {
   name: string;
   surname: string;
   email: string;
-  phone?: string;
+  mobile?: string;
   birth_date: string;
   gender?: string;
   education?: string;
