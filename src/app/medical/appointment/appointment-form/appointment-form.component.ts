@@ -72,7 +72,7 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
     return this.fb.group({
       date_appointment: [todayString, Validators.required],
       specialitie_id: ['', Validators.required],
-      identification_number: ['', Validators.required],
+      identification_number: ['', [Validators.required, Validators.pattern(/^\d{1,8}$/)]],
       first_name: [{value: '', disabled: true}, Validators.required],
       last_name: [{value: '', disabled: true}, Validators.required],
       first_phone: [{value: '', disabled: true}],
@@ -256,6 +256,11 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
       specialitie_id: formValues.specialitie_id,
       amount: formValues.amount || undefined
     };
+  }
+
+  public allowOnlyNumbers(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/[^0-9]/g, '');
   }
 
   resetForm(): void {

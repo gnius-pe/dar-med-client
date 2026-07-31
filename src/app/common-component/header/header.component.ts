@@ -79,20 +79,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public toggleMobileSideBar(): void {
     this.sideBar.switchMobileSideBarPosition();
-
-    const overlay = document.querySelector('.sidebar-overlay') as HTMLElement;
-    const root = document.querySelector('html') as HTMLElement;
-    const sidebar = document.getElementById('sidebar');
-
-    if (this.sideBar.toggleMobileSideBar.value === 'true') {
-      root?.classList.add('menu-opened');
-      sidebar?.classList.add('opened');
-      overlay?.classList.add('opened');
-    } else {
-      root?.classList.remove('menu-opened');
-      sidebar?.classList.remove('opened');
-      overlay?.classList.remove('opened');
-    }
   }
 
   private showLoading() {

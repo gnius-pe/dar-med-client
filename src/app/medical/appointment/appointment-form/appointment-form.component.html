@@ -135,8 +135,10 @@
             <input
               class="form-control"
               formControlName="identification_number"
-              type="number"
+              type="text"
               placeholder="Ingrese DNI (8 dígitos)"
+              maxlength="8"
+              (input)="allowOnlyNumbers($event)"
               (keyup.enter)="appointmentForm.get('identification_number')?.value?.length === 8 ? searchPatient() : null"
             >
           </div>

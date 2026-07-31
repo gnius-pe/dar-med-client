@@ -24,7 +24,25 @@ export class SideBarService {
   public expandSideBar: BehaviorSubject<string> = new BehaviorSubject<string>("false");
 
   constructor(private data: DataService) {
+    this.toggleMobileSideBar.subscribe((state: string) => {
+      this.applyMobileSideBarClasses(state);
+    });
+  }
 
+  private applyMobileSideBarClasses(state: string): void {
+    const root = document.querySelector('html') as HTMLElement;
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.querySelector('.sidebar-overlay') as HTMLElement;
+
+    if (state === 'true') {
+      root?.classList.add('menu-opened');
+      sidebar?.classList.add('opened');
+      overlay?.classList.add('opened');
+    } else {
+      root?.classList.remove('menu-opened');
+      sidebar?.classList.remove('opened');
+      overlay?.classList.remove('opened');
+    }
   }
 
   public switchSideMenuPosition(): void {
