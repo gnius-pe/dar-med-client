@@ -68,6 +68,10 @@ export class PrintService {
     return of('');
   }
 
+  private sanitizeFileName(name: string): string {
+    return name.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s_-]/g, '').trim() || 'sin_nombre';
+  }
+
   /**
    * Genera el PDF con los datos del paciente
    * @param patientData Datos del paciente
@@ -201,9 +205,20 @@ export class PrintService {
     doc.text('Citas Médicas:', marginLeft, y);
     y += lineHeight;
 
+    if (!patientData.appointments || patientData.appointments.length === 0) {
+      doc.setFont('helvetica', 'normal');
+      doc.text('No hay citas médicas registradas.', marginLeft, y);
+      y += lineHeight;
+      return y;
+    }
+
     patientData.appointments.forEach((appointment) => {
       doc.setFontSize(8);
       
+      const specialty = appointment.specialty || 'No especificada';
+      const doctorName = appointment.doctor_name || 'No asignado';
+      const appointmentDate = appointment.date || 'Sin fecha';
+
       // 1. Escribimos "Especialidad: " en letra normal
       doc.setFont('helvetica', 'normal');
       doc.text('Especialidad: ', marginLeft, y);
@@ -213,15 +228,15 @@ export class PrintService {
 
       // 2. Escribimos SOLO el nombre de la especialidad (ej. Medicina) en negrita justo al lado
       doc.setFont('helvetica', 'bold');
-      doc.text(appointment.specialty, marginLeft + labelWidth, y);
+      doc.text(specialty, marginLeft + labelWidth, y);
       y += lineHeight;
 
       // El doctor y la fecha continúan en texto normal
       doc.setFont('helvetica', 'normal');
-      doc.text(`Doctor: ${appointment.doctor_name}`, marginLeft, y);
+      doc.text(`Doctor: ${doctorName}`, marginLeft, y);
       y += lineHeight;
 
-      doc.text(`Fecha: ${appointment.date}`, marginLeft, y);
+      doc.text(`Fecha: ${appointmentDate}`, marginLeft, y);
       y += lineHeight;
 
       y += 2;
@@ -322,12 +337,14 @@ export class PrintService {
       doc.setFontSize(9);
       doc.text(patientData.patient.name, marginLeft, y);
 
-      doc.save(`Paciente_${patientData.patient.name}.pdf`);
+      const safeFileName = this.sanitizeFileName(patientData.patient.name);
+      doc.save(`Paciente_${safeFileName}.pdf`);
     };
 
     bottomImg.onerror = () => {
       console.warn('No se pudo cargar la imagen del footer, guardando PDF sin ella...');
-      doc.save(`Paciente_${patientData.patient.name}.pdf`);
+      const safeFileName = this.sanitizeFileName(patientData.patient.name);
+      doc.save(`Paciente_${safeFileName}.pdf`);
     };
   }
 
