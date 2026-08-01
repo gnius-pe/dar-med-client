@@ -55,20 +55,24 @@
                       {{ isActiveMission(mission) ? 'Activa' : 'Inactiva' }}
                     </span>
                   </td>
-                  <td class="icon-spacing">
-                    <a href="javascript:void(0);" (click)="editMission(mission)">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                    </a>
-                    <a href="javascript:void(0);" (click)="deleteMission(mission)">
-                      <i class="fa fa-trash-alt"></i>
-                    </a>
-                    <a href="javascript:void(0);" (click)="selectMission(mission)">
-                      <i class="fa-solid fa-eye"
+                    <td class="icon-spacing">
+                      <a href="javascript:void(0);" (click)="editMission(mission)">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </a>
+                      <a href="javascript:void(0);" (click)="deleteMission(mission)">
+                        <i class="fa fa-trash-alt"></i>
+                      </a>
+                      <a href="javascript:void(0);" *ngIf="isSuperAdmin()" (click)="selectMission(mission)">
+                        <i class="fa-solid fa-eye"
+                           [class.text-success]="isSelectedMission(mission)"
+                           [class.text-danger]="!isSelectedMission(mission)">
+                        </i>
+                      </a>
+                      <i *ngIf="!isSuperAdmin()" class="fa-solid fa-eye"
                          [class.text-success]="isSelectedMission(mission)"
                          [class.text-danger]="!isSelectedMission(mission)">
                       </i>
-                    </a>
-                  </td>
+                    </td>
                 </tr>
                 </tbody>
               </table>

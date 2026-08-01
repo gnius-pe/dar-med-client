@@ -18,6 +18,7 @@ export class ListMissionsComponent implements OnInit, OnDestroy {
   notificationMessage = '';
   notificationType: 'success' | 'error' | 'warning' = 'success';
   selectedMission: Mission | null = null;
+  user: any = null;
   private selectedMissionSubscription: Subscription = new Subscription();
 
   constructor(
@@ -25,6 +26,8 @@ export class ListMissionsComponent implements OnInit, OnDestroy {
     private selectedMissionService: SelectedMissionService,
     private router: Router,
   ) {
+    const USER = localStorage.getItem("user");
+    this.user = USER ? JSON.parse(USER) : null;
   }
 
   ngOnInit(): void {
@@ -67,6 +70,11 @@ export class ListMissionsComponent implements OnInit, OnDestroy {
   }
 
   selectMission(mission: Mission) {
+    if (!this.isSuperAdmin()) {
+      this.showWarning('Solo el Super Administrador puede seleccionar una misión');
+      return;
+    }
+
     if (!mission.state) {
       this.showWarning('Solo puedes seleccionar una misión activa');
       return;
@@ -82,6 +90,10 @@ export class ListMissionsComponent implements OnInit, OnDestroy {
 
   isSelectedMission(mission: Mission): boolean {
     return !!this.selectedMission?.id && this.selectedMission.id === mission.id && !!mission.state;
+  }
+
+  isSuperAdmin(): boolean {
+    return this.user && this.user.roles && this.user.roles.includes('Super-Admin');
   }
 
   showSuccess(message: string) {
