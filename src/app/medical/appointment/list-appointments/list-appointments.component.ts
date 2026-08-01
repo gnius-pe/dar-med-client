@@ -22,6 +22,7 @@ export class ListAppointmentsComponent implements OnInit{
   currentPage = 1;
   totalPagesArray: number[] = [];
   serialNumberArray: Array<number> = [];
+  isLoading = false;
 
   public patient_generals:any = [];
   public appointment_selected:any;
@@ -63,8 +64,7 @@ export class ListAppointmentsComponent implements OnInit{
   }
 
   private getTableData(page = 1): void {
-    this.appointmentList = [];
-    this.serialNumberArray = [];
+    this.showLoading();
 
     this.appointmentService.listAppointments(page, this.searchDataValue, this.specialitie_id, this.date).subscribe((resp: any) => {
 
@@ -75,6 +75,7 @@ export class ListAppointmentsComponent implements OnInit{
       this.currentPage = resp.appointments.pagination.current_page;
       this.totalPages = resp.appointments.pagination.last_page;
       this.totalPagesArray = Array.from({length: this.totalPages}, (_, i) => i + 1);
+      this.hideLoading();
     });
   }
 
@@ -113,9 +114,7 @@ export class ListAppointmentsComponent implements OnInit{
       this.appointmentList = data;
     } else {
       this.appointmentList = data.sort((a:any, b:any) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const aValue = (a as any)[sort.active];
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const bValue = (b as any)[sort.active];
         return (aValue < bValue ? -1 : 1) * (sort.direction === 'asc' ? 1 : -1);
       });
@@ -126,6 +125,7 @@ export class ListAppointmentsComponent implements OnInit{
     if (page < 1 || page > this.totalPages || page === this.currentPage) {
       return;
     }
+    this.currentPage = page;
     this.getTableData(page);
   }
 
@@ -138,12 +138,20 @@ export class ListAppointmentsComponent implements OnInit{
     this.getTableData();
   }
 
-  private calculateTotalPages(totalData: number, pageSize: number): void {
-    this.totalPagesArray = [];
-    this.totalPages = totalData / pageSize;
-    if (this.totalPages % 1 != 0) {
-      this.totalPages = Math.trunc(this.totalPages + 1);
-    }
-    this.totalPagesArray = Array.from({length: this.totalPages}, (_, i) => i + 1);
+  formatDate(date: string): string {
+    const parsedDate = new Date(date);
+    const day = parsedDate.getDate().toString().padStart(2, '0');
+    const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+    const year = parsedDate.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+
+  private showLoading() {
+    this.isLoading = true;
+  }
+
+  private hideLoading() {
+    this.isLoading = false;
   }
 }

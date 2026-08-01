@@ -193,26 +193,14 @@
                 <div class="col-sm-12 col-md-7">
                   <div class="pagination_section">
                     <ul class="pagination">
-                      <li
-                        class="page-item"
-                        [class.disabled]="currentPage === 1">
-                        <a href="javascript:void(0)" (click)="changePage(currentPage - 1)">
-                          Anterior
-                        </a>
+                      <li class="page-item" [class.disabled]="currentPage === 1">
+                        <a href="javascript:void(0)" (click)="changePage(currentPage - 1)">Anterior</a>
                       </li>
                       <li class="page-item" *ngFor="let page of totalPagesArray">
-                        <a href="javascript:void(0)"
-                           [class.active]="page === currentPage"
-                           (click)="changePage(page)">
-                          {{ page }}
-                        </a>
+                        <a href="javascript:void(0)" [class.active]="page === currentPage" (click)="changePage(page)">{{ page }}</a>
                       </li>
-                      <li
-                        class="page-item"
-                        [class.disabled]="currentPage === totalPages">
-                        <a href="javascript:void(0)" (click)="changePage(currentPage + 1)">
-                          Siguiente
-                        </a>
+                      <li class="page-item" [class.disabled]="currentPage === totalPages">
+                        <a href="javascript:void(0)" (click)="changePage(currentPage + 1)">Siguiente</a>
                       </li>
                     </ul>
                   </div>
@@ -226,3 +214,5 @@
     </div>
   </div>
 </div>
+
+<app-loading-overlay [isBlock]="isLoading"></app-loading-overlay>
