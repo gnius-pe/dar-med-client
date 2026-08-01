@@ -42,6 +42,22 @@
       </div>
     </div>
 
+    <div class="col-12 col-md-6">
+      <div class="form-group local-forms">
+        <label>Estado<span class="login-danger">*</span></label>
+        <select
+          class="form-control"
+          formControlName="state"
+          [class.is-invalid]="getFieldError('state')">
+          <option [ngValue]="true">Activa</option>
+          <option [ngValue]="false">Inactiva</option>
+        </select>
+        <div class="invalid-feedback" *ngIf="getFieldError('state')">
+          {{ getFieldError('state') }}
+        </div>
+      </div>
+    </div>
+
     <div class="col-12">
       <div class="form-group local-forms">
         <label>Descripción<span class="login-danger">*</span></label>
@@ -69,7 +85,7 @@
           type="submit"
           class="btn btn-primary submit-form me-2"
           >
-          Guardar
+          {{ submitLabel }}
         </button>
       </div>
     </div>

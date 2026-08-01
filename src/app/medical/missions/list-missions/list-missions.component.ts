@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 import {Mission} from "../models/mission.model";
 import {MissionService} from "../services/mission.service";
 import {SelectedMissionService} from "../services/selected-mission.service";
@@ -19,6 +20,7 @@ export class ListMissionsComponent implements OnInit {
   constructor(
     private missionService: MissionService,
     private selectedMissionService: SelectedMissionService,
+    private router: Router,
   ) {
   }
 
@@ -41,7 +43,12 @@ export class ListMissionsComponent implements OnInit {
   }
 
   editMission(mission: Mission) {
-    // TODO: Implementar edición
+    if (!mission.id) {
+      this.showError('No se pudo editar la misión seleccionada');
+      return;
+    }
+
+    this.router.navigate(['/missions/edit-mission', mission.id]);
   }
 
   deleteMission(mission: Mission) {
@@ -49,8 +56,17 @@ export class ListMissionsComponent implements OnInit {
   }
 
   selectMission(mission: Mission) {
+    if (!mission.state) {
+      this.showWarning('Solo puedes seleccionar una misión activa');
+      return;
+    }
+
     this.selectedMissionService.selectMission(mission);
     this.showSuccess(`Misión "${mission.name}" seleccionada correctamente`);
+  }
+
+  isActiveMission(mission: Mission): boolean {
+    return mission.state;
   }
 
   showSuccess(message: string) {
@@ -62,6 +78,12 @@ export class ListMissionsComponent implements OnInit {
   showError(message: string) {
     this.notificationMessage = message;
     this.notificationType = 'error';
+    this.showNotification = true;
+  }
+
+  showWarning(message: string) {
+    this.notificationMessage = message;
+    this.notificationType = 'warning';
     this.showNotification = true;
   }
 

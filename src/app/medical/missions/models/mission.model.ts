@@ -4,4 +4,5 @@ export interface Mission {
   description: string;
   start_date: string;
   end_date: string;
+  state: boolean;
 }

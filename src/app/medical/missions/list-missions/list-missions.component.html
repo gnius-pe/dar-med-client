@@ -38,6 +38,7 @@
                   <th>Descripción</th>
                   <th>Fecha de inicio</th>
                   <th>Fecha de fin</th>
+                  <th>Estado</th>
                   <th></th>
                 </tr>
                 </thead>
@@ -47,6 +48,13 @@
                   <td>{{ mission.description | slice:0:50 }}{{ mission.description.length > 50 ? '...' : '' }}</td>
                   <td>{{ mission.start_date | date:'dd/MM/yyyy' }}</td>
                   <td>{{ mission.end_date | date:'dd/MM/yyyy' }}</td>
+                  <td>
+                    <span class="badge"
+                          [class.bg-success]="isActiveMission(mission)"
+                          [class.bg-secondary]="!isActiveMission(mission)">
+                      {{ isActiveMission(mission) ? 'Activa' : 'Inactiva' }}
+                    </span>
+                  </td>
                   <td class="icon-spacing">
                     <a href="javascript:void(0);" (click)="editMission(mission)">
                       <i class="fa-solid fa-pen-to-square"></i>
