@@ -100,7 +100,7 @@
                                 <div class="col-12 col-md-6 col-xl-4">
                                     <div class="form-group local-forms">
                                         <label >Roles <span class="login-danger">*</span></label>
-                                        <mat-select [(ngModel)]="selectedValue" [ngModelOptions]="{standalone: true}" class="form-control select"  placeholder="Select  Role">
+                                        <mat-select [(ngModel)]="selectedValue" [ngModelOptions]="{standalone: true}" class="form-control select"  placeholder="Select  Role" [compareWith]="compareRoleIds">
                                             <mat-option *ngFor="let data of roles" [value]="data.id">
                                             {{data.name}}
                                             </mat-option>
