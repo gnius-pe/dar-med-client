@@ -16,16 +16,12 @@ export class ListAppointmentsComponent implements OnInit{
   public specialitie_id = '';
   public date = null;
   public lastIndex = 0;
-  public pageSize = 20;
-  public totalData = 0;
-  public skip = 0;//MIN
-  public limit: number = this.pageSize;//MAX
-  public pageIndex = 0;
-  public serialNumberArray: Array<number> = [];
-  public currentPage = 1;
-  public pageNumberArray: Array<number> = [];
-  public pageSelection: Array<any> = [];
-  public totalPages = 0;
+  pageSize = 20;
+  totalData = 0;
+  totalPages = 0;
+  currentPage = 1;
+  totalPagesArray: number[] = [];
+  serialNumberArray: Array<number> = [];
 
   public patient_generals:any = [];
   public appointment_selected:any;
@@ -72,28 +68,14 @@ export class ListAppointmentsComponent implements OnInit{
 
     this.appointmentService.listAppointments(page, this.searchDataValue, this.specialitie_id, this.date).subscribe((resp: any) => {
 
-      this.totalData = resp.appointments.total;
+      this.totalData = resp.total;
       this.appointmentList = resp.appointments.data;
 
       this.dataSource = new MatTableDataSource<any>(this.appointmentList);
-      this.calculateTotalPages(this.totalData, this.pageSize);
+      this.currentPage = resp.appointments.pagination.current_page;
+      this.totalPages = resp.appointments.pagination.last_page;
+      this.totalPagesArray = Array.from({length: this.totalPages}, (_, i) => i + 1);
     });
-  }
-
-  getTableDataGeneral() {
-    this.appointmentList = [];
-    this.serialNumberArray = [];
-
-    this.patient_generals.map((res: any, index: number) => {
-      const serialNumber = index + 1;
-      if (index >= this.skip && serialNumber <= this.limit) {
-
-        this.appointmentList.push(res);
-        this.serialNumberArray.push(serialNumber);
-      }
-    });
-    this.dataSource = new MatTableDataSource<any>(this.appointmentList);
-    this.calculateTotalPages(this.totalData, this.pageSize);
   }
 
   selectUser(rol:any){
@@ -118,15 +100,9 @@ export class ListAppointmentsComponent implements OnInit{
       }
     })
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public searchData() {
-    // this.dataSource.filter = value.trim().toLowerCase();
-    // this.appointmentList = this.dataSource.filteredData;
-    this.pageSelection = [];
-    this.limit = this.pageSize;
-    this.skip = 0;
+    this.totalPagesArray = [];
     this.currentPage = 1;
-
     this.getTableData();
   }
 
@@ -146,38 +122,15 @@ export class ListAppointmentsComponent implements OnInit{
     }
   }
 
-  public getMoreData(event: string): void {
-    if (event == 'next') {
-      this.currentPage++;
-      this.pageIndex = this.currentPage - 1;
-      this.limit += this.pageSize;
-      this.skip = this.pageSize * this.pageIndex;
-      this.getTableData(this.currentPage);
-    } else if (event == 'previous') {
-      this.currentPage--;
-      this.pageIndex = this.currentPage - 1;
-      this.limit -= this.pageSize;
-      this.skip = this.pageSize * this.pageIndex;
-      this.getTableData(this.currentPage);
+  public changePage(page: number): void {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) {
+      return;
     }
-  }
-
-  public moveToPage(pageNumber: number): void {
-    this.currentPage = pageNumber;
-    this.skip = this.pageSelection[pageNumber - 1].skip;
-    this.limit = this.pageSelection[pageNumber - 1].limit;
-    if (pageNumber > this.currentPage) {
-      this.pageIndex = pageNumber - 1;
-    } else if (pageNumber < this.currentPage) {
-      this.pageIndex = pageNumber + 1;
-    }
-    this.getTableData(this.currentPage);
+    this.getTableData(page);
   }
 
   public clearFilters(): void {
-    this.pageSelection = [];
-    this.limit = this.pageSize;
-    this.skip = 0;
+    this.totalPagesArray = [];
     this.currentPage = 1;
     this.searchDataValue = '';
     this.specialitie_id = '';
@@ -186,23 +139,11 @@ export class ListAppointmentsComponent implements OnInit{
   }
 
   private calculateTotalPages(totalData: number, pageSize: number): void {
-    this.pageNumberArray = [];
+    this.totalPagesArray = [];
     this.totalPages = totalData / pageSize;
     if (this.totalPages % 1 != 0) {
-      this.totalPages = Math.trunc(this.totalPages + 1);//10.6 o 10.9 11
+      this.totalPages = Math.trunc(this.totalPages + 1);
     }
-    /* eslint no-var: off */
-    for (var i = 1; i <= this.totalPages; i++) {
-      const limit = pageSize * i;
-      const skip = limit - pageSize;
-      this.pageNumberArray.push(i);
-      this.pageSelection.push({ skip: skip, limit: limit });
-      // 1
-      // 0 - 10
-      // 2
-      // 10 - 20
-      // 3
-      // 20 - 30
-    }
+    this.totalPagesArray = Array.from({length: this.totalPages}, (_, i) => i + 1);
   }
 }
