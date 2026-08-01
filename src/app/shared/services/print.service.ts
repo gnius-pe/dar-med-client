@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf';
 import { Observable, of, switchMap, map } from 'rxjs';
 import {PatientData} from "../../medical/patient-m/models/patient.model";
-import {Mission} from "../../medical/missions/models/mission.model";
-import {MissionService} from "../../medical/missions/services/mission.service";
 import {SelectedMissionService} from "../../medical/missions/services/selected-mission.service";
 import {PatientMService} from "../../medical/patient-m/service/patient-m.service";
 
@@ -13,7 +11,6 @@ import {PatientMService} from "../../medical/patient-m/service/patient-m.service
 export class PrintService {
 
   constructor(
-    private missionService: MissionService,
     private selectedMissionService: SelectedMissionService,
     private patientService: PatientMService
   ) {}
@@ -64,16 +61,11 @@ export class PrintService {
   private resolveActiveMissionName(): Observable<string> {
     const selectedMission = this.selectedMissionService.getSelectedMission();
 
-    if (selectedMission?.state && selectedMission.name) {
+    if (selectedMission?.name) {
       return of(selectedMission.name);
     }
 
-    return this.missionService.listMissions().pipe(
-      map((missions: Mission[]) => {
-        const activeMission = missions.find((mission) => Boolean(mission.state));
-        return activeMission?.name || '';
-      })
-    );
+    return of('');
   }
 
   /**

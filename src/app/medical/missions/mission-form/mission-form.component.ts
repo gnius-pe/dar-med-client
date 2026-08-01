@@ -32,9 +32,21 @@ export class MissionFormComponent {
         description: this.missionData.description,
         start_date: this.missionData.start_date,
         end_date: this.missionData.end_date,
-        state: this.missionData.state ?? true,
+        state: this.normalizeState(this.missionData.state),
       });
     }
+  }
+
+  private normalizeState(state: boolean | number | string | null | undefined): boolean {
+    if (state === null || state === undefined || state === '') {
+      return true;
+    }
+
+    if (typeof state === 'boolean') {
+      return state;
+    }
+
+    return state === 1 || state === '1' || state === 'true';
   }
 
   dateValidator(form: FormGroup) {

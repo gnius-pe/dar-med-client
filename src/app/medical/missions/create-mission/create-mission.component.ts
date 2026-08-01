@@ -60,9 +60,7 @@ export class CreateMissionComponent implements OnInit {
 
     request$.subscribe({
       next: (savedMission: Mission) => {
-        if (savedMission.state) {
-          this.selectedMissionService.selectMission(savedMission);
-        } else if (this.missionId) {
+        if (this.missionId && !savedMission.state) {
           this.selectedMissionService.clearSelectedMission();
         }
 

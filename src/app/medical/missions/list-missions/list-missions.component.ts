@@ -1,21 +1,24 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Mission} from "../models/mission.model";
 import {MissionService} from "../services/mission.service";
 import {SelectedMissionService} from "../services/selected-mission.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-list-missions',
   templateUrl: './list-missions.component.html',
   styleUrls: ['./list-missions.component.scss']
 })
-export class ListMissionsComponent implements OnInit {
+export class ListMissionsComponent implements OnInit, OnDestroy {
 
   missionsList: Mission[] = [];
   isLoading = false;
   showNotification = false;
   notificationMessage = '';
   notificationType: 'success' | 'error' | 'warning' = 'success';
+  selectedMission: Mission | null = null;
+  private selectedMissionSubscription: Subscription = new Subscription();
 
   constructor(
     private missionService: MissionService,
@@ -25,7 +28,15 @@ export class ListMissionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.selectedMissionSubscription = this.selectedMissionService.getSelectedMission$().subscribe((mission) => {
+      this.selectedMission = mission;
+    });
+
     this.listMissions();
+  }
+
+  ngOnDestroy(): void {
+    this.selectedMissionSubscription.unsubscribe();
   }
 
   listMissions() {
@@ -67,6 +78,10 @@ export class ListMissionsComponent implements OnInit {
 
   isActiveMission(mission: Mission): boolean {
     return mission.state;
+  }
+
+  isSelectedMission(mission: Mission): boolean {
+    return !!this.selectedMission?.id && this.selectedMission.id === mission.id && !!mission.state;
   }
 
   showSuccess(message: string) {

@@ -15,11 +15,14 @@ export class SelectedMissionService {
    */
   selectMission(mission: Mission | null): void {
     if (mission) {
-      sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(mission));
+      const normalizedMission = this.normalizeMission(mission);
+      sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(normalizedMission));
+      this.selectedMissionSubject.next(normalizedMission);
+      return;
     } else {
       sessionStorage.removeItem(this.STORAGE_KEY);
+      this.selectedMissionSubject.next(null);
     }
-    this.selectedMissionSubject.next(mission);
   }
 
   /**
@@ -49,10 +52,29 @@ export class SelectedMissionService {
   private getSelectedMissionFromStorage(): Mission | null {
     try {
       const storedMission = sessionStorage.getItem(this.STORAGE_KEY);
-      return storedMission ? JSON.parse(storedMission) : null;
+      return storedMission ? this.normalizeMission(JSON.parse(storedMission) as Mission) : null;
     } catch (error) {
       console.error('Error parsing selected mission from sessionStorage:', error);
       return null;
     }
+  }
+
+  private normalizeMission(mission: Mission): Mission {
+    return {
+      ...mission,
+      state: this.normalizeState(mission.state),
+    };
+  }
+
+  private normalizeState(state: boolean | number | string | null | undefined): boolean {
+    if (state === null || state === undefined || state === '') {
+      return false;
+    }
+
+    if (typeof state === 'boolean') {
+      return state;
+    }
+
+    return state === 1 || state === '1' || state === 'true';
   }
 }
