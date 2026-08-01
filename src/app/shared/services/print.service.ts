@@ -100,11 +100,14 @@ export class PrintService {
       // Citas médicas
       y = this.addAppointments(doc, patientData, marginLeft, y, lineHeight);
 
+      // Sección Profesionales
+      y = this.addProfessionalSection(doc, marginLeft, y, lineHeight);
+
       // Declaración
       y = this.addDeclaration(doc, marginLeft, y, lineHeight);
 
-      // Campos de firma
-      y = this.addSignatureFields(doc, marginLeft, y, lineHeight);
+      // Campos de firma y texto de escaneo (Se envía patientData para llenar datos automáticos)
+      y = this.addSignatureFields(doc, patientData, marginLeft, y, lineHeight);
 
       // Código QR (si existe)
       if (qrCodeElement) {
@@ -189,10 +192,21 @@ export class PrintService {
 
     patientData.appointments.forEach((appointment) => {
       doc.setFontSize(8);
+      
+      // 1. Escribimos "Especialidad: " en letra normal
       doc.setFont('helvetica', 'normal');
-      doc.text(`Especialidad: ${appointment.specialty}`, marginLeft, y);
+      doc.text('Especialidad: ', marginLeft, y);
+      
+      // Calculamos el ancho de "Especialidad: " para saber dónde empezar a escribir el nombre
+      const labelWidth = doc.getTextWidth('Especialidad: ');
+
+      // 2. Escribimos SOLO el nombre de la especialidad (ej. Medicina) en negrita justo al lado
+      doc.setFont('helvetica', 'bold');
+      doc.text(appointment.specialty, marginLeft + labelWidth, y);
       y += lineHeight;
 
+      // El doctor y la fecha continúan en texto normal
+      doc.setFont('helvetica', 'normal');
       doc.text(`Doctor: ${appointment.doctor_name}`, marginLeft, y);
       y += lineHeight;
 
@@ -200,41 +214,76 @@ export class PrintService {
       y += lineHeight;
 
       y += 2;
-      doc.line(marginLeft, y, 75, y);
+      // Esta línea separa la sección de citas de la sección de profesionales
+      doc.line(marginLeft, y, 75, y); 
       y += lineHeight;
     });
 
     return y;
   }
 
-  private addDeclaration(doc: jsPDF, marginLeft: number, y: number, lineHeight: number): number {
-    y += 4;
-    const declaration = 'Declaro estar de acuerdo con los servicios y autorizo el uso de mi imagen para fines de publicidad.';
-    doc.setFontSize(6);
-    const splitDeclaration = doc.splitTextToSize(declaration, 70);
-    doc.text(splitDeclaration, marginLeft, y);
-    y += splitDeclaration.length * 2.5;
+  private addProfessionalSection(doc: jsPDF, marginLeft: number, y: number, lineHeight: number): number {
+    doc.setLineWidth(0.2);
 
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "bold");
+    doc.text('A COMPLETAR POR LOS PROFESIONALES:', marginLeft, y);
+    y += 6;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6);
+    doc.text('PESO: ______', marginLeft, y);
+    doc.text('ALTURA: ______', marginLeft + 17, y);
+    doc.text('P.A: ______', marginLeft + 36, y);
+    doc.text('HORARIO: ______', marginLeft + 51, y);
+    
+    y += 6; 
     return y;
   }
 
-  private addSignatureFields(doc: jsPDF, marginLeft: number, y: number, lineHeight: number): number {
-    y += 8;
-    doc.setFontSize(9);
-    doc.text('Nombre: _______________________', marginLeft, y);
-    y += lineHeight;
-    doc.text('DNI: __________________________', marginLeft, y);
-    y += lineHeight;
-    doc.text('Firma: ________________________', marginLeft, y);
-    y += lineHeight;
-
+  private addDeclaration(doc: jsPDF, marginLeft: number, y: number, lineHeight: number): number {
+    const declaration = 'DECLARO A TODOS LOS EFECTOS QUE ESTOY DE ACUERDO CON TODOS LOS SERVICIOS EN LOS QUE PARTICIPARÉ Y QUE AUTORIZO EL USO DE MI IMAGEN (EN FOTOGRAFÍA O VIDEO) EN LA PUBLICIDAD DEL TRABAJO REALIZADO POR LA ENTIDAD, SIN CARGA ALGUNA PARA ÉSTA.';
+    
+    doc.setFontSize(6);
+    const splitDeclaration = doc.splitTextToSize(declaration, 70); 
+    doc.text(splitDeclaration, marginLeft, y);
+    
+    y += splitDeclaration.length * 2.5; 
     return y;
+  }
+
+  private addSignatureFields(doc: jsPDF, patientData: PatientData, marginLeft: number, y: number, lineHeight: number): number {
+    y += 4;
+    doc.setFontSize(7);
+    
+    doc.text(`NOMBRE: ${patientData.patient.name}`, marginLeft, y);
+    y += lineHeight + 1;
+    
+    doc.text(`DNI: ${patientData.patient.identification_number}`, marginLeft, y);
+    doc.text('FIRMA: ___________________', marginLeft + 35, y); 
+    
+    y += 6;
+
+    doc.setLineWidth(0.2);
+    doc.line(marginLeft, y, 75, y);
+    
+    y += 5;
+    
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "bold"); // Lo puse en negrita para resaltar como título
+    // Se centra a 40 (mitad de 80mm) con la alineación 'center'
+    doc.text('CONOCE MÁS DE NOSOTROS:', 40, y, { align: 'center' });
+
+    // Reduje el espacio en blanco antes de regresar el Y para acercarlo al QR
+    return y + 2;
   }
 
   private addQRCode(doc: jsPDF, qrCodeElement: HTMLCanvasElement, marginLeft: number, y: number): number {
     const qrDataUrl = qrCodeElement.toDataURL();
-    y += 8;
-    doc.addImage(qrDataUrl, 'PNG', marginLeft + 15, y, 40, 40);
+    y += 2; // Reduje el espacio antes de imprimir la imagen
+    
+    // Posición X fija a 20 para centrar la imagen exacta ( (80 total - 40 ancho qr) / 2 = 20 )
+    doc.addImage(qrDataUrl, 'PNG', 20, y, 40, 40);
     y += 42;
 
     return y;
@@ -272,31 +321,20 @@ export class PrintService {
   }
 
   private generatePDFWithoutMainLogo(doc: jsPDF, patientData: PatientData, missionName: string, marginLeft: number, y: number, lineHeight: number, qrCodeElement?: HTMLCanvasElement): void {
-    // Header información
     this.addHeader(doc, marginLeft, y, lineHeight, missionName);
     y = this.getYAfterHeader(y, lineHeight);
 
-    // Datos del paciente
     y = this.addPatientData(doc, patientData, marginLeft, y, lineHeight);
-
-    // Pre-diagnóstico
     y = this.addPreDiagnosis(doc, patientData, marginLeft, y, lineHeight);
-
-    // Citas médicas
     y = this.addAppointments(doc, patientData, marginLeft, y, lineHeight);
-
-    // Declaración
+    y = this.addProfessionalSection(doc, marginLeft, y, lineHeight);
     y = this.addDeclaration(doc, marginLeft, y, lineHeight);
+    y = this.addSignatureFields(doc, patientData, marginLeft, y, lineHeight);
 
-    // Campos de firma
-    y = this.addSignatureFields(doc, marginLeft, y, lineHeight);
-
-    // Código QR (si existe)
     if (qrCodeElement) {
       y = this.addQRCode(doc, qrCodeElement, marginLeft, y);
     }
 
-    // Footer y guardar
     this.addFooterAndSave(doc, patientData, marginLeft, y, lineHeight);
   }
 }
