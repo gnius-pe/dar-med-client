@@ -66,13 +66,16 @@ export class DoctorDashboardComponent implements OnInit{
   public chartOptionsOne: Partial<ChartOptions>;
   public chartOptionsTwo: Partial<ChartOptions>;
   public chartOptionsThree: Partial<ChartOptions>;
-  public selectedValue  = "2023";
+  public selectedValue  = "2026";
 
   public doctors:any = [];
   public doctor_id:any;
 
 
   selecedList: data[] = [
+    {value: '2026'},
+    {value: '2025'},
+    {value: '2024'},
     {value: '2023'},
     {value: '2022'},
     {value: '2021'},
