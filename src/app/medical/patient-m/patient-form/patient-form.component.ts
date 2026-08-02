@@ -1,6 +1,10 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Patient} from "../models/patient.model";
+import {PatientLookupService} from "../service/patient-lookup.service";
+import {tap, catchError, of} from 'rxjs';
+import {GeographicLocationService} from "../service/geographic_location.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-patient-form',
@@ -15,9 +19,18 @@ export class PatientFormComponent implements OnChanges {
 
   public patientForm: FormGroup;
 
+  public isLookingUpDocument = false;
+  public lookupError = '';
+  public user: any;
+
   constructor(
     private fb: FormBuilder,
+    private patientLookupService: PatientLookupService,
+    private locationService: GeographicLocationService,
+    private router: Router,
   ) {
+    const USER = localStorage.getItem("user");
+    this.user = USER ? JSON.parse(USER) : null;
     this.patientForm = this.createPersonalForm();
   }
 
@@ -27,9 +40,43 @@ export class PatientFormComponent implements OnChanges {
     }
   }
 
-  public preparePatientData(): void {
-    this.patientForm.get('identification_type')?.setValue('DNI');
+  public isRecepcionista(): boolean {
+    return this.user && this.user.roles && this.user.roles.includes('RECEPCIONISTA');
+  }
 
+  onDocumentNumberBlur(): void {
+    const identificationNumber = this.patientForm.get('identification_number')?.value;
+
+    if (!identificationNumber || identificationNumber.length !== 8) {
+      return;
+    }
+
+    this.isLookingUpDocument = true;
+    this.lookupError = '';
+
+    this.patientLookupService.lookupDni(identificationNumber).pipe(
+      tap((response: any) => {
+        if (response && response.first_name && response.last_name) {
+          this.patientForm.patchValue({
+            first_name: response.first_name,
+            last_name: response.last_name,
+          });
+        } else {
+          this.lookupError = 'No se encontró información para el DNI ingresado.';
+        }
+      }),
+      catchError(() => {
+        this.lookupError = 'Error al consultar el DNI.';
+        return of(null);
+      })
+    ).subscribe({
+      complete: () => {
+        this.isLookingUpDocument = false;
+      }
+    });
+  }
+
+  public preparePatientData(): void {
     if (this.patientForm.invalid) {
       this.patientForm.markAllAsTouched();
       return
@@ -48,7 +95,7 @@ export class PatientFormComponent implements OnChanges {
 
   private createPersonalForm(): FormGroup {
     return this.fb.group({
-      identification_type: ['', [Validators.required]],
+      identification_type: ['DNI', [Validators.required]],
       identification_number: ['', [Validators.required, Validators.pattern(/^\d{1,8}$/)]],
       first_name: ['', [Validators.required]],
       last_name: ['', [Validators.required]],

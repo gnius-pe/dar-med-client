@@ -20,12 +20,14 @@
             <div class="row">
               <div class="col-12">
                 <div class="form-heading">
-                  <h4>Crear nueva misión</h4>
+                  <h4>{{ missionId ? 'Editar misión' : 'Crear nueva misión' }}</h4>
                 </div>
               </div>
             </div>
 
             <app-mission-form
+              [missionData]="missionData"
+              [submitLabel]="submitLabel"
               (missionSubmit)="onMissionSubmit($event)">
             </app-mission-form>
 

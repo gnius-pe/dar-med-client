@@ -66,6 +66,8 @@ export class SidebarComponent {
     // FIN
     router.events.subscribe((event: object) => {
       if (event instanceof NavigationEnd) {
+        this.sideBar.toggleMobileSideBar.next('false');
+        localStorage.removeItem('isMobileSidebar');
         this.getRoutes(event);
       }
     });
@@ -85,15 +87,8 @@ export class SidebarComponent {
     });
   }
   private getRoutes(route: { url: string }): void {
-    const bodyTag = document.body;
-
-    bodyTag.classList.remove('slide-nav')
-    bodyTag.classList.remove('opened')
     this.currentUrl = route.url;
-
     const splitVal = route.url.split('/');
-
-
     this.base = splitVal[1];
     this.page = splitVal[2];
   }

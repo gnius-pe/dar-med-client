@@ -24,6 +24,9 @@ export class GeographicLocationFormComponent implements OnInit, OnChanges {
   public filteredProvinces: any[] = [];
   public filteredDistricts: any[] = [];
 
+  private readonly DEFAULT_DEPARTMENT_ID = '22';
+  private readonly DEFAULT_COUNTRY_ID = '1';
+
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.locationForm = this.createForm();
   }
@@ -37,6 +40,10 @@ export class GeographicLocationFormComponent implements OnInit, OnChanges {
     ]).then(() => {
       if (this.geographicLocation) {
         this.patchLocationForm(this.geographicLocation);
+      } else {
+        this.filteredProvinces = this.provinces.filter(
+          (province) => province.department_id === this.DEFAULT_DEPARTMENT_ID
+        );
       }
     });
   }
@@ -49,8 +56,8 @@ export class GeographicLocationFormComponent implements OnInit, OnChanges {
 
   private createForm(): FormGroup {
     return this.fb.group({
-      country: ['', [Validators.required]],
-      department: ['', [Validators.required]],
+      country: [this.DEFAULT_COUNTRY_ID, [Validators.required]],
+      department: [this.DEFAULT_DEPARTMENT_ID, [Validators.required]],
       province: ['', [Validators.required]],
       district: ['', [Validators.required]],
       address: ['', [Validators.required]],

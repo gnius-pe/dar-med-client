@@ -15,7 +15,7 @@ import {ChartOptions, ChartOptionsTwo, data} from "../models/dashboard.model";
 })
 export class AdminDashboardComponent implements OnInit {
   public routes = routes;
-  public selectedValue = "2024";
+  public selectedValue = "2026";
   @ViewChild('chart') chart!: ChartComponent;
   public chartOptionsOne!: Partial<ChartOptions>;
   public chartOptionsTwo!: Partial<ChartOptions>;
@@ -331,6 +331,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   selectedList: data[] = [
+    {value: '2026'},
     {value: '2025'},
     {value: '2024'},
     {value: '2023'},

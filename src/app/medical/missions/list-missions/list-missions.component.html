@@ -38,6 +38,7 @@
                   <th>Descripción</th>
                   <th>Fecha de inicio</th>
                   <th>Fecha de fin</th>
+                  <th>Estado</th>
                   <th></th>
                 </tr>
                 </thead>
@@ -47,17 +48,31 @@
                   <td>{{ mission.description | slice:0:50 }}{{ mission.description.length > 50 ? '...' : '' }}</td>
                   <td>{{ mission.start_date | date:'dd/MM/yyyy' }}</td>
                   <td>{{ mission.end_date | date:'dd/MM/yyyy' }}</td>
-                  <td class="icon-spacing">
-                    <a href="javascript:void(0);" (click)="editMission(mission)">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                    </a>
-                    <a href="javascript:void(0);" (click)="deleteMission(mission)">
-                      <i class="fa fa-trash-alt"></i>
-                    </a>
-                    <a href="javascript:void(0);" (click)="selectMission(mission)">
-                      <i class="fa-solid fa-eye"></i>
-                    </a>
+                  <td>
+                    <span class="badge"
+                          [class.bg-success]="isActiveMission(mission)"
+                          [class.bg-danger]="!isActiveMission(mission)">
+                      {{ isActiveMission(mission) ? 'Activa' : 'Inactiva' }}
+                    </span>
                   </td>
+                    <td class="icon-spacing">
+                      <a href="javascript:void(0);" (click)="editMission(mission)">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </a>
+                      <a href="javascript:void(0);" (click)="deleteMission(mission)">
+                        <i class="fa fa-trash-alt"></i>
+                      </a>
+                      <a href="javascript:void(0);" *ngIf="isSuperAdmin()" (click)="selectMission(mission)">
+                        <i class="fa-solid fa-eye"
+                           [class.text-success]="isSelectedMission(mission)"
+                           [class.text-danger]="!isSelectedMission(mission)">
+                        </i>
+                      </a>
+                      <i *ngIf="!isSuperAdmin()" class="fa-solid fa-eye"
+                         [class.text-success]="isSelectedMission(mission)"
+                         [class.text-danger]="!isSelectedMission(mission)">
+                      </i>
+                    </td>
                 </tr>
                 </tbody>
               </table>

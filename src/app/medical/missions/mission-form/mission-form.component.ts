@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Mission} from "../models/mission.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
@@ -10,6 +10,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 export class MissionFormComponent {
 
   @Output() missionSubmit = new EventEmitter<Mission>();
+  @Input() missionData: Mission | null = null;
+  @Input() submitLabel = 'Guardar';
 
   missionForm: FormGroup;
 
@@ -18,8 +20,33 @@ export class MissionFormComponent {
       name: ['', [Validators.required, Validators.maxLength(80)]],
       description: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
-      end_date: ['', [Validators.required]]
+      end_date: ['', [Validators.required]],
+      state: [true, [Validators.required]]
     }, {validators: this.dateValidator});
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['missionData'] && this.missionData) {
+      this.missionForm.patchValue({
+        name: this.missionData.name,
+        description: this.missionData.description,
+        start_date: this.missionData.start_date,
+        end_date: this.missionData.end_date,
+        state: this.normalizeState(this.missionData.state),
+      });
+    }
+  }
+
+  private normalizeState(state: boolean | number | string | null | undefined): boolean {
+    if (state === null || state === undefined || state === '') {
+      return true;
+    }
+
+    if (typeof state === 'boolean') {
+      return state;
+    }
+
+    return state === 1 || state === '1' || state === 'true';
   }
 
   dateValidator(form: FormGroup) {
@@ -40,6 +67,7 @@ export class MissionFormComponent {
 
     this.missionSubmit.emit(this.missionForm.getRawValue());
     this.missionForm.reset();
+    this.missionForm.patchValue({ state: true });
   }
 
   private markFormGroupTouched() {
@@ -58,6 +86,7 @@ export class MissionFormComponent {
           case 'description': return 'La descripción es obligatoria';
           case 'start_date': return 'La fecha de inicio es obligatoria';
           case 'end_date': return 'La fecha de fin es obligatoria';
+          case 'state': return 'El estado es obligatorio';
           default: return `${fieldName} es obligatorio`;
         }
       }
