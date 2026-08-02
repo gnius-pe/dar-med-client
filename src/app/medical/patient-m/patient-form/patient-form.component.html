@@ -191,35 +191,37 @@
           </div>
         </div>
 
-        <div class="col-12 mt-2">
-          <div class="form-heading">
-            <h4>Consejería</h4>
-          </div>
-        </div>
-
-        <div class="col-12">
-          <div class="form-group local-forms">
-            <label>Diagnostico espiritual</label>
-            <textarea class="form-control" rows="3" cols="30" formControlName="spiritual_diagnosis"></textarea>
-          </div>
-        </div>
-
-        <div class="col-12">
-          <div class="form-group select-gender">
-            <label class="gen-label">Estado de visita:</label>
-            <div class="form-check-inline">
-              <label class="form-check-label">
-                <input type="radio" formControlName="visit_condition" class="form-check-input" name="visit_condition"
-                       value="urgent">
-                Urgente
-              </label>
+        <div *ngIf="!isRecepcionista()">
+          <div class="col-12 mt-2">
+            <div class="form-heading">
+              <h4>Consejería</h4>
             </div>
-            <div class="form-check-inline">
-              <label class="form-check-label">
-                <input type="radio" formControlName="visit_condition" class="form-check-input" name="visit_condition"
-                       value="program">
-                Programado
-              </label>
+          </div>
+
+          <div class="col-12">
+            <div class="form-group local-forms">
+              <label>Diagnostico espiritual</label>
+              <textarea class="form-control" rows="3" cols="30" formControlName="spiritual_diagnosis"></textarea>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-group select-gender">
+              <label class="gen-label">Estado de visita:</label>
+              <div class="form-check-inline">
+                <label class="form-check-label">
+                  <input type="radio" formControlName="visit_condition" class="form-check-input" name="visit_condition"
+                         value="urgent">
+                  Urgente
+                </label>
+              </div>
+              <div class="form-check-inline">
+                <label class="form-check-label">
+                  <input type="radio" formControlName="visit_condition" class="form-check-input" name="visit_condition"
+                         value="program">
+                  Programado
+                </label>
+              </div>
             </div>
           </div>
         </div>

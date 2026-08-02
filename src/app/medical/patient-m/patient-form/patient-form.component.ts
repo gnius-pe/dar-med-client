@@ -21,6 +21,7 @@ export class PatientFormComponent implements OnChanges {
 
   public isLookingUpDocument = false;
   public lookupError = '';
+  public user: any;
 
   constructor(
     private fb: FormBuilder,
@@ -28,6 +29,8 @@ export class PatientFormComponent implements OnChanges {
     private locationService: GeographicLocationService,
     private router: Router,
   ) {
+    const USER = localStorage.getItem("user");
+    this.user = USER ? JSON.parse(USER) : null;
     this.patientForm = this.createPersonalForm();
   }
 
@@ -35,6 +38,10 @@ export class PatientFormComponent implements OnChanges {
     if (changes.hasOwnProperty('patientData') && this.patientData != undefined) {
       this.patientForm.patchValue(this.patientData);
     }
+  }
+
+  public isRecepcionista(): boolean {
+    return this.user && this.user.roles && this.user.roles.includes('RECEPCIONISTA');
   }
 
   onDocumentNumberBlur(): void {
