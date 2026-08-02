@@ -1,0 +1,82 @@
+<div class="form-container">
+  <h2 class="form-title">Ubicación geográfica</h2>
+  <form [formGroup]="locationForm" (ngSubmit)="save()">
+    <div class="grid-cols-2">
+      <div>
+        <label class="form-label">Nacionalidad<span class="login-danger">*</span></label>
+        <select formControlName="country" class="form-select">
+          <option value="" disabled selected>Seleccionar</option>
+          <option *ngFor="let nationality of nationalities" [value]="nationality.id">
+            {{ nationality.title }}
+          </option>
+        </select>
+        <div *ngIf="locationForm.get('country')?.touched && locationForm.get('nationality')?.invalid" class="error-message">
+          Nacionalidad es requerida.
+        </div>
+      </div>
+      <div>
+        <label class="form-label">Departamento<span class="login-danger">*</span></label>
+        <select formControlName="department" class="form-select" (change)="onDepartmentChange()">
+          <option value="" disabled selected>Seleccionar</option>
+          <option *ngFor="let department of departments" [value]="department.id">
+            {{ department.name }}
+          </option>
+        </select>
+        <div *ngIf="locationForm.get('department')?.touched && locationForm.get('department')?.invalid" class="error-message">
+          Departamento es requerido.
+        </div>
+      </div>
+      <div>
+        <label class="form-label">Provincia<span class="login-danger">*</span></label>
+        <select formControlName="province" class="form-select" (change)="onProvinceChange()">
+          <option value="" disabled selected>Seleccionar</option>
+          <option *ngFor="let province of filteredProvinces" [value]="province.id">
+            {{ province.name }}
+          </option>
+        </select>
+        <div *ngIf="locationForm.get('province')?.touched && locationForm.get('province')?.invalid" class="error-message">
+          Provincia es requerida.
+        </div>
+      </div>
+      <div>
+        <label class="form-label">Distrito<span class="login-danger">*</span></label>
+        <select formControlName="district" class="form-select">
+          <option value="" disabled selected>Seleccionar</option>
+          <option *ngFor="let district of filteredDistricts" [value]="district.id">
+            {{ district.name }}
+          </option>
+        </select>
+        <div *ngIf="locationForm.get('district')?.touched && locationForm.get('district')?.invalid" class="error-message">
+          Distrito es requerido.
+        </div>
+      </div>
+    </div>
+    <div class="mt-4">
+      <label class="form-label">Dirección<span class="login-danger">*</span></label>
+      <textarea formControlName="address" rows="2" class="form-textarea"></textarea>
+      <div *ngIf="locationForm.get('address')?.touched && locationForm.get('address')?.invalid" class="error-message">
+        Dirección es requerida.
+      </div>
+    </div>
+    <div class="mt-4">
+      <label class="form-label">Referencia(Opcional)</label>
+      <textarea formControlName="reference" rows="2" class="form-textarea"></textarea>
+    </div>
+    <button type="submit" class="form-button">Guardar</button>
+  </form>
+
+  <ng-container *ngIf="showMessage">
+    <div class="col-12">
+      <div class="form-group row my-4">
+        <div class="col-md-8">
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Guardado correctamente</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true"> </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

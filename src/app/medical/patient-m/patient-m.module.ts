@@ -12,6 +12,12 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { PatientMProfileComponent } from './patient-m-profile/patient-m-profile.component';
 import { PatientFormComponent } from './patient-form/patient-form.component';
+import {QRCodeModule} from "angularx-qrcode";
+import { GeographicLocationFormComponent } from './geographic-location-form/geographic-location-form.component';
+import { EditGeographicLocationComponent } from './edit-geographic-location/edit-geographic-location.component';
+import {LoadingOverlayComponent} from "../../shared/components/loading-overlay/loading-overlay.component";
+import {NotificationComponent} from "../../shared/components/notification/notification.component";
+import {ConfirmationModalComponent} from "../../shared/components/confirmation-modal/confirmation-modal.component";
 
 
 @NgModule({
@@ -21,17 +27,23 @@ import { PatientFormComponent } from './patient-form/patient-form.component';
     EditPatientMComponent,
     ListPatientMComponent,
     PatientMProfileComponent,
-    PatientFormComponent
+    PatientFormComponent,
+    GeographicLocationFormComponent,
+    EditGeographicLocationComponent
   ],
-  imports: [
-    CommonModule,
-    PatientMRoutingModule,
-    SharedModule,
-    // 
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    RouterModule
-  ]
+    imports: [
+        CommonModule,
+        PatientMRoutingModule,
+        SharedModule,
+        //
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        RouterModule,
+        QRCodeModule,
+        LoadingOverlayComponent,
+        NotificationComponent,
+        ConfirmationModalComponent
+    ]
 })
 export class PatientMModule { }

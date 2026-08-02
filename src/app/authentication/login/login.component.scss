@@ -1,0 +1,16 @@
+.software-version {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.version-text {
+  font-size: 12px;
+  color: #6c757d;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+  font-family: 'Courier New', monospace;
+  font-weight: bolder;
+}

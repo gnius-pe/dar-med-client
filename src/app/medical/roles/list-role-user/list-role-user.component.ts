@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { RolesService } from '../service/roles.service';
 import { Sort } from '@angular/material/sort';
 
-declare var $:any; 
+declare var $:any;
 @Component({
   selector: 'app-list-role-user',
   templateUrl: './list-role-user.component.html',
@@ -47,7 +47,7 @@ export class ListRoleUserComponent {
 
     this.RoleService.listRoles().subscribe((resp:any) => {
 
-      console.log(resp);
+
 
       this.totalData = resp.roles.length;
       this.role_generals = resp.roles;
@@ -74,7 +74,7 @@ export class ListRoleUserComponent {
     this.role_generals.map((res: any, index: number) => {
       const serialNumber = index + 1;
       if (index >= this.skip && serialNumber <= this.limit) {
-        
+
         this.rolesList.push(res);
         this.serialNumberArray.push(serialNumber);
       }
@@ -90,7 +90,7 @@ export class ListRoleUserComponent {
   deleteRol(){
 
     this.RoleService.deleteRoles(this.role_selected.id).subscribe((resp:any) => {
-      console.log(resp);
+
       let INDEX = this.rolesList.findIndex((item:any) => item.id == this.role_selected.id);
       if(INDEX != -1){
         this.rolesList.splice(INDEX,1);

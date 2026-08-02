@@ -1,171 +1,204 @@
 <div class="page-wrapper">
-    <div class="content">
-    
-        <!-- Page Header -->
-        <div class="page-header">
-            <div class="row">
-                <div class="col-sm-12">
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Appointment </a></li>
-                        <li class="breadcrumb-item"><i class="feather icon-chevron-right"></i></li>
-                        <li class="breadcrumb-item active">Edit / Add Atención medica : #{{ appointment_id }}</li>
-                    </ul>
-                </div>
-            </div>
+  <div class="content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="row">
+        <div class="col-sm-12">
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Citas</a></li>
+            <li class="breadcrumb-item"><i class="feather icon-chevron-right"></i></li>
+            <li class="breadcrumb-item active">Atención médica - Cita #{{ appointmentId }}</li>
+          </ul>
         </div>
-        <!-- /Page Header -->
-        <div class="row">
-            <div class="col-sm-12">
-            
-                <div class="card">
-                    <div class="card-body">
-                        <form>
-
-                            <div class="row align-items-center py-4">
-                                <div class="col-12 py-4">  
-                                    <h4>Datos del paciente: </h4>
-                                </div>
-                                <div class="col-12 col-md-6 col-xl-4">  
-                                    <div class="form-group local-forms">
-                                        <label >First Name <span class="login-danger">*</span></label>
-                                        <input class="form-control" disabled [(ngModel)]="name" name="name" type="text"  >
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-6 col-xl-4">
-                                    <div class="form-group local-forms">
-                                        <label >Surname <span class="login-danger">*</span></label>
-                                        <input class="form-control" disabled [(ngModel)]="surname" name="surname" type="text"  >
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-6 col-xl-4">
-                                    <div class="form-group local-forms">
-                                        <label >Mobile <span class="login-danger">*</span></label>
-                                        <input class="form-control" disabled [(ngModel)]="mobile" name="mobile" type="text"  >
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-6 col-xl-4">
-                                    <div class="form-group local-forms">
-                                        <label >N° Documento <span class="login-danger">*</span></label>
-                                        <input class="form-control"  disabled [(ngModel)]="identification_number" name="identification_number"  type="number"  >
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-sm-3">
-                                    <div class="form-group local-forms">
-                                        <label>Nombre del Acompañante  <span class="login-danger">*</span></label>
-                                        <input class="form-control" disabled [(ngModel)]="name_companion" type="text" name="name_companion">
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-sm-3">
-                                    <div class="form-group local-forms">
-                                        <label>Apellido del Acompañante  <span class="login-danger">*</span></label>
-                                        <input type="text" class="form-control" disabled [(ngModel)]="surname_companion" name="surname_companion" >
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row align-items-center">
-                                <div class="col-12 col-sm-12">
-                                    <div class="form-group local-forms">
-                                        <label>Diagnostico/Revisión  <span class="login-danger">*</span></label>
-                                        <textarea class="form-control" [(ngModel)]="description" name="description" rows="4" cols="30"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row align-items-center">
-                                <div class="col-6">
-                                    <div class="row">
-                                        <div class="col-12 mb-3">
-                                            <button class="btn btn-primary btn-sm" (click)="addMedicamento()">+</button>
-                                            <!-- <button class="btn btn-danger btn-sm">X</button> -->
-                                        </div>
-
-                                        <div class="col-12">  
-                                            <div class="form-group local-forms">
-                                                <label >Nombre de medicamento <span class="login-danger">*</span></label>
-                                                <input class="form-control" [(ngModel)]="name_medical" name="name_medical" type="text"  >
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="form-group local-forms">
-                                                <label >Uso <span class="login-danger">*</span></label>
-                                                <input class="form-control" [(ngModel)]="uso" name="uso" type="text"  >
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="table-responsive">
-                                        <table class="table mb-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Descripción</th>
-                                                    <th>Acción</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr *ngFor="let item of medical;let i = index">
-                                                    <td>
-                                                      MEDICAMENTO:  {{ item.name_medical }}
-                                                      <br>
-                                                      USO: {{ item.uso }}
-                                                    </td>
-                                                    <td>
-                                                        <button class="btn btn-danger btn-sm" (click)="deleteMedical(i)">X</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row align-items-center">
-
-                                <div class="col-12">
-                                    <div class="form-group row my-4" *ngIf="text_success">
-                                        <div class="col-md-8">
-                                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                                <strong>Exito!</strong> {{ text_success }}.
-                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                                                    <span aria-hidden="true"> </span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-            
-                                    <div class="form-group row my-4" *ngIf="text_validation">
-                                        <div class="col-md-8">
-                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                <strong>!</strong> {{ text_validation }}.
-                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                                                    <span aria-hidden="true"> </span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <div class="doctor-submit text-end">
-                                        <button type="button" (click)="save()" class="btn btn-primary submit-form me-2">Editar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>							
-            </div>	
-            	
-
-
-
-        </div>
+      </div>
     </div>
+    <!-- /Page Header -->
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <form>
+
+              <!-- Patient Data Section -->
+              <div class="row align-items-center py-4">
+                <div class="col-12 py-4">
+                  <h4>Datos del paciente</h4>
+                </div>
+
+                <div class="col-12 col-md-6 col-xl-3">
+                  <div class="form-group local-forms">
+                    <label>N° Documento</label>
+                    <input class="form-control" [value]="identification_number" disabled type="number">
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-xl-3">
+                  <div class="form-group local-forms">
+                    <label>Nombres</label>
+                    <input class="form-control" [value]="first_name" disabled type="text">
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-xl-3">
+                  <div class="form-group local-forms">
+                    <label>Apellidos</label>
+                    <input class="form-control" [value]="last_name" disabled type="text">
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-xl-3">
+                  <div class="form-group local-forms">
+                    <label>Teléfono</label>
+                    <input class="form-control" [value]="first_phone" disabled type="text">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Diagnosis Section -->
+              <div class="row align-items-center">
+                <div class="col-12">
+                  <div class="form-group local-forms">
+                    <label>Diagnóstico/Revisión <span class="login-danger">*</span></label>
+                    <textarea
+                      class="form-control"
+                      [(ngModel)]="description"
+                      name="description"
+                      rows="4"
+                      cols="30"
+                      placeholder="Ingrese el diagnóstico médico..."
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Medications Section -->
+              <div class="row align-items-center">
+                <div class="col-12">
+                  <h5>Receta Médica</h5>
+                </div>
+
+                <!-- Add Medication Form -->
+                <div class="col-6">
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-sm"
+                        (click)="addMedicament()"
+                        [disabled]="!name_medical || !uso"
+                      >
+                        <i class="fa fa-plus"></i> Agregar Medicamento
+                      </button>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="form-group local-forms">
+                        <label>Nombre del medicamento <span class="login-danger">*</span></label>
+                        <input
+                          class="form-control"
+                          [(ngModel)]="name_medical"
+                          name="name_medical"
+                          type="text"
+                          placeholder="Ej: Paracetamol 500mg"
+                        >
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="form-group local-forms">
+                        <label>Indicaciones de uso <span class="login-danger">*</span></label>
+                        <input
+                          class="form-control"
+                          [(ngModel)]="uso"
+                          name="uso"
+                          type="text"
+                          placeholder="Ej: 1 tableta cada 8 horas por 3 días"
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Medications List -->
+                <div class="col-6">
+                  <div class="card">
+                    <div class="card-header">
+                      <h6 class="card-title mb-0">
+                        Medicamentos agregados ({{ medical.length }})
+                      </h6>
+                    </div>
+                    <div class="card-body p-0" *ngIf="medical.length > 0">
+                      <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                          <thead class="table-light">
+                          <tr>
+                            <th>Medicamento e Indicaciones</th>
+                            <th width="60">Acción</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr *ngFor="let item of medical; let i = index">
+                            <td>
+                              <strong>{{ item.name_medical }}</strong>
+                              <br>
+                              <small class="text-muted">{{ item.uso }}</small>
+                            </td>
+                            <td>
+                              <button
+                                type="button"
+                                class="btn btn-sm btn-outline-danger"
+                                (click)="deleteMedical(i)"
+                                title="Eliminar"
+                              >
+                                <i class="fa fa-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="card-body text-center" *ngIf="medical.length === 0">
+                      <p class="text-muted mb-0">No se han agregado medicamentos</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="row align-items-center">
+                <div class="col-12">
+                  <div class="doctor-submit text-end">
+                    <button
+                      type="button"
+                      (click)="save()"
+                      class="btn btn-primary submit-form me-2"
+                      [disabled]="!description || medical.length === 0 || isLoading"
+                    >
+                      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                      {{ isLoading ? 'Guardando...' : 'Guardar Atención' }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
- 
+
+<!-- Notifications -->
+<app-notification
+  [show]="showNotification"
+  [message]="notificationMessage"
+  [type]="notificationType"
+  [duration]="3000"
+  (close)="onNotificationClose()">
+</app-notification>
+
+<app-loading-overlay [isBlock]="isLoading"></app-loading-overlay>

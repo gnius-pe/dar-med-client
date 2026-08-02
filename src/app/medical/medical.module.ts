@@ -1,23 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { MedicalRoutingModule } from './medical-routing.module';
 import { MedicalComponent } from './medical.component';
 import { SharedModule } from '../shared/shared.module';
-// import { HeaderComponent } from '../common-component/header/header.component';
-// import { SidebarComponent } from '../common-component/sidebar/sidebar.component';
-
+import { CreateDoctorTicketsModalComponent } from './tickets/create-doctor-tickets-modal/create-doctor-tickets-modal.component';
+import { ManageDoctorTicketsModalComponent } from './tickets/manage-doctor-tickets-modal/manage-doctor-tickets-modal.component';
 
 @NgModule({
-  declarations: [
-    MedicalComponent,
-    // HeaderComponent,
-    // SidebarComponent,
+    declarations: [
+        MedicalComponent,
+        CreateDoctorTicketsModalComponent,
+        ManageDoctorTicketsModalComponent,
+    ],
+  exports: [
+    CreateDoctorTicketsModalComponent,
+    ManageDoctorTicketsModalComponent
   ],
-  imports: [
-    CommonModule,
-    MedicalRoutingModule,
-    SharedModule,
-  ]
+    imports: [
+        CommonModule,
+        MedicalRoutingModule,
+        SharedModule,
+    ]
 })
 export class MedicalModule { }

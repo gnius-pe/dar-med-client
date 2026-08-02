@@ -6,9 +6,9 @@
       <div class="row">
         <div class="col-sm-12">
           <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Patients </a></li>
+            <li class="breadcrumb-item"><a href="#">Pacientes </a></li>
             <li class="breadcrumb-item"><i class="feather icon-chevron-right"></i></li>
-            <li class="breadcrumb-item active">Patient List</li>
+            <li class="breadcrumb-item active">Lista de pacientes</li>
           </ul>
         </div>
       </div>
@@ -28,19 +28,18 @@
                   <div class="doctor-table-blk">
                     <h3>Lista de pacientes</h3>
 
-                    <!--<div class="doctor-search-blk">
-                      <div class="top-nav-search table-search-blk">
-                        <input class="form-control" placeholder="Search here" [(ngModel)]="searchDataValue"
-                               (keyup.enter)="searchData()">
-                        <a class="btn"><img src="assets/img/icons/search-normal.svg" alt=""></a>
+                    <div class="doctor-search-blk">
+                      <div class="top-nav-search table-search-blk d-flex">
+                        <input
+                          class="form-control"
+                          placeholder="Buscar paciente"
+                          [(ngModel)]="searchDataValue"
+                          (keyup.enter)="searchData()">
+                        <a class="btn ms-2" (click)="searchData()">
+                          <img src="assets/img/icons/search-normal.svg" alt="">
+                        </a>
                       </div>
-                      <div class="add-group">
-                        <a routerLink="/patient-m/register" class="btn btn-primary add-pluss ms-2"><img
-                          src="assets/img/icons/plus.svg" alt=""></a>
-                        <a href="javascript:;" (click)="PageSize()" class="btn btn-primary doctor-refresh ms-2"><img
-                          src="assets/img/icons/re-fresh.svg" alt=""></a>
-                      </div>
-                    </div>-->
+                    </div>
 
                   </div>
                 </div>
@@ -77,45 +76,34 @@
                   <td>{{ patient.first_phone }}</td>
                   <td>{{ calculateAge(patient.birth_date, patient.created_at) }}</td>
                   <td>{{ formatDate(patient.created_at) }}</td>
-                  <td class="flex flex-col gap-2">
+                  <td class="icon-spacing">
                     <a *ngIf="isPermission('edit_patient')"
-                       [routerLink]="[ '/patient-m/list/edit/', patient.id ]"><i
-                      class="fa-solid fa-pen-to-square m-r-5"></i></a>
+                       [routerLink]="['/patient-m/list/edit/', patient.id]">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
                     <a *ngIf="isPermission('delete_patient')" href="javascript:void(0);"
                        (click)="selectUser(patient)" data-bs-toggle="modal"
-                       [attr.data-bs-target]="'#delete_staff-'+patient.id"
-                    ><i class="fa fa-trash-alt m-r-5"></i></a>
+                       [attr.data-bs-target]="'#delete_staff-' + patient.id">
+                      <i class="fa fa-trash-alt"></i>
+                    </a>
+                    <a [routerLink]="['/patient-m/edit-location/', patient.id]"
+                       href="javascript:void(0)">
+                      <i class="fa-solid fa-location-dot"></i>
+                    </a>
+                    <a href="javascript:void(0)" (click)="printPatientData(patient.id.toString())">
+                      <i class="fa fa-print"></i>
+                    </a>
                   </td>
-
-                  <!--  <td class="text-end">
-                    <div class="dropdown dropdown-action" *ngIf="patient.id !== 1">
-                      <a href="javascript:void(0);" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
-                         aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                      <div class="dropdown-menu dropdown-menu-end">
-                        &lt;!&ndash;  &ndash;&gt;
-                        <a class="dropdown-item" *ngIf="isPermission('edit_patient')"
-                           [routerLink]="[ '/patient-m/list/edit/', patient.id ]"><i
-                          class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
-                        <a class="dropdown-item" *ngIf="isPermission('delete_patient')" href="javascript:void(0);"
-                           (click)="selectUser(patient)" data-bs-toggle="modal"
-                           [attr.data-bs-target]="'#delete_staff-'+patient.id"
-                        ><i class="fa fa-trash-alt m-r-5"></i> Delete</a>
-                        <a class="dropdown-item" *ngIf="isPermission('profile_patient')"
-                           [routerLink]="[ '/patient-m/list/profile/', patient.id ]">+ Perfil Paciente</a>
-                      </div>
-                    </div>
-                  </td>-->
 
                   <div [attr.id]="'delete_staff-'+patient.id" class="modal fade delete-modal" role="dialog">
                     <div class="modal-dialog modal-dialog-centered">
                       <div class="modal-content">
                         <div class="modal-body text-center">
                           <img src="assets/img/sent.png" alt="" width="50" height="46">
-                          <h3 *ngIf="patient_selected">Are you sure want to delete this
-                            patinet {{ patient_selected.name }}?</h3>
+                          <h3 *ngIf="patient_selected">¿Esta seguro de eliminar a {{ patient_selected.name }}?</h3>
                           <div class="m-t-20"><a href="javascript:void(0);" class="btn btn-white me-1"
-                                                 data-bs-dismiss="modal">Close</a>
-                            <button type="submit" class="btn btn-danger" (click)="deletePatient()">Delete</button>
+                                                 data-bs-dismiss="modal">Cerrar</a>
+                            <button type="submit" class="btn btn-danger" (click)="deletePatient()">Eliminar</button>
                           </div>
                         </div>
                       </div>
@@ -130,13 +118,6 @@
               <div class="table_footer">
 
                 <div></div>
-                <!--  <div class="col-sm-12 col-md-5">
-                    <div class="dataTables_info">
-                      Showing {{ serialNumberArray[0] }} to
-                      {{ serialNumberArray[serialNumberArray.length - 1] }} of
-                      {{ totalData }} entries
-                    </div>
-                  </div>-->
 
                 <div class="col-sm-12 col-md-7">
                   <div class="pagination_section">
@@ -174,3 +155,8 @@
     </div>
   </div>
 </div>
+<div #qrCodeContainer style="display: none">
+  <qrcode [qrdata]="'https://dar.reformaperu.org/'" [width]="100" [errorCorrectionLevel]="'M'"></qrcode>
+</div>
+
+<app-loading-overlay [isBlock]="isLoading"></app-loading-overlay>

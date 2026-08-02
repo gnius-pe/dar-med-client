@@ -1,189 +1,109 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AppointmentService } from '../service/appointment.service';
 import { ActivatedRoute } from '@angular/router';
+import { ApiResponse } from "../../../shared/models/global.model";
+import {Appointment, AppointmentUpdateData} from "../models/appointment.model";
 
 @Component({
   selector: 'app-edit-appointments',
   templateUrl: './edit-appointments.component.html',
   styleUrls: ['./edit-appointments.component.scss']
 })
-export class EditAppointmentsComponent {
-  hours:any = [];
-  specialities:any = [];
-  date_appointment:any;
-  hour:any;
-  specialitie_id:any;
+export class EditAppointmentsComponent implements OnInit {
 
-  first_name:string = '';
-  last_name:string = '';
+  isLoading = false;
+  showNotification = false;
+  notificationMessage = '';
+  notificationType: 'success' | 'error' | 'warning' = 'success';
 
- 
-  mobile:string = '';
-  identification_number:number = 0;
-  name_companion:string = '';
-  surname_companion:string = '';
+  public appointmentId = '';
+  public appointmentData: Appointment | null = null;
 
-  amount:number = 0;
-  amount_add:number = 0;
-  method_payment:string = '';
-
-  DOCTORS:any = [];
-  DOCTOR_SELECTED:any;
-  selected_segment_hour:any;
-
-  public text_success:string = '';
-  public text_validation:string = '';
-  public appointment_id:any;
-  public appointment_selected:any;
   constructor(
-    public appointmentService: AppointmentService,
-    public activedRoute: ActivatedRoute,
-  ) {
-    
-  }
+    private appointmentService: AppointmentService,
+    private activatedRoute: ActivatedRoute,
+  ) {}
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    this.activedRoute.params.subscribe((resp:any) => {
-      console.log(resp);
-      this.appointment_id = resp.id;
-    })
-
-    this.appointmentService.listConfig().subscribe((resp:any) => {
-      this.hours = resp.hours;
-      this.specialities = resp.specialities;
-
-      this.appointmentService.showAppointment(this.appointment_id).subscribe((resp:any) => {
-        console.log(resp);
-  
-        this.appointment_selected = resp.appointment;
-        // Datos del paciente
-        this.first_name= this.appointment_selected.patient.first_name;
-        this.last_name = this.appointment_selected.patient.last_name;
-        this.mobile = this.appointment_selected.patient.mobile;
-        this.identification_number = this.appointment_selected.patient.identification_number;
-        this.name_companion = this.appointment_selected.patient.name_companion;
-        this.surname_companion = this.appointment_selected.patient.surname_companion;
-
-        this.date_appointment = new Date(this.appointment_selected.date_appointment).toISOString();
-
-        this.specialitie_id = this.appointment_selected.specialitie_id;
-        // this.selected_segment_hour = this.appointment_selected.selected_segment_hour;
-        this.amount = this.appointment_selected.amount;
-        this.hour = this.appointment_selected.segment_hour.format_segment.hour;
-        // this.filtro();
-      })
-
-    })
+    this.activatedRoute.params.subscribe((params: any) => {
+      this.appointmentId = params.id;
+      this.loadAppointment();
+    });
   }
-  save(){
-    this.text_validation = "";
 
-    if(!this.date_appointment
-      || !this.specialitie_id || !this.amount){
-      this.text_validation = "LOS CAMPOS SON NECESARIOS (LA FECHA , LA ESPECIALIDAD Y EL TOTAL DE PAGOS)";
-      return;
-    }
-    if(new Date(this.date_appointment).getTime() != new Date(this.appointment_selected.date_appointment).getTime()){
-      if(!this.selected_segment_hour){
-        this.text_validation = "NECESITAS SELECCIONAR UN SEGMENTO";
-        return;
-      }
-    }
-    // || !this.selected_segment_hour
+  private loadAppointment(): void {
+    this.showLoading();
 
-    let data = {
-      "doctor_id": this.DOCTOR_SELECTED.doctor.id,
-      "date_appointment": this.date_appointment,
-      "specialitie_id": this.specialitie_id,
-      "doctor_schedule_join_hour_id":  this.selected_segment_hour ? this.selected_segment_hour.id : this.appointment_selected.doctor_schedule_join_hour_id,
-      amount: this.amount,
-    }
-
-    this.appointmentService.updateAppointment(this.appointment_id,data).subscribe((resp:any) => {
-      console.log(resp);
-      if(resp.message == 403){
-        this.text_validation = resp.message_text;
-      }else{
-        this.text_success = "LA CITA MEDICA SE EDITO CON EXITO";
+    this.appointmentService.showAppointment(this.appointmentId).subscribe({
+      next: (resp: any) => {
+        this.appointmentData = resp.appointment;
+        this.hideLoading();
+      },
+      error: () => {
+        this.hideLoading();
+        this.showError('Error al cargar los datos de la cita');
       }
     });
   }
 
-  onDateChange($event:any){
-    this.DOCTORS = [];
-    this.selected_segment_hour = null;
-    this.DOCTOR_SELECTED = null;
-  }
-  filtro(){
-    let data = {
-      date_appointment: this.date_appointment,
-      hour: this.hour,
-      specialitie_id : this.specialitie_id,
-    }
-    this.appointmentService.listFilter(data).subscribe((resp:any) => {
-      console.log(resp);
-      this.DOCTORS = resp.doctors;
+  onAppointmentUpdate(appointmentData: AppointmentUpdateData): void {
+    this.showLoading();
 
-      // this.DOCTORS.forEach((doctor:any) => {
-      //   if(doctor.doctor.id == this.appointment_selected.doctor_id){
-      //     let INDEX = doctor.segments.findIndex((item:any) => item.id == this.appointment_selected.doctor_schedule_join_hour_id)
-      //     if(INDEX != -1){
-      //       this.showSegment(doctor);
-      //     }
-      //   }
-      // });
-    })
-  }
-  
-  isDoctorSelected(DOCTOR:any){
-    if(DOCTOR.doctor.id == this.appointment_selected.doctor_id){
-      return true;
-    }
-    return false;
-  }
-  isSegmentSelected(SEGMENT:any){
-    if(SEGMENT.id == this.appointment_selected.doctor_schedule_join_hour_id){
-      return true;
-    }
-    return false;
-  }
-  countDisponibilidad(DOCTOR:any){
-    let SEGMENTS = [];
-    SEGMENTS = DOCTOR.segments.filter((item:any) => !item.is_appointment);
-    return SEGMENTS.length;
-  }
+    this.appointmentService.updateAppointment(this.appointmentId, appointmentData).subscribe({
+      next: (resp: ApiResponse) => {
+        this.hideLoading();
 
-  showSegment(DOCTOR:any){
-    this.DOCTOR_SELECTED = DOCTOR;
-  }
+        if (resp.message === 422) {
+          this.showError(resp.message_text || 'Error al actualizar la cita');
+          return;
+        }
 
-  selectSegment(SEGMENT:any){
-    this.selected_segment_hour = SEGMENT;
-  }
+        if (resp.message === 403) {
+          this.showError(resp.message_text || 'No tienes permisos para editar esta cita');
+          return;
+        }
 
-  filterPatient(){
-    this.appointmentService.listPatient(this.identification_number+"").subscribe((resp:any) => {
-      console.log(resp);
-      if(resp.message == 403){
-        this.first_name = '';
-        this.last_name = '';
-        this.mobile = ''
-        this.identification_number = 0;
-      }else{
-        this.first_name= resp.first_name;
-        this.last_name = resp.last_name;
-        this.mobile = resp.mobile;
-        this.identification_number = resp.identification_number;
+        this.showSuccess("La cita médica ha sido actualizada correctamente");
+        this.loadAppointment(); // Recargar datos actualizados
+      },
+      error: () => {
+        this.hideLoading();
+        this.showError('Error en el servidor al actualizar la cita');
       }
-    })
+    });
   }
 
-  resetPatient(){
-    this.first_name = '';
-    this.last_name = '';
-    //this.mobile = ''
-    this.identification_number = 0;
+  onAppointmentError(errorMessage: string): void {
+    this.showWarning(errorMessage);
+  }
+
+  private showLoading(): void {
+    this.isLoading = true;
+  }
+
+  private hideLoading(): void {
+    this.isLoading = false;
+  }
+
+  showSuccess(message: string): void {
+    this.notificationMessage = message;
+    this.notificationType = 'success';
+    this.showNotification = true;
+  }
+
+  showError(message: string): void {
+    this.notificationMessage = message;
+    this.notificationType = 'error';
+    this.showNotification = true;
+  }
+
+  showWarning(message: string): void {
+    this.notificationMessage = message;
+    this.notificationType = 'warning';
+    this.showNotification = true;
+  }
+
+  onNotificationClose(): void {
+    this.showNotification = false;
   }
 }

@@ -1,27 +1,57 @@
-# PreclinicAngular
+# Requisitos para ejecutar el proyecto
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.1.
+Asegúrate de que tu entorno cumpla con las siguientes versiones para ejecutar correctamente este proyecto:
 
-## Development server
+## 1. Angular
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **CLI de Angular**: `15.1.6`
+- **Versión de Angular**: `15.2.10`
+  - Incluye los siguientes paquetes:
+    - `@angular/animations`
+    - `@angular/common`
+    - `@angular/compiler`
+    - `@angular/compiler-cli`
+    - `@angular/core`
+    - `@angular/forms`
+    - `@angular/platform-browser`
+    - `@angular/platform-browser-dynamic`
+    - `@angular/router`
 
-## Code scaffolding
+## 2. Node.js
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- **Versión de Node.js**: `16.20.2`
 
-## Build
+## 3. Gestor de paquetes (NPM)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- **Versión de NPM**: `6.14.18`
 
-## Running unit tests
+## 4. Sistema Operativo
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- **Sistema Operativo**: `Windows 64-bit`
 
-## Running end-to-end tests
+## Instrucciones
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+1. Instala [Node.js](https://nodejs.org/) y asegúrate de que esté en la versión especificada.
+2. Instala la CLI de Angular globalmente:
+   ```bash
+   npm install -g @angular/cli@15.1.6
+   ```
+3. Verifica las versiones instaladas:
+   ```bash
+   node -v   # Debería mostrar 16.20.2
+   npm -v    # Debería mostrar 6.14.18
+   ng version # Debería mostrar Angular CLI 15.1.6 y Angular 15.2.10
+   ```
+4. Clona el repositorio del proyecto y navega al directorio.
+5. Instala las dependencias del proyecto:
+   ```bash
+   npm install
+   ```
+6. Ejecuta el proyecto localmente:
+   ```bash
+   ng serve
+   ```
 
-## Further help
+## Nota
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Es importante mantener las versiones indicadas para garantizar la compatibilidad con las dependencias y el funcionamiento correcto del proyecto.

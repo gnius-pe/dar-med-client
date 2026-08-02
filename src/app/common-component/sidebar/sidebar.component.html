@@ -73,8 +73,8 @@
         </li> -->
       </ul>
       <div class="logout-btn">
-        <a [routerLink]="routes.login"><span class="menu-side"><img src="assets/img/icons/logout.svg" alt="" /></span>
-          <span>Logout</span></a>
+        <a href="javascript:void(0);" (click)="authService.logout()"><span class="menu-side"><img src="assets/img/icons/logout.svg" alt="" /></span>
+          <span>Cerrar sesión</span></a>
       </div>
     </div>
   </ng-scrollbar>

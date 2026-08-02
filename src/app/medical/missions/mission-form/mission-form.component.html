@@ -1,0 +1,93 @@
+<form [formGroup]="missionForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <div class="form-group local-forms">
+        <label>Nombre de la misión<span class="login-danger">*</span></label>
+        <input
+          class="form-control"
+          formControlName="name"
+          type="text"
+          [class.is-invalid]="getFieldError('name')">
+        <div class="invalid-feedback" *ngIf="getFieldError('name')">
+          {{ getFieldError('name') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+      <div class="form-group local-forms">
+        <label>Fecha de inicio<span class="login-danger">*</span></label>
+        <input
+          class="form-control"
+          formControlName="start_date"
+          type="date"
+          [class.is-invalid]="getFieldError('start_date')">
+        <div class="invalid-feedback" *ngIf="getFieldError('start_date')">
+          {{ getFieldError('start_date') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+      <div class="form-group local-forms">
+        <label>Fecha de fin<span class="login-danger">*</span></label>
+        <input
+          class="form-control"
+          formControlName="end_date"
+          type="date"
+          [class.is-invalid]="getFieldError('end_date')">
+        <div class="invalid-feedback" *ngIf="getFieldError('end_date')">
+          {{ getFieldError('end_date') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+      <div class="form-group local-forms">
+        <label>Estado<span class="login-danger">*</span></label>
+        <select
+          class="form-control"
+          formControlName="state"
+          [class.is-invalid]="getFieldError('state')">
+          <option [ngValue]="true">Activa</option>
+          <option [ngValue]="false">Inactiva</option>
+        </select>
+        <div class="invalid-feedback" *ngIf="getFieldError('state')">
+          {{ getFieldError('state') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-group local-forms">
+        <label>Descripción<span class="login-danger">*</span></label>
+        <textarea
+          class="form-control"
+          formControlName="description"
+          rows="4"
+          [class.is-invalid]="getFieldError('description')">
+        </textarea>
+        <div class="invalid-feedback" *ngIf="getFieldError('description')">
+          {{ getFieldError('description') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12" *ngIf="missionForm.errors?.['dateInvalid'] && missionForm.touched">
+      <div class="alert alert-warning">
+        La fecha de fin debe ser posterior o igual a la fecha de inicio
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="doctor-submit text-end">
+        <button
+          type="submit"
+          class="btn btn-primary submit-form me-2"
+          >
+          {{ submitLabel }}
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

@@ -67,7 +67,7 @@ export class ListAppointmentPayComponent {
     });
     return band;
   }
-  
+
  isPermision(permission:string){
     if(this.user.roles.includes('Super-Admin')){
       return true;
@@ -83,8 +83,8 @@ export class ListAppointmentPayComponent {
 
     this.appointmentPayService.listAppointmentPays(page,this.searchDataDoctor,this.searchDataValue,this.specialitie_id,this.date_start,this.date_end).subscribe((resp:any) => {
 
-      console.log(resp);
- 
+
+
       this.totalData = resp.total;
       this.appointmentList = resp.appointments.data;
       // this.getTableDataGeneral();
@@ -102,7 +102,7 @@ export class ListAppointmentPayComponent {
     this.patient_generals.map((res: any, index: number) => {
       const serialNumber = index + 1;
       if (index >= this.skip && serialNumber <= this.limit) {
-        
+
         this.appointmentList.push(res);
         this.serialNumberArray.push(serialNumber);
       }
@@ -196,7 +196,7 @@ export class ListAppointmentPayComponent {
   deleteAppointmentPay(data:any){
 
     this.appointmentPayService.deleteAppointmentPay(this.payment_selected.id).subscribe((resp:any) => {
-      console.log(resp);
+
       let INDEX = data.payments.findIndex((item:any) => item.id == this.payment_selected.id);
 
       let INDEX2 = this.appointmentList.findIndex((appo:any) => appo.id == data.id);

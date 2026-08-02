@@ -1,146 +1,115 @@
-import { Component, OnInit } from '@angular/core';
-import { AppointmentService } from '../service/appointment.service';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {AppointmentService} from '../service/appointment.service';
+import {ApiResponse} from "../../../shared/models/global.model";
+import {AppointmentCreateData} from "../models/appointment.model";
+import {PrintService} from "../../../shared/services/print.service";
 
 @Component({
   selector: 'app-add-appointments',
   templateUrl: './add-appointments.component.html',
   styleUrls: ['./add-appointments.component.scss']
 })
-export class AddAppointmentsComponent implements OnInit {
+export class AddAppointmentsComponent {
 
-  hours: any = [];
-  specialities: any = [];
-  date_appointment: any = new Date();  // Fecha de la cita
-  minDate: Date = new Date();  // Fecha mínima, que será la fecha actual
-  hour: any;
-  specialitie_id: any;
+  @ViewChild('qrCodeContainer', {static: false}) qrCodeContainer!: ElementRef;
 
-  first_name: string = '';
-  last_name: string = '';
-  identification_number: number = 0;
+  isLoading = false;
+  showNotification = false;
+  notificationMessage = '';
+  notificationType: 'success' | 'error' | 'warning' = 'success';
 
- 
-  
-  //name_companion: string = '';
-  //surname_companion: string = '';
+  showConfirmModal = false;
+  modalMessage = '';
 
-  //amount: number = 0;
-  //amount_add: number = 0;
- // method_payment: string = '';
+  patientId = '';
 
-  DOCTORS: any = [];
-  DOCTOR_SELECTED: any;
-  selected_segment_hour:any;
-
-  public text_success: string = '';
-  public text_validation: string = '';
-
-  constructor(public appointmentService: AppointmentService) { }
-
-  ngOnInit(): void {
-    this.appointmentService.listConfig().subscribe((resp: any) => {
-      this.hours = resp.hours;
-      this.specialities = resp.specialities;
-    });
+  constructor(
+    private appointmentService: AppointmentService,
+    private printService: PrintService,
+  ) {
   }
 
-  // Validar si la fecha seleccionada es anterior a la fecha actual
-  validateAppointmentDate(): boolean {
-    const today = new Date();
-    const appointmentDate = new Date(this.date_appointment);
+  onAppointmentSave(appointmentData: AppointmentCreateData): void {
+    this.showLoading();
 
-    // Comparar las fechas sin las horas
-    if (appointmentDate.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)) {
-      this.text_validation = "La fecha de la cita no puede ser anterior a la fecha actual.";
-      return false;
-    }
-    return true;
-  }
+    this.appointmentService.createAppointment(appointmentData).subscribe({
+      next: (resp: ApiResponse) => {
+        this.hideLoading();
 
-  save() {
-    this.text_validation = "";
+        if (resp.message === 422) {
+          this.showError(resp.message_text || 'Error al crear la cita');
+          return;
+        }
 
-    // Validación de la fecha de la cita
-    if (!this.validateAppointmentDate()) {
-      return;  // Si la validación falla, no continuar con el registro
-    }
+        if (resp.message === 403) {
+          this.showError(resp.message_text || 'No tienes permisos para crear citas');
+          return;
+        }
 
-    /*if (this.amount < this.amount_add) {
-      this.text_validation = "EL MONTO INGRESADO COMO ADELANTO NO PUEDE SER MAYOR AL COSTO DE LA CITA MEDICA";
-      return;
-    }
-  */
-    if (!this.first_name || !this.last_name || !this.identification_number || !this.date_appointment
-      || !this.specialitie_id || !this.selected_segment_hour ) {
-      this.text_validation = "LOS CAMPOS SON NECESARIOS (SEGMENTO DE HORA, LA FECHA, LA ESPECIALIDAD, PACIENTE Y PAGOS)";
-      return;
-    }
+        this.patientId = appointmentData.patient_id?.toString() || '';
 
-    let data = {
-      "doctor_id": this.DOCTOR_SELECTED.doctor.id,
-      first_name: this.first_name,
-      last_name: this.last_name,
-    
-      identification_number: this.identification_number,
-   
-      "date_appointment": this.date_appointment,
-      "specialitie_id": this.specialitie_id,
-      "doctor_schedule_join_hour_id": this.selected_segment_hour.id,
-        
-    };
+        this.showSuccess("La cita médica se registró exitosamente");
 
-    this.appointmentService.registerAppointment(data).subscribe((resp: any) => {
-      console.log(resp);
-      this.text_success = "LA CITA MEDICA SE REGISTRO CON EXITO";
-    });
-  }
-
-  filtro() {
-    let data = {
-      date_appointment: this.date_appointment,
-      hour: this.hour,
-      specialitie_id: this.specialitie_id,
-    };
-    this.appointmentService.listFilter(data).subscribe((resp: any) => {
-      console.log(resp);
-      this.DOCTORS = resp.doctors;
-    });
-  }
-
-  countDisponibilidad(DOCTOR: any) {
-    let SEGMENTS = [];
-    SEGMENTS = DOCTOR.segments.filter((item: any) => !item.is_appointment);
-    return SEGMENTS.length;
-  }
-
-  showSegment(DOCTOR: any) {
-    this.DOCTOR_SELECTED = DOCTOR;
-  }
-
-  selectSegment(SEGMENT: any) {
-    this.selected_segment_hour = SEGMENT;
-  }
-
-  filterPatient() {
-    this.appointmentService.listPatient(this.identification_number + "").subscribe((resp: any) => {
-      console.log(resp);
-      if (resp.message == 403) {
-        this.resetPatient();
-      } else {
-        this.first_name = resp.first_name;
-        this.last_name = resp.last_name;
-       // this.mobile = resp.mobile;
-        this.identification_number = resp.identification_number;
+        this.modalMessage = '¿Desea imprimir la cita?';
+        this.showConfirmModal = true;
+      },
+      error: () => {
+        this.hideLoading();
+        this.showError('Error en el servidor al crear la cita');
       }
     });
   }
 
-  resetPatient() {
-    this.first_name = '';
-    this.last_name = '';
-    //this.mobile = '';
-    this.identification_number= 0;
-
-   
+  private resetPatientId(): void {
+    this.patientId = ''
   }
-} 
+
+  onModalAccept(): void {
+    this.showConfirmModal = false;
+
+    if (this.patientId === '') return
+
+    const qrCodeElement = this.qrCodeContainer?.nativeElement?.querySelector('canvas');
+    this.printService.printPatientData(this.patientId, qrCodeElement).subscribe();
+
+    this.resetPatientId()
+  }
+
+  onModalCancel(): void {
+    this.showConfirmModal = false;
+  }
+
+  onAppointmentError(errorMessage: string): void {
+    this.showWarning(errorMessage);
+  }
+
+  private showLoading(): void {
+    this.isLoading = true;
+  }
+
+  private hideLoading(): void {
+    this.isLoading = false;
+  }
+
+  showSuccess(message: string): void {
+    this.notificationMessage = message;
+    this.notificationType = 'success';
+    this.showNotification = true;
+  }
+
+  showError(message: string): void {
+    this.notificationMessage = message;
+    this.notificationType = 'error';
+    this.showNotification = true;
+  }
+
+  showWarning(message: string): void {
+    this.notificationMessage = message;
+    this.notificationType = 'warning';
+    this.showNotification = true;
+  }
+
+  onNotificationClose(): void {
+    this.showNotification = false;
+  }
+}

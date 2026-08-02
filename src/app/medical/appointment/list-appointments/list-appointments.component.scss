@@ -1,0 +1,17 @@
+.pagination_section .page-link {
+  border: none;
+  background: transparent;
+  color: #1a6fff;
+}
+
+.pagination_section .page-link.active {
+  background-color: #1a6fff;
+  color: #fff;
+  border-radius: 6px;
+}
+
+.pagination_section .page-item.disabled .page-link {
+  opacity: 0.45;
+  pointer-events: none;
+  cursor: not-allowed;
+}

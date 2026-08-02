@@ -7,7 +7,7 @@ interface MainMenu {
 
 interface MenuItem {
   menuValue: string;
-  showSubRoute: boolean;  
+  showSubRoute: boolean;
 }
 @Injectable({
   providedIn: 'root',
@@ -24,30 +24,45 @@ export class SideBarService {
   public expandSideBar: BehaviorSubject<string> = new BehaviorSubject<string>("false");
 
   constructor(private data: DataService) {
-   
+    this.toggleMobileSideBar.subscribe((state: string) => {
+      this.applyMobileSideBarClasses(state);
+    });
+  }
+
+  private applyMobileSideBarClasses(state: string): void {
+    const root = document.querySelector('html') as HTMLElement;
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.querySelector('.sidebar-overlay') as HTMLElement;
+
+    if (state === 'true') {
+      root?.classList.add('menu-opened');
+      sidebar?.classList.add('opened');
+      overlay?.classList.add('opened');
+    } else {
+      root?.classList.remove('menu-opened');
+      sidebar?.classList.remove('opened');
+      overlay?.classList.remove('opened');
+    }
   }
 
   public switchSideMenuPosition(): void {
-    if (localStorage.getItem('isMiniSidebar')) {
-      this.toggleSideBar.next("false");
-      localStorage.removeItem('isMiniSidebar');
-      this.data.sideBar.map((mainMenus: MainMenu) => {
-        mainMenus.menu.map((resMenu: MenuItem) => {
-          const menuValue = sessionStorage.getItem('menuValue');
-          if (menuValue && menuValue == resMenu.menuValue) {
-            resMenu.showSubRoute = true;
-          }
-        });
-      });
-    } else {
-      this.toggleSideBar.next('true');
+    const isMiniSidebar = localStorage.getItem('isMiniSidebar');
+    const newState = !isMiniSidebar;
+
+    if (newState) {
       localStorage.setItem('isMiniSidebar', 'true');
-      this.data.sideBar.map((mainMenus: MainMenu) => {
-        mainMenus.menu.map((resMenu: MenuItem) => {
-          resMenu.showSubRoute = false;
-        });
-      });
+      this.toggleSideBar.next('true');
+    } else {
+      localStorage.removeItem('isMiniSidebar');
+      this.toggleSideBar.next('false');
     }
+
+    const menuValue = sessionStorage.getItem('menuValue');
+    this.data.sideBar.forEach((mainMenus: MainMenu) => {
+      mainMenus.menu.forEach((resMenu: MenuItem) => {
+        resMenu.showSubRoute = newState ? false : menuValue === resMenu.menuValue;
+      });
+    });
   }
 
   public switchMobileSideBarPosition(): void {

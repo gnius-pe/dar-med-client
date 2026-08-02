@@ -1,73 +1,91 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from 'src/app/shared/auth/auth.service';
-import { routes } from 'src/app/shared/routes/routes';
-import { SideBarService } from 'src/app/shared/side-bar/side-bar.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {AuthService} from 'src/app/shared/auth/auth.service';
+import {routes} from 'src/app/shared/routes/routes';
+import {SideBarService} from 'src/app/shared/side-bar/side-bar.service';
+import {SelectedMissionService} from "../../medical/missions/services/selected-mission.service";
+import {Subscription} from "rxjs";
+import {Mission} from "../../medical/missions/models/mission.model";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
   public routes = routes;
   public openBox = false;
-  public miniSidebar  = false;
-  public addClass = false;
-  public user:any;
+  public miniSidebar = false;
+  public user: any;
+  isLoading = false;
+  selectedMission: Mission | null = null;
+  private selectedMissionSubscription: Subscription = new Subscription();
 
-  constructor(public router: Router,private sideBar: SideBarService,public auth: AuthService) {
+  constructor(
+    private router: Router,
+    private sideBar: SideBarService,
+    private selectedMissionService: SelectedMissionService,
+    private auth: AuthService,) {
     this.sideBar.toggleSideBar.subscribe((res: string) => {
-      if (res == 'true') {
-        this.miniSidebar = true;
-      } else {
-        this.miniSidebar = false;
-      }
+      this.miniSidebar = res == 'true';
     });
-    let USER = localStorage.getItem("user");
+    const USER = localStorage.getItem("user");
     this.user = JSON.parse(USER ? USER : '');
-    console.log(this.user);
   }
-  getRole(){
+
+  ngOnInit(): void {
+    this.selectedMissionSubscription = this.selectedMissionService.getSelectedMission$().subscribe(
+      (mission) => {
+        this.selectedMission = mission;
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.selectedMissionSubscription.unsubscribe();
+  }
+
+  clearSelectedMission() {
+    this.selectedMissionService.clearSelectedMission();
+  }
+
+  getRole() {
     let RoleName = "";
-    this.user.roles.forEach((rol:any) => {
+    this.user.roles.forEach((rol: any) => {
       RoleName = rol;
     });
     return RoleName;
   }
+
   openBoxFunc() {
     this.openBox = !this.openBox;
-    /* eslint no-var: off */
-    var mainWrapper = document.getElementsByClassName('main-wrapper')[0];
+    const mainWrapper = document.getElementsByClassName('main-wrapper')[0];
     if (this.openBox) {
       mainWrapper.classList.add('open-msg-box');
     } else {
       mainWrapper.classList.remove('open-msg-box');
     }
   }
-  logout(){
+
+  logout() {
+    this.showLoading();
     this.auth.logout();
+    this.hideLoading();
   }
+
   public toggleSideBar(): void {
     this.sideBar.switchSideMenuPosition();
   }
+
   public toggleMobileSideBar(): void {
     this.sideBar.switchMobileSideBarPosition();
-    
-      this.addClass = !this.addClass;
-      /* eslint no-var: off */
-      var root = document.getElementsByTagName( 'html' )[0];
-      /* eslint no-var: off */
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      var sidebar:any = document.getElementById('sidebar')
-  
-      if (this.addClass) {
-        root.classList.add('menu-opened');
-        sidebar.classList.add('opened');
-      }
-      else {
-        root.classList.remove('menu-opened');
-        sidebar.classList.remove('opened');
-      }
-    }
   }
+
+  private showLoading() {
+    this.isLoading = true;
+  }
+
+  private hideLoading() {
+    this.isLoading = false;
+  }
+}

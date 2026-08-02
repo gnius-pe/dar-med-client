@@ -33,18 +33,18 @@ export class DoctorMProfileComponent {
     public doctorService: DoctorService,
     public activedRoute: ActivatedRoute,
   ) {
-    
+
   }
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.activedRoute.params.subscribe((resp:any) => {
-      console.log(resp);
+
       this.doctor_id = resp.id;
     })
     this.doctorService.profileDoctor(this.doctor_id).subscribe((resp:any) => {
-      console.log(resp);
+
       this.num_appointment = resp.num_appointment;
       this.money_of_appointments = resp.money_of_appointments;
       this.num_appointment_pendings = resp.num_appointment_pendings;
@@ -88,7 +88,7 @@ export class DoctorMProfileComponent {
       data.password = this.password;
     }
     this.doctorService.updateDoctorProfile(this.doctor_id,data).subscribe((resp:any) => {
-      console.log(resp);
+
 
       if(resp.message == 403){
         this.text_validation = resp.message_text;

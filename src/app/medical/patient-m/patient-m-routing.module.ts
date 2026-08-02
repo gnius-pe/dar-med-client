@@ -1,10 +1,11 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { PatientMComponent } from './patient-m.component';
-import { AddPatientMComponent } from './add-patient-m/add-patient-m.component';
-import { ListPatientMComponent } from './list-patient-m/list-patient-m.component';
-import { EditPatientMComponent } from './edit-patient-m/edit-patient-m.component';
-import { PatientMProfileComponent } from './patient-m-profile/patient-m-profile.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {PatientMComponent} from './patient-m.component';
+import {AddPatientMComponent} from './add-patient-m/add-patient-m.component';
+import {ListPatientMComponent} from './list-patient-m/list-patient-m.component';
+import {EditPatientMComponent} from './edit-patient-m/edit-patient-m.component';
+import {PatientMProfileComponent} from './patient-m-profile/patient-m-profile.component';
+import {EditGeographicLocationComponent} from "./edit-geographic-location/edit-geographic-location.component";
 
 const routes: Routes = [{
   path: '',
@@ -25,7 +26,11 @@ const routes: Routes = [{
     {
       path: 'list/profile/:id',
       component: PatientMProfileComponent,
-    }
+    },
+    {
+      path: 'edit-location/:id',
+      component: EditGeographicLocationComponent
+    },
   ]
 }];
 
@@ -33,4 +38,5 @@ const routes: Routes = [{
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class PatientMRoutingModule { }
+export class PatientMRoutingModule {
+}

@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {PatientMService} from '../service/patient-m.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {Patient} from "../models/patient.model";
+import {PrintService} from "../../../shared/services/print.service";
 
 @Component({
   selector: 'app-list-patient-m',
@@ -10,29 +11,34 @@ import {Patient} from "../models/patient.model";
 })
 export class ListPatientMComponent implements OnInit {
 
-  public patientsList: Patient[] = [];
+  @ViewChild('qrCodeContainer', {static: false}) qrCodeContainer!: ElementRef;
+
+  patientsList: Patient[] = [];
   dataSource!: MatTableDataSource<any>;
 
-  public showFilter = false;
-  public searchDataValue = '';
-  public lastIndex = 0;
-  public pageSize = 20;
-  public totalData = 0;
-  public skip = 0;//MIN
-  public limit: number = this.pageSize;//MAX
-  public pageIndex = 0;
-  public serialNumberArray: Array<number> = [];
-  public currentPage = 1;
-  public pageNumberArray: Array<number> = [];
-  public pageSelection: Array<any> = [];
-  public totalPages = 0;
-  public totalPagesArray: number[] = [];
+  showFilter = false;
+  searchDataValue = '';
+  lastIndex = 0;
+  pageSize = 20;
+  totalData = 0;
+  skip = 0;//MIN
+  limit: number = this.pageSize;//MAX
+  pageIndex = 0;
+  serialNumberArray: Array<number> = [];
+  currentPage = 1;
+  pageNumberArray: Array<number> = [];
+  pageSelection: Array<any> = [];
+  totalPages = 0;
+  totalPagesArray: number[] = [];
 
-  public patient_selected: any;
-  public user: any;
+  patient_selected: any;
+  user: any;
+
+  isLoading = false;
 
   constructor(
-    public patientService: PatientMService,
+    private patientService: PatientMService,
+    private printService: PrintService,
   ) {
 
   }
@@ -65,23 +71,25 @@ export class ListPatientMComponent implements OnInit {
   formatDate(date: string): string {
     const parsedDate = new Date(date);
     const day = parsedDate.getDate().toString().padStart(2, '0');
-    const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0'); // Los meses son 0-indexados
+    const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
     const year = parsedDate.getFullYear();
 
     return `${day}/${month}/${year}`;
   }
 
-  private getTableData(page: number ): void {
-    this.patientsList = [];
-    this.serialNumberArray = [];
+  public searchData() {
+    this.getTableData(this.currentPage, this.searchDataValue);
+  }
 
-    this.patientService.listPatients(page).subscribe((resp: any) => {
+  private getTableData(page: number, search = ''): void {
+    this.showLoading()
+    this.patientService.listPatients(page, search).subscribe((resp: any) => {
       this.patientsList = resp.data;
       this.currentPage = resp.current_page;
       this.totalPages = resp.last_page;
-      this.totalPagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
-    })
-
+      this.totalPagesArray = Array.from({length: this.totalPages}, (_, i) => i + 1);
+      this.hideLoading()
+    });
   }
 
   selectUser(rol: any) {
@@ -91,7 +99,7 @@ export class ListPatientMComponent implements OnInit {
   deletePatient() {
 
     this.patientService.deletePatient(this.patient_selected.id).subscribe((resp: any) => {
-      console.log(resp);
+
       const INDEX = this.patientsList.findIndex((item: any) => item.id == this.patient_selected.id);
       if (INDEX != -1) {
         this.patientsList.splice(INDEX, 1);
@@ -128,5 +136,18 @@ export class ListPatientMComponent implements OnInit {
         return (aValue < bValue ? -1 : 1) * (sort.direction === 'asc' ? 1 : -1);
       });
     }
+  }
+
+  public printPatientData(patientId: string) {
+    const qrCodeElement = this.qrCodeContainer?.nativeElement?.querySelector('canvas');
+    this.printService.printPatientData(patientId, qrCodeElement).subscribe();
+  }
+
+  private showLoading() {
+    this.isLoading = true;
+  }
+
+  private hideLoading() {
+    this.isLoading = false;
   }
 }

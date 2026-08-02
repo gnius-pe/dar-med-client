@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { MedicalComponent } from './medical.component';
 import { AuthGuard } from '../shared/gaurd/auth.guard';
 
-// http://localhost:4200/roles/register
 const routes: Routes = [
   {
     path:'',
@@ -19,6 +18,11 @@ const routes: Routes = [
         path: 'staffs',
         loadChildren: () =>
           import('./staff/staff.module').then((m) => m.StaffModule),
+      },
+      {
+        path:'missions',
+        loadChildren: () =>
+          import('./missions/missions.module').then((m) => m.MissionsModule),
       },
       {
         path: 'specialities',

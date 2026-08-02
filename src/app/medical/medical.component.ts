@@ -22,7 +22,7 @@ export class MedicalComponent {
   page = '';
   currentUrl = '';
 
-  constructor(private sideBar: SideBarService,public router: Router,private data: DataService,) 
+  constructor(private sideBar: SideBarService,public router: Router,private data: DataService,)
   {
     this.sideBar.toggleSideBar.subscribe((res: string) => {
       if (res == 'true') {
@@ -78,4 +78,10 @@ export class MedicalComponent {
       this.headerActivePath = true;
     }
   }
+
+  public closeMobileSideBar(): void {
+    this.sideBar.toggleMobileSideBar.next('false');
+    localStorage.removeItem('isMobileSidebar');
+  }
+
 }
