@@ -17,7 +17,7 @@ export class PrintService {
 
   printPatientData(patientId: string, qrCodeElement?: HTMLCanvasElement): Observable<boolean> {
     return new Observable(observer => {
-      this.resolveActiveMissionName().pipe(
+      const innerSubscription = this.resolveActiveMissionName().pipe(
         switchMap((missionName) => this.patientService.getPatientDataWithAppointments(patientId).pipe(
           map((patientData: PatientData) => ({ patientData, missionName }))
         ))
@@ -37,6 +37,8 @@ export class PrintService {
           observer.error(err);
         }
       });
+
+      observer.add(innerSubscription);
     });
   }
 
