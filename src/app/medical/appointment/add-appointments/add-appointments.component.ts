@@ -29,29 +29,37 @@ export class AddAppointmentsComponent {
   ) {
   }
 
-  onAppointmentSave(appointmentData: AppointmentCreateData): void {
+  onAppointmentSave(appointmentsData: AppointmentCreateData[]): void {
     this.showLoading();
+    this.createAppointmentsSequentially(appointmentsData, 0);
+  }
 
+  private createAppointmentsSequentially(appointmentsData: AppointmentCreateData[], index: number): void {
+    if (index >= appointmentsData.length) {
+      this.hideLoading();
+      this.showSuccess("Las citas médicas se registraron exitosamente");
+      this.modalMessage = '¿Desea imprimir las citas?';
+      this.showConfirmModal = true;
+      return;
+    }
+
+    const appointmentData = appointmentsData[index];
     this.appointmentService.createAppointment(appointmentData).subscribe({
       next: (resp: ApiResponse) => {
-        this.hideLoading();
-
         if (resp.message === 422) {
-          this.showError(resp.message_text || 'Error al crear la cita');
+          this.hideLoading();
+          this.showError(resp.message_text || 'Error al crear una de las citas');
           return;
         }
 
         if (resp.message === 403) {
+          this.hideLoading();
           this.showError(resp.message_text || 'No tienes permisos para crear citas');
           return;
         }
 
         this.patientId = appointmentData.patient_id?.toString() || '';
-
-        this.showSuccess("La cita médica se registró exitosamente");
-
-        this.modalMessage = '¿Desea imprimir la cita?';
-        this.showConfirmModal = true;
+        this.createAppointmentsSequentially(appointmentsData, index + 1);
       },
       error: () => {
         this.hideLoading();

@@ -107,6 +107,52 @@
         </div>
       </div>
 
+      <!-- Selected Appointments List -->
+      <div class="row" *ngIf="selectedAppointments.length > 0 && !isEditMode">
+        <div class="col-12">
+          <h5>Especialidades y Doctores Seleccionados</h5>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <th>Especialidad</th>
+                <th>Doctor</th>
+                <th>Acción</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let apt of selectedAppointments; let i = index">
+                <td>{{ apt.specialitie_name }}</td>
+                <td>{{ apt.doctor_name }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-danger"
+                    (click)="removeFromSelection(i)"
+                  >
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Selection Button -->
+      <div class="row" *ngIf="selectedDoctor && !isEditMode">
+        <div class="col-12">
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="addToSelection()"
+          >
+            Agregar a la lista
+          </button>
+        </div>
+      </div>
+
       <!-- Patient Data -->
       <div class="row py-4" *ngIf="!isEditMode">
         <div class="col-12">
@@ -213,9 +259,9 @@
               type="button"
               (click)="save()"
               class="btn btn-primary submit-form me-2"
-              [disabled]="appointmentForm.invalid || !selectedDoctor"
+              [disabled]="isEditMode ? (appointmentForm.invalid || !selectedDoctor) : (appointmentForm.invalid || selectedAppointments.length === 0)"
             >
-              {{ isEditMode ? 'Actualizar Cita' : 'Crear Cita' }}
+              {{ isEditMode ? 'Actualizar Cita' : 'Crear Citas' }}
             </button>
           </div>
         </div>
