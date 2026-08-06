@@ -45,7 +45,7 @@ export class AddPatientMComponent {
         this.hideLoading();
 
         if (error.status === 422) {
-          this.showError(error.error.message);
+          this.showError(this.getDuplicateFieldMessage(error));
         } else {
           this.showError('Error al registrar el paciente');
         }
@@ -115,6 +115,20 @@ export class AddPatientMComponent {
     this.notificationMessage = message;
     this.notificationType = 'error';
     this.showNotification = true;
+  }
+
+  private getDuplicateFieldMessage(error: any): string {
+    const errors = error.error?.errors;
+    if (errors && typeof errors === 'object') {
+      const firstField = Object.keys(errors)[0];
+      const labels: Record<string, string> = {
+        identification_number: 'Número de documento',
+        email: 'Correo electrónico',
+      };
+      const label = labels[firstField] || firstField;
+      return `El campo ${label} ya está registrado.`;
+    }
+    return error.error?.message || 'Error al registrar el paciente';
   }
 
   onNotificationClose() {

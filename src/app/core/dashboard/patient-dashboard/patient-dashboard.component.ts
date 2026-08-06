@@ -416,7 +416,7 @@ export class PatientDashboardComponent implements OnInit {
     if (pageNumber > this.currentPage) {
       this.pageIndex = pageNumber - 1;
     } else if (pageNumber < this.currentPage) {
-      this.pageIndex = pageNumber + 1;
+      this.pageIndex = pageNumber - 1;
     }
     this.getTableData();
   }

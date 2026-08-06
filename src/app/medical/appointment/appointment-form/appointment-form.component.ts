@@ -22,7 +22,7 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
   @Input() appointmentToEdit: Appointment | null = null;
   @Input() isEditMode = false;
 
-  @Output() createAppointment = new EventEmitter<AppointmentCreateData>();
+  @Output() createAppointment = new EventEmitter<AppointmentCreateData[]>();
   @Output() updateAppointment = new EventEmitter<AppointmentUpdateData>();
   @Output() showError = new EventEmitter<string>();
 
@@ -30,6 +30,13 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
 
   public availableDoctors: AvailableDoctor[] = [];
   public selectedDoctor: AvailableDoctor | null = null;
+  
+  public selectedAppointments: Array<{
+    specialitie_id: number;
+    specialitie_name: string;
+    doctor_id: number;
+    doctor_name: string;
+  }> = [];
 
   public isLoadingDoctors = false;
   public showDoctorsList = false;
@@ -71,7 +78,7 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
 
     return this.fb.group({
       date_appointment: [todayString, Validators.required],
-      specialitie_id: ['', Validators.required],
+      specialitie_id: [''],
       identification_number: ['', [Validators.required, Validators.pattern(/^\d{1,8}$/)]],
       first_name: [{value: '', disabled: true}, Validators.required],
       last_name: [{value: '', disabled: true}, Validators.required],
@@ -82,7 +89,7 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
       amount: [0],
       amount_add: [0],
       method_payment: ['EFECTIVO'],
-      doctor_id: ['', Validators.required]
+      doctor_id: ['']
     });
   }
 
@@ -163,6 +170,32 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
     });
   }
 
+  addToSelection(): void {
+    if (!this.selectedDoctor) return;
+    
+    const specialitieId = this.appointmentForm.get('specialitie_id')?.value;
+    const speciality = this.specialities.find(s => s.id === specialitieId);
+    
+    this.selectedAppointments.push({
+      specialitie_id: specialitieId,
+      specialitie_name: speciality?.name || '',
+      doctor_id: this.selectedDoctor.doctor.id,
+      doctor_name: this.selectedDoctor.doctor.full_name
+    });
+    
+    this.selectedDoctor = null;
+    this.appointmentForm.patchValue({
+      specialitie_id: '',
+      doctor_id: ''
+    });
+    this.availableDoctors = [];
+    this.showDoctorsList = false;
+  }
+
+  removeFromSelection(index: number): void {
+    this.selectedAppointments.splice(index, 1);
+  }
+
   searchPatient(): void {
 
     const identificationNumber = String(this.appointmentForm.get('identification_number')?.value)
@@ -209,24 +242,48 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
 
   save(): void {
 
-    if (this.appointmentForm.invalid) {
-      this.showError.emit('Complete todos los campos obligatorios');
-      return;
-    }
-
-    if (!this.selectedDoctor) {
-      this.showError.emit('Seleccione un doctor para la cita');
-      return;
-    }
-
-    const formValues = this.appointmentForm.value;
-
     if (this.isEditMode) {
+      if (this.appointmentForm.invalid) {
+        this.showError.emit('Complete todos los campos obligatorios');
+        return;
+      }
+
+      if (!this.selectedDoctor) {
+        this.showError.emit('Seleccione un doctor para la cita');
+        return;
+      }
+
+      const formValues = this.appointmentForm.value;
       const updateData: AppointmentUpdateData = this.buildUpdateData(formValues);
       this.updateAppointment.emit(updateData);
     } else {
-      const createData: AppointmentCreateData = this.buildCreateData(formValues);
-      this.createAppointment.emit(createData);
+      if (this.selectedAppointments.length === 0) {
+        this.showError.emit('Seleccione al menos una especialidad y doctor');
+        return;
+      }
+
+      const formValues = this.appointmentForm.value;
+
+      const appointments = this.selectedAppointments.map(sel => {
+        const patientId = formValues.patient_id ? Number(formValues.patient_id) : undefined;
+        return {
+          doctor_id: sel.doctor_id,
+          patient_id: patientId,
+          first_name: formValues.first_name,
+          last_name: formValues.last_name,
+          identification_number: formValues.identification_number,
+          first_phone: formValues.first_phone || undefined,
+          name_companion: formValues.name_companion || undefined,
+          surname_companion: formValues.surname_companion || undefined,
+          date_appointment: formValues.date_appointment,
+          specialitie_id: sel.specialitie_id,
+          amount: formValues.amount || undefined,
+          amount_add: formValues.amount_add || undefined,
+          method_payment: formValues.method_payment || undefined
+        };
+      });
+
+      this.createAppointment.emit(appointments);
       this.resetForm();
     }
   }
@@ -272,5 +329,6 @@ export class AppointmentFormComponent implements OnInit, OnChanges{
     this.availableDoctors = [];
     this.selectedDoctor = null;
     this.showDoctorsList = false;
+    this.selectedAppointments = [];
   }
 }
