@@ -124,8 +124,6 @@ export class AddPatientMComponent {
       const labels: Record<string, string> = {
         identification_number: 'Número de documento',
         email: 'Correo electrónico',
-        first_phone: 'Teléfono',
-        second_phone: 'Teléfono secundario',
       };
       const label = labels[firstField] || firstField;
       return `El campo ${label} ya está registrado.`;
