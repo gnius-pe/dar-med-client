@@ -62,7 +62,7 @@ export class PatientFormComponent implements OnChanges {
             last_name: response.last_name,
           });
         } else {
-          this.lookupError = 'No se encontró información para el DNI ingresado.';
+          this.lookupError = 'No hay datos registrados. Completa la información del paciente manualmente.';
         }
       }),
       catchError(() => {
