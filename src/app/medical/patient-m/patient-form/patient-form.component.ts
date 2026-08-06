@@ -86,11 +86,6 @@ export class PatientFormComponent implements OnChanges {
     formData.birth_date = new Date(formData.birth_date).toISOString().split('T')[0];
 
     this.sendPatientData.emit(formData);
-    this.resetForm();
-  }
-
-  private resetForm(): void {
-    this.patientForm.reset();
   }
 
   private createPersonalForm(): FormGroup {
