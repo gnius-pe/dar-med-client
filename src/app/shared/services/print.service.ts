@@ -15,22 +15,16 @@ export class PrintService {
     private patientService: PatientMService
   ) {}
 
-  /**
-   * Imprime los datos del paciente con sus citas médicas
-   * @param patientId ID del paciente
-   * @param qrCodeElement Elemento canvas del código QR (opcional)
-   * @returns Observable<boolean> - true si se imprimió correctamente
-   */
   printPatientData(patientId: string, qrCodeElement?: HTMLCanvasElement): Observable<boolean> {
     return new Observable(observer => {
-      this.resolveActiveMissionName().pipe(
+      const innerSubscription = this.resolveActiveMissionName().pipe(
         switchMap((missionName) => this.patientService.getPatientDataWithAppointments(patientId).pipe(
           map((patientData: PatientData) => ({ patientData, missionName }))
         ))
       ).subscribe({
-        next: ({ patientData, missionName }) => {
+        next: async ({ patientData, missionName }) => {
           try {
-            this.generatePDF(patientData, missionName, qrCodeElement);
+            await this.generatePDF(patientData, missionName, qrCodeElement);
             observer.next(true);
             observer.complete();
           } catch (error) {
@@ -43,17 +37,20 @@ export class PrintService {
           observer.error(err);
         }
       });
+
+      observer.add(innerSubscription);
     });
   }
 
-  /**
-   * Imprime datos del paciente usando datos ya obtenidos
-   * @param patientData Datos del paciente con citas
-   * @param qrCodeElement Elemento canvas del código QR (opcional)
-   */
   printPatientDataDirect(patientData: PatientData, qrCodeElement?: HTMLCanvasElement): void {
     this.resolveActiveMissionName().subscribe({
-      next: (missionName) => this.generatePDF(patientData, missionName, qrCodeElement),
+      next: async (missionName) => {
+        try {
+          await this.generatePDF(patientData, missionName, qrCodeElement);
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      },
       error: (error) => console.error('Error resolviendo la misión activa:', error)
     });
   }
@@ -72,72 +69,50 @@ export class PrintService {
     return name.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s_-]/g, '').trim() || 'sin_nombre';
   }
 
-  /**
-   * Genera el PDF con los datos del paciente
-   * @param patientData Datos del paciente
-   * @param missionName Nombre de la misión
-   * @param qrCodeElement Elemento canvas del código QR
-   */
-  private generatePDF(patientData: PatientData, missionName: string, qrCodeElement?: HTMLCanvasElement): void {
+  private loadImage(src: string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => resolve(img);
+      img.onerror = (err) => reject(err);
+    });
+  }
+
+  private async generatePDF(patientData: PatientData, missionName: string, qrCodeElement?: HTMLCanvasElement): Promise<void> {
     const doc = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
-      format: [80, 300],
+      format: [80, 400],
     });
 
     const marginLeft = 3;
     let y = 8;
     const lineHeight = 5;
 
-    // Cargar logo principal
-    const img = new Image();
-    img.src = 'assets/img/logo_ticket.png';
-
-    img.onload = () => {
-      // Logo principal
+    try {
+      const img = await this.loadImage('assets/img/logo_ticket.png');
       const imgWidth = 70;
       const imgAspectRatio = img.width / img.height;
       const imgHeight = imgWidth / imgAspectRatio;
 
       doc.addImage(img, 'PNG', marginLeft, y, imgWidth, imgHeight);
       y += imgHeight + 5;
-
-      // Header información
-      this.addHeader(doc, marginLeft, y, lineHeight, missionName);
-      y = this.getYAfterHeader(y, lineHeight);
-
-      // Datos del paciente
-      y = this.addPatientData(doc, patientData, marginLeft, y, lineHeight);
-
-      // Pre-diagnóstico
-      y = this.addPreDiagnosis(doc, patientData, marginLeft, y, lineHeight);
-
-      // Citas médicas
-      y = this.addAppointments(doc, patientData, marginLeft, y, lineHeight);
-
-      // Sección Profesionales
-      y = this.addProfessionalSection(doc, marginLeft, y, lineHeight);
-
-      // Declaración
-      y = this.addDeclaration(doc, marginLeft, y, lineHeight);
-
-      // Campos de firma y texto de escaneo (Se envía patientData para llenar datos automáticos)
-      y = this.addSignatureFields(doc, patientData, marginLeft, y, lineHeight);
-
-      // Código QR (si existe)
-      if (qrCodeElement) {
-        y = this.addQRCode(doc, qrCodeElement, marginLeft, y);
-      }
-
-      // Imagen del footer y finalización
-      this.addFooterAndSave(doc, patientData, marginLeft, y, lineHeight);
-    };
-
-    img.onerror = () => {
+    } catch (error) {
       console.warn('No se pudo cargar el logo principal, continuando sin él...');
-      // Continuar sin logo si hay error
-      this.generatePDFWithoutMainLogo(doc, patientData, missionName, marginLeft, y, lineHeight, qrCodeElement);
-    };
+    }
+
+    this.addHeader(doc, marginLeft, y, lineHeight, missionName);
+    y = this.getYAfterHeader(y, lineHeight);
+    y = this.addPatientData(doc, patientData, marginLeft, y, lineHeight);
+    y = this.addPreDiagnosis(doc, patientData, marginLeft, y, lineHeight);
+    y = this.addAppointments(doc, patientData, marginLeft, y, lineHeight);
+    y = this.addProfessionalSection(doc, marginLeft, y, lineHeight);
+    y = this.addDeclaration(doc, marginLeft, y, lineHeight);
+    y = this.addSignatureFields(doc, patientData, marginLeft, y, lineHeight);
+
+    y = await this.addQRCode(doc, marginLeft, y);
+
+    await this.addFooterAndSave(doc, patientData, marginLeft, y, lineHeight);
   }
 
   private addHeader(doc: jsPDF, marginLeft: number, y: number, lineHeight: number, missionName: string): void {
@@ -219,19 +194,15 @@ export class PrintService {
       const doctorName = appointment.doctor_name || 'No asignado';
       const appointmentDate = appointment.date || 'Sin fecha';
 
-      // 1. Escribimos "Especialidad: " en letra normal
       doc.setFont('helvetica', 'normal');
       doc.text('Especialidad: ', marginLeft, y);
       
-      // Calculamos el ancho de "Especialidad: " para saber dónde empezar a escribir el nombre
       const labelWidth = doc.getTextWidth('Especialidad: ');
 
-      // 2. Escribimos SOLO el nombre de la especialidad (ej. Medicina) en negrita justo al lado
       doc.setFont('helvetica', 'bold');
       doc.text(specialty, marginLeft + labelWidth, y);
       y += lineHeight;
 
-      // El doctor y la fecha continúan en texto normal
       doc.setFont('helvetica', 'normal');
       doc.text(`Doctor: ${doctorName}`, marginLeft, y);
       y += lineHeight;
@@ -240,7 +211,6 @@ export class PrintService {
       y += lineHeight;
 
       y += 2;
-      // Esta línea separa la sección de citas de la sección de profesionales
       doc.line(marginLeft, y, 75, y); 
       y += lineHeight;
     });
@@ -296,73 +266,66 @@ export class PrintService {
     y += 5;
     
     doc.setFontSize(7);
-    doc.setFont("helvetica", "bold"); // Lo puse en negrita para resaltar como título
-    // Se centra a 40 (mitad de 80mm) con la alineación 'center'
+    doc.setFont("helvetica", "bold"); 
     doc.text('CONOCE MÁS DE NOSOTROS:', 40, y, { align: 'center' });
 
-    // Reduje el espacio en blanco antes de regresar el Y para acercarlo al QR
     return y + 2;
   }
 
-  private addQRCode(doc: jsPDF, qrCodeElement: HTMLCanvasElement, marginLeft: number, y: number): number {
-    const qrDataUrl = qrCodeElement.toDataURL();
-    y += 2; // Reduje el espacio antes de imprimir la imagen
-    
-    // Posición X fija a 20 para centrar la imagen exacta ( (80 total - 40 ancho qr) / 2 = 20 )
-    doc.addImage(qrDataUrl, 'PNG', 20, y, 40, 40);
-    y += 42;
+  private async addQRCode(doc: jsPDF, marginLeft: number, y: number): Promise<number> {
+    y += 3; 
+    try {
+      const qrImg = await this.loadImage('assets/img/qr-DAR.png');
+      const qrWidth = 60; 
+      const qrHeight = qrWidth / (qrImg.width / qrImg.height);
+      const xPos = (80 - qrWidth) / 2;
 
+      doc.addImage(qrImg, 'PNG', xPos, y, qrWidth, qrHeight);
+      y += qrHeight + 2; 
+    } catch (error) {
+      console.warn('No se pudo cargar el código QR, continuando sin él...');
+      y += 42; 
+    }
+    
     return y;
   }
 
-  private addFooterAndSave(doc: jsPDF, patientData: PatientData, marginLeft: number, y: number, lineHeight: number): void {
-    const bottomImg = new Image();
-    bottomImg.src = 'assets/img/ticket_bottom.png';
-
-    bottomImg.onload = () => {
+  private async addFooterAndSave(doc: jsPDF, patientData: PatientData, marginLeft: number, y: number, lineHeight: number): Promise<void> {
+    try {
+      const bottomImg = await this.loadImage('assets/img/ticket_bottom.png');
       y += 5;
+      const footerWidth = 70;
+      const footerAspectRatio = bottomImg.width / bottomImg.height;
+      const footerHeight = footerWidth / footerAspectRatio;
 
-      const imgWidth = 70;
-      const imgAspectRatio = bottomImg.width / bottomImg.height;
-      const imgHeight = imgWidth / imgAspectRatio;
-
-      doc.addImage(bottomImg, 'JPEG', marginLeft, y, imgWidth, imgHeight);
-      y += imgHeight + 5;
-
-      doc.setFontSize(8);
-      doc.text('¡Gracias por asistir a Misiones DAR!', marginLeft, y);
-      y += lineHeight;
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.text(patientData.patient.name, marginLeft, y);
-
-      const safeFileName = this.sanitizeFileName(patientData.patient.name);
-      doc.save(`Paciente_${safeFileName}.pdf`);
-    };
-
-    bottomImg.onerror = () => {
-      console.warn('No se pudo cargar la imagen del footer, guardando PDF sin ella...');
-      const safeFileName = this.sanitizeFileName(patientData.patient.name);
-      doc.save(`Paciente_${safeFileName}.pdf`);
-    };
-  }
-
-  private generatePDFWithoutMainLogo(doc: jsPDF, patientData: PatientData, missionName: string, marginLeft: number, y: number, lineHeight: number, qrCodeElement?: HTMLCanvasElement): void {
-    this.addHeader(doc, marginLeft, y, lineHeight, missionName);
-    y = this.getYAfterHeader(y, lineHeight);
-
-    y = this.addPatientData(doc, patientData, marginLeft, y, lineHeight);
-    y = this.addPreDiagnosis(doc, patientData, marginLeft, y, lineHeight);
-    y = this.addAppointments(doc, patientData, marginLeft, y, lineHeight);
-    y = this.addProfessionalSection(doc, marginLeft, y, lineHeight);
-    y = this.addDeclaration(doc, marginLeft, y, lineHeight);
-    y = this.addSignatureFields(doc, patientData, marginLeft, y, lineHeight);
-
-    if (qrCodeElement) {
-      y = this.addQRCode(doc, qrCodeElement, marginLeft, y);
+      doc.addImage(bottomImg, 'JPEG', marginLeft, y, footerWidth, footerHeight);
+      y += footerHeight + 5;
+    } catch (error) {
+      console.warn('No se pudo cargar la imagen del footer, continuando sin ella...');
     }
 
-    this.addFooterAndSave(doc, patientData, marginLeft, y, lineHeight);
+    try {
+      const starImg = await this.loadImage('assets/img/noche-estelar.png');
+      const starWidth = 70;
+      const starAspectRatio = starImg.width / starImg.height;
+      const starHeight = starWidth / starAspectRatio;
+
+      doc.addImage(starImg, 'PNG', marginLeft, y, starWidth, starHeight);
+      y += starHeight + 5;
+    } catch (error) {
+      console.warn('No se pudo cargar la imagen noche-estelar.');
+    }
+
+    // Restaurado EXACTAMENTE a tu código original (sin cambios de fuente)
+    doc.setFontSize(8);
+    doc.text('¡Gracias por asistir a Misiones DAR!', marginLeft, y);
+    y += lineHeight;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.text(patientData.patient.name, marginLeft, y);
+
+    const safeFileName = this.sanitizeFileName(patientData.patient.name);
+    doc.save(`Paciente_${safeFileName}.pdf`);
   }
 }

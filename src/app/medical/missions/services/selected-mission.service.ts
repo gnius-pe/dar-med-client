@@ -11,7 +11,7 @@ import { URL_SERVICIOS } from 'src/app/config/config';
 export class SelectedMissionService {
 
   private readonly STORAGE_KEY = 'selected_mission';
-  private selectedMissionSubject = new BehaviorSubject<Mission | null>(null);
+  private selectedMissionSubject = new BehaviorSubject<Mission | null>(this.getSelectedMissionFromStorage());
 
   constructor(
     private http: HttpClient,
@@ -25,10 +25,19 @@ export class SelectedMissionService {
     const URL = URL_SERVICIOS + "/settings/selected-mission";
     this.http.get<any>(URL, {headers}).subscribe({
       next: (response) => {
+        const currentMission = this.selectedMissionSubject.value;
+        if (currentMission) {
+          return;
+        }
         const mission = response.selected_mission ? this.normalizeMission(response.selected_mission) : null;
         this.selectedMissionSubject.next(mission);
+        this.saveToStorage(mission);
       },
       error: () => {
+        const currentMission = this.selectedMissionSubject.value;
+        if (currentMission) {
+          return;
+        }
         const local = this.getSelectedMissionFromStorage();
         this.selectedMissionSubject.next(local);
       }
@@ -38,9 +47,13 @@ export class SelectedMissionService {
   selectMission(mission: Mission | null): void {
     if (mission) {
       const normalizedMission = this.normalizeMission(mission);
+      this.selectedMissionSubject.next(normalizedMission);
+      this.saveToStorage(normalizedMission);
       this.persistToBackend(normalizedMission);
       return;
     } else {
+      this.selectedMissionSubject.next(null);
+      this.removeFromStorage();
       this.deleteFromBackend();
     }
   }
@@ -61,12 +74,11 @@ export class SelectedMissionService {
     const headers = new HttpHeaders({'Authorization': 'Bearer ' + this.authService.token});
     const URL = URL_SERVICIOS + "/settings/selected-mission";
     this.http.post(URL, {selected_mission: mission}, {headers}).subscribe({
-      next: (response: any) => {
-        const saved = response.selected_mission ? this.normalizeMission(response.selected_mission) : null;
-        this.selectedMissionSubject.next(saved);
+      next: () => {
+        this.saveToStorage(mission);
       },
       error: () => {
-        this.selectedMissionSubject.next(mission);
+        this.saveToStorage(mission);
       }
     });
   }
@@ -76,10 +88,10 @@ export class SelectedMissionService {
     const URL = URL_SERVICIOS + "/settings/selected-mission";
     this.http.delete(URL, {headers}).subscribe({
       next: () => {
-        this.selectedMissionSubject.next(null);
+        this.removeFromStorage();
       },
       error: () => {
-        this.selectedMissionSubject.next(null);
+        this.removeFromStorage();
       }
     });
   }
@@ -96,6 +108,21 @@ export class SelectedMissionService {
       console.error('Error parsing selected mission from storage:', error);
       return null;
     }
+  }
+
+  private saveToStorage(mission: Mission | null): void {
+    if (!mission) {
+      this.removeFromStorage();
+      return;
+    }
+
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(mission));
+    sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(mission));
+  }
+
+  private removeFromStorage(): void {
+    localStorage.removeItem(this.STORAGE_KEY);
+    sessionStorage.removeItem(this.STORAGE_KEY);
   }
 
   private normalizeMission(mission: Mission): Mission {

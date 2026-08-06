@@ -62,7 +62,7 @@ export class PatientFormComponent implements OnChanges {
             last_name: response.last_name,
           });
         } else {
-          this.lookupError = 'No se encontró información para el DNI ingresado.';
+          this.lookupError = 'No hay datos registrados. Completa la información del paciente manualmente.';
         }
       }),
       catchError(() => {
@@ -86,11 +86,6 @@ export class PatientFormComponent implements OnChanges {
     formData.birth_date = new Date(formData.birth_date).toISOString().split('T')[0];
 
     this.sendPatientData.emit(formData);
-    this.resetForm();
-  }
-
-  private resetForm(): void {
-    this.patientForm.reset();
   }
 
   private createPersonalForm(): FormGroup {
