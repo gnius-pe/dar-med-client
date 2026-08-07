@@ -16,6 +16,7 @@ export interface Patient {
   spiritual_support: boolean;
   permission_to_call: boolean;
   created_at: string;
+  geographic_location?: GeographicLocation;
 }
 
 export interface PatientData {

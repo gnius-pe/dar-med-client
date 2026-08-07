@@ -137,12 +137,20 @@ export class GeographicLocationFormComponent implements OnInit, OnChanges {
 
     this.triggerMessage();
     this.saveLocationData.emit(this.locationForm.value);
-    this.resetForm();
+
+    if (!this.geographicLocation) {
+      this.resetForm();
+    }
   }
 
   private resetForm(): void {
-    this.locationForm.reset();
-    this.filteredProvinces = [];
+    this.locationForm.reset({
+      country: this.DEFAULT_COUNTRY_ID,
+      department: this.DEFAULT_DEPARTMENT_ID,
+    });
+    this.filteredProvinces = this.provinces.filter(
+      (province) => province.department_id === this.DEFAULT_DEPARTMENT_ID
+    );
     this.filteredDistricts = [];
   }
 

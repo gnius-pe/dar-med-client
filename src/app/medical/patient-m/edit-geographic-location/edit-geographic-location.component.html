@@ -17,17 +17,34 @@
     <div class="row">
       <div class="col-sm-12">
 
-        <ng-container *ngIf="hasLocation === false">
+        <ng-container *ngIf="hasLocation === false && !isCreatingLocation">
           <div class="alert alert-warning">
             El paciente no tiene una ubicación registrada.
           </div>
+          <div class="mt-3">
+            <button type="button" class="btn btn-primary" (click)="startCreatingLocation()">
+              <i class="fa-solid fa-plus me-1"></i>
+              Registrar ubicación
+            </button>
+          </div>
         </ng-container>
 
-        <ng-container *ngIf="hasLocation === true && geographicLocation">
+        <ng-container *ngIf="hasLocation === true && geographicLocation && !isCreatingLocation">
           <app-geographic-location-form
             [geographicLocation]="geographicLocation"
             (saveLocationData)="updateGeographicLocation($event)">
           </app-geographic-location-form>
+        </ng-container>
+
+        <ng-container *ngIf="isCreatingLocation">
+          <app-geographic-location-form
+            (saveLocationData)="registerGeographicLocation($event)">
+          </app-geographic-location-form>
+          <div class="mt-3">
+            <button type="button" class="btn btn-secondary" (click)="cancelCreatingLocation()">
+              Cancelar
+            </button>
+          </div>
         </ng-container>
 
         <ng-container *ngIf="hasLocation === null">

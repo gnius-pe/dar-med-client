@@ -14,6 +14,7 @@ export class EditGeographicLocationComponent implements OnInit {
   public hasLocation: boolean | null = null;
   public geographicLocation: GeographicLocation | null = null;
   public patientId: number | null = null;
+  public isCreatingLocation = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,8 +47,34 @@ export class EditGeographicLocationComponent implements OnInit {
     ).subscribe();
   }
 
-  public updateGeographicLocation(locationData: GeographicLocation): void {
+  public startCreatingLocation(): void {
+    this.isCreatingLocation = true;
+  }
 
+  public cancelCreatingLocation(): void {
+    this.isCreatingLocation = false;
+  }
+
+  public registerGeographicLocation(locationData: GeographicLocation): void {
+    const dataWithPatientId: GeographicLocation = {
+      ...locationData,
+      patient_id: this.patientId!,
+    };
+
+    this.locationService.registerLocation(dataWithPatientId).pipe(
+      tap((resp: any) => {
+        this.geographicLocation = resp.data;
+        this.hasLocation = true;
+        this.isCreatingLocation = false;
+      }),
+      catchError((error) => {
+        console.error('Error al registrar la ubicación:', error);
+        return of(error);
+      })
+    ).subscribe();
+  }
+
+  public updateGeographicLocation(locationData: GeographicLocation): void {
     const updatedLocation: GeographicLocation = {
       ...locationData,
       id: this.geographicLocation!.id,

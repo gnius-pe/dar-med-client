@@ -10,7 +10,7 @@
             {{ nationality.title }}
           </option>
         </select>
-        <div *ngIf="locationForm.get('country')?.touched && locationForm.get('nationality')?.invalid" class="error-message">
+        <div *ngIf="locationForm.get('country')?.touched && locationForm.get('country')?.invalid" class="error-message">
           Nacionalidad es requerida.
         </div>
       </div>

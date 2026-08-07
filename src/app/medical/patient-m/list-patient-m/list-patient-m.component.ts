@@ -4,7 +4,8 @@ import {MatTableDataSource} from '@angular/material/table';
 import {Patient} from "../models/patient.model";
 import {PrintService} from "../../../shared/services/print.service";
 import {ExportService, ColumnDefinition} from "../../../shared/services/export.service";
-import {range, mergeMap, map, catchError, of, forkJoin, Observable} from 'rxjs';
+import {GeographicLocationService} from "../service/geographic_location.service";
+import {catchError, forkJoin, map, Observable, of} from 'rxjs';
 
 @Component({
   selector: 'app-list-patient-m',
@@ -42,6 +43,7 @@ export class ListPatientMComponent implements OnInit {
     private patientService: PatientMService,
     private printService: PrintService,
     private exportService: ExportService,
+    private locationService: GeographicLocationService,
   ) {
 
   }
@@ -49,6 +51,7 @@ export class ListPatientMComponent implements OnInit {
   ngOnInit() {
     this.getTableData(this.currentPage);
     this.user = this.patientService.authService.user;
+    this.locationService.loadLocationCatalogs().subscribe();
   }
 
   isPermission(permission: string) {
@@ -179,13 +182,54 @@ export class ListPatientMComponent implements OnInit {
     forkJoin(pagesRequests).subscribe({
       next: (pagesData: Patient[][]) => {
         const allPatients = pagesData.flat();
-        this.downloadExcel(allPatients);
-        this.hideLoading();
+        this.enrichPatientsWithLocations(allPatients).subscribe({
+          next: (enrichedPatients) => {
+            this.downloadExcel(enrichedPatients);
+            this.hideLoading();
+          },
+          error: () => {
+            this.hideLoading();
+          }
+        });
       },
       error: () => {
         this.hideLoading();
       }
     });
+  }
+
+  private enrichPatientsWithLocations(patients: Patient[]): Observable<Patient[]> {
+    const patientsWithoutLocation = patients.filter(p => !p.geographic_location && p.id);
+
+    if (patientsWithoutLocation.length === 0) {
+      return of(patients);
+    }
+
+    const patientIds = patientsWithoutLocation.map(p => p.id);
+
+    return this.locationService.getByPatientIds(patientIds).pipe(
+      map((resp: any) => {
+        const locationMap = new Map<number, any>();
+        const locations = Array.isArray(resp?.data) ? resp.data : [];
+
+        locations.forEach((location: any) => {
+          if (location?.patient_id) {
+            locationMap.set(location.patient_id, location);
+          }
+        });
+
+        return patients.map(patient => ({
+          ...patient,
+          geographic_location: patient.geographic_location ?? locationMap.get(patient.id) ?? undefined
+        }));
+      }),
+      catchError(() => {
+        return of(patients.map(patient => ({
+          ...patient,
+          geographic_location: patient.geographic_location ?? undefined
+        })));
+      })
+    );
   }
 
   private downloadExcel(patients: Patient[]): void {
@@ -206,6 +250,12 @@ export class ListPatientMComponent implements OnInit {
       { header: 'Mensaje', key: 'message', transform: (v) => v || '' },
       { header: 'Condición de visita', key: 'visit_condition', transform: (v) => v || '' },
       { header: 'Diagnóstico espiritual', key: 'spiritual_diagnosis', transform: (v) => v || '' },
+      { header: 'País', key: 'geographic_location', transform: (v) => this.locationService.getNationalityName(v?.country) },
+      { header: 'Departamento', key: 'geographic_location', transform: (v) => this.locationService.getDepartmentName(v?.department) },
+      { header: 'Provincia', key: 'geographic_location', transform: (v) => this.locationService.getProvinceName(v?.province) },
+      { header: 'Distrito', key: 'geographic_location', transform: (v) => this.locationService.getDistrictName(v?.district) },
+      { header: 'Dirección', key: 'geographic_location', transform: (v) => v?.address || '' },
+      { header: 'Referencia', key: 'geographic_location', transform: (v) => v?.reference || '' },
     ];
 
     this.exportService.exportToExcel(patients, columns, 'pacientes');
