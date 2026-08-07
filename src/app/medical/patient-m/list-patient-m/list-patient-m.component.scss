@@ -5,22 +5,3 @@
 .icon-spacing a:last-child {
   margin-right: 0;
 }
-
-.export-excel-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 32px;
-  border-radius: 3px;
-  transition: opacity 0.2s ease;
-  vertical-align: middle;
-}
-
-.export-excel-btn:hover {
-  opacity: 0.8;
-}
-
-.export-excel-btn svg {
-  display: block;
-}
