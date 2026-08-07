@@ -3,6 +3,8 @@ import {PatientMService} from '../service/patient-m.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {Patient} from "../models/patient.model";
 import {PrintService} from "../../../shared/services/print.service";
+import {ExportService, ColumnDefinition} from "../../../shared/services/export.service";
+import {range, mergeMap, map, catchError, of, forkJoin, Observable} from 'rxjs';
 
 @Component({
   selector: 'app-list-patient-m',
@@ -39,6 +41,7 @@ export class ListPatientMComponent implements OnInit {
   constructor(
     private patientService: PatientMService,
     private printService: PrintService,
+    private exportService: ExportService,
   ) {
 
   }
@@ -149,5 +152,62 @@ export class ListPatientMComponent implements OnInit {
 
   private hideLoading() {
     this.isLoading = false;
+  }
+
+  exportToExcel(): void {
+    this.showLoading();
+
+    const totalPages = this.totalPages || 1;
+    const currentPage = this.currentPage || 1;
+    const search = this.searchDataValue || '';
+
+    const pagesRequests: Observable<Patient[]>[] = [];
+
+    for (let page = 1; page <= totalPages; page++) {
+      if (page === currentPage) {
+        pagesRequests.push(of(this.patientsList));
+      } else {
+        pagesRequests.push(
+          this.patientService.listPatients(page, search).pipe(
+            map((resp: any) => resp.data),
+            catchError(() => of([] as Patient[]))
+          )
+        );
+      }
+    }
+
+    forkJoin(pagesRequests).subscribe({
+      next: (pagesData: Patient[][]) => {
+        const allPatients = pagesData.flat();
+        this.downloadExcel(allPatients);
+        this.hideLoading();
+      },
+      error: () => {
+        this.hideLoading();
+      }
+    });
+  }
+
+  private downloadExcel(patients: Patient[]): void {
+    const columns: ColumnDefinition<Patient>[] = [
+      { header: 'DNI', key: 'identification_number' },
+      { header: 'Nombre', key: 'first_name' },
+      { header: 'Apellido', key: 'last_name' },
+      { header: 'Celular', key: 'first_phone' },
+      { header: 'Teléfono 2', key: 'second_phone', transform: (v) => v || '' },
+      { header: 'Correo', key: 'email', transform: (v) => v || '' },
+      { header: 'Fecha de nacimiento', key: 'birth_date' },
+      { header: 'Género', key: 'gender' },
+      { header: 'Edad', key: 'birth_date', transform: (_, row) => this.calculateAge(row.birth_date, row.created_at) },
+      { header: 'Fecha de registro', key: 'created_at', transform: (v) => this.formatDate(v) },
+      { header: 'Examen médico', key: 'medical_examination', transform: (v) => v ? 'Sí' : 'No' },
+      { header: 'Apoyo espiritual', key: 'spiritual_support', transform: (v) => v ? 'Sí' : 'No' },
+      { header: 'Permiso de llamada', key: 'permission_to_call', transform: (v) => v ? 'Sí' : 'No' },
+      { header: 'Mensaje', key: 'message', transform: (v) => v || '' },
+      { header: 'Condición de visita', key: 'visit_condition', transform: (v) => v || '' },
+      { header: 'Diagnóstico espiritual', key: 'spiritual_diagnosis', transform: (v) => v || '' },
+    ];
+
+    this.exportService.exportToExcel(patients, columns, 'pacientes');
   }
 }
