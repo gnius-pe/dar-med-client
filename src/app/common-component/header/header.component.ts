@@ -1,11 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {AuthService} from 'src/app/shared/auth/auth.service';
-import {routes} from 'src/app/shared/routes/routes';
-import {SideBarService} from 'src/app/shared/side-bar/side-bar.service';
-import {SelectedMissionService} from "../../medical/missions/services/selected-mission.service";
-import {Subscription} from "rxjs";
-import {Mission} from "../../medical/missions/models/mission.model";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/shared/auth/auth.service';
+import { routes } from 'src/app/shared/routes/routes';
+import { SideBarService } from 'src/app/shared/side-bar/side-bar.service';
+import { SelectedMissionService } from '../../medical/missions/services/selected-mission.service';
+import { Subscription, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Mission } from '../../medical/missions/models/mission.model';
 
 @Component({
   selector: 'app-header',
@@ -16,76 +17,92 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public routes = routes;
   public openBox = false;
   public miniSidebar = false;
-  public user: any;
+  public user: AuthUser | null = null;
   isLoading = false;
   selectedMission: Mission | null = null;
-  private selectedMissionSubscription: Subscription = new Subscription();
+
+  private destroy$ = new Subject<void>();
+  private selectedMissionSubscription!: Subscription;
 
   constructor(
     private router: Router,
     private sideBar: SideBarService,
     private selectedMissionService: SelectedMissionService,
-    private auth: AuthService,) {
-    this.sideBar.toggleSideBar.subscribe((res: string) => {
-      this.miniSidebar = res == 'true';
-    });
-    const USER = localStorage.getItem("user");
-    this.user = JSON.parse(USER ? USER : '');
+    private auth: AuthService
+  ) {
+    this.loadUser();
+    this.initSideBarListeners();
   }
 
   ngOnInit(): void {
-    this.selectedMissionSubscription = this.selectedMissionService.getSelectedMission$().subscribe(
-      (mission) => {
+    this.selectedMissionSubscription = this.selectedMissionService
+      .getSelectedMission$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((mission) => {
         this.selectedMission = mission;
-      }
-    );
+      });
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.selectedMissionSubscription.unsubscribe();
   }
 
-  clearSelectedMission() {
+  clearSelectedMission(): void {
     this.selectedMissionService.clearSelectedMission();
   }
 
-  getRole() {
-    let RoleName = "";
-    this.user.roles.forEach((rol: any) => {
-      RoleName = rol;
-    });
-    return RoleName;
-  }
-
-  openBoxFunc() {
-    this.openBox = !this.openBox;
-    const mainWrapper = document.getElementsByClassName('main-wrapper')[0];
-    if (this.openBox) {
-      mainWrapper.classList.add('open-msg-box');
-    } else {
-      mainWrapper.classList.remove('open-msg-box');
+  getRole(): string {
+    if (!this.user?.roles || this.user.roles.length === 0) {
+      return '';
     }
+
+    return this.user.roles[0];
   }
 
-  logout() {
+  openBoxFunc(): void {
+    this.openBox = !this.openBox;
+    const mainWrapper = document.querySelector('.main-wrapper');
+    mainWrapper?.classList.toggle('open-msg-box', this.openBox);
+  }
+
+  logout(): void {
     this.showLoading();
     this.auth.logout();
     this.hideLoading();
   }
 
-  public toggleSideBar(): void {
+  toggleSideBar(): void {
     this.sideBar.switchSideMenuPosition();
   }
 
-  public toggleMobileSideBar(): void {
+  toggleMobileSideBar(): void {
     this.sideBar.switchMobileSideBarPosition();
   }
 
-  private showLoading() {
+  private loadUser(): void {
+    const userStorage = localStorage.getItem('user');
+    this.user = userStorage ? JSON.parse(userStorage) : null;
+  }
+
+  private initSideBarListeners(): void {
+    this.sideBar.toggleSideBar.pipe(takeUntil(this.destroy$)).subscribe((res: string) => {
+      this.miniSidebar = res === 'true';
+    });
+  }
+
+  private showLoading(): void {
     this.isLoading = true;
   }
 
-  private hideLoading() {
+  private hideLoading(): void {
     this.isLoading = false;
   }
+}
+
+interface AuthUser {
+  name: string;
+  roles: string[];
+  [key: string]: any;
 }
